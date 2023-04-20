@@ -4,13 +4,9 @@ from app.api.Order.Presentation.order import order_ns
 from app.api.History.Presentation.history import history_ns
 
 from flask import Blueprint
-from flask_restx import Api, apidoc
+from flask_restx import Api
 
 from app.util.error_handling import error_handler
-
-URL_PREFIX = '/api/delivery'
-
-apidoc.apidoc.url_prefix = URL_PREFIX
 
 authorizations = {
     'jwt': {

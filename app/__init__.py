@@ -1,6 +1,10 @@
 from flask import Flask, g, request
 from app.src.container import Container
 from werkzeug.middleware.proxy_fix import ProxyFix
+from flask_restx import apidoc
+
+URL_PREFIX = '/static'
+apidoc.apidoc.url_prefix = URL_PREFIX
 
 
 def create_app():
