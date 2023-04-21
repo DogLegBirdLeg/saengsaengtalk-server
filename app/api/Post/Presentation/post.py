@@ -40,7 +40,7 @@ post_register_model = post_ns.model('게시글 등록 응답', {
     'post_id': fields.String(description='등록된 포스트의 ID', example='63da17abcc800e43227d91e4')
 })
 post_status_model = post_ns.model('상태 파라미터', {
-    'recruitment': fields.Boolean(description='인원 모집 상태를 변경하는 파라미터', example=True),
+    'status': fields.Boolean(description='상태 변경, recruiting/closed/ordered/delivered', example='closed'),
 })
 
 option = post_ns.parser()
@@ -113,20 +113,10 @@ class DeliveryPostDetail(Resource):
 
 @post_ns.route('/<string:post_id>/status')
 class DeliveryPostOpenStatus(Resource):
-    @post_ns.doc(security='jwt', body=post_status_model, description="게시글의 인원 모집 상태를 변경합니다")
+    @post_ns.doc(security='jwt', body=post_status_model, description="상태를 변경합니다, recruiting/closed/ordered/delivered 중 하나 입력")
     @post_ns.response(code=204, description='변경 성공')
     @inject
     def patch(self, post_id, post_service: PostService = Provide[Container.post_service]):
         data = request.get_json()
-        post_service.update_status(post_id, 'recruitment', bool(data['recruitment']))
-        return '', 204
-
-
-@post_ns.route('/<string:post_id>/notice')
-class DeliveryDelivered(Resource):
-    @post_ns.doc(security='jwt', description="배달 완료를 명시합니다")
-    @post_ns.response(code=204, description='변경 성공')
-    @inject
-    def get(self, post_id, post_service: PostService = Provide[Container.post_service]):
-        post_service.delivered(post_id)
+        post_service.change_status(post_id, data['status'])
         return '', 204

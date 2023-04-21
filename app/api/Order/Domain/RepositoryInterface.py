@@ -4,7 +4,7 @@ from typing import List
 from app.api.Order.Domain.Entity.Order import Order
 
 
-class OrderReader(metaclass=ABCMeta):
+class OrderRepository(metaclass=ABCMeta):
     @abstractmethod
     def find_order_by_user_id(self, post_id, user_id) -> Order:
         pass
@@ -17,8 +17,6 @@ class OrderReader(metaclass=ABCMeta):
     def find_post_join_user(self):
         pass
 
-
-class OrderWriter(metaclass=ABCMeta):
     @abstractmethod
     def save(self, post_id, order: Order):
         pass

@@ -4,7 +4,7 @@ from typing import List
 from app.api.Post.Domain.Entity.Post import Post
 
 
-class PostReader(metaclass=ABCMeta):
+class PostRepository(metaclass=ABCMeta):
     @abstractmethod
     def find_post(self, post_id) -> Post:
         pass
@@ -13,10 +13,8 @@ class PostReader(metaclass=ABCMeta):
     def find_post_list(self) -> List[Post]:
         pass
 
-
-class PostWriter(metaclass=ABCMeta):
     @abstractmethod
-    def set(self, post: Post):
+    def save(self, post: Post):
         pass
 
     @abstractmethod

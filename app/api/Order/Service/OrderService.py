@@ -34,13 +34,8 @@ class OrderService:
 
     def join(self, post_id, order_json):
         post = self.post_reader.find_post(post_id)
+
         orders = self.order_reader.find_order_list_by_post_id(post_id)
-
-        if post.is_recruit():
-            raise exceptions.ClosedPost
-
-        if post.is_max_member(len(orders)):
-            raise exceptions.MaxMember
 
         join_user_id = [order.user_id for order in orders]
         if g.id in join_user_id:
