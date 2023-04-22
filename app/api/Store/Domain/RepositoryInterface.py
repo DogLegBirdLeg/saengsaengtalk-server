@@ -5,7 +5,7 @@ from app.api.Store.Domain.Model.MenuSummary import MenuSummary
 from app.api.Store.Domain.Model.Menu import Menu, Menus
 
 
-class StoreReader(metaclass=ABCMeta):
+class StoreRepository(metaclass=ABCMeta):
     @abstractmethod
     def find_store_list(self) -> List[Store]:
         pass
@@ -15,7 +15,7 @@ class StoreReader(metaclass=ABCMeta):
         pass
 
 
-class MenuReader(metaclass=ABCMeta):
+class MenuRepository(metaclass=ABCMeta):
     @abstractmethod
     def find_menu_list(self, store_id) -> Menus:
         pass

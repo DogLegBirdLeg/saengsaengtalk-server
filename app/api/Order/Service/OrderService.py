@@ -3,59 +3,59 @@ from typing import List
 from app import exceptions
 
 from app.api.Order.Domain.DomainService.OrderCreateService import OrderCreateService
-from app.api.Order.Domain.RepositoryInterface import OrderReader, OrderWriter
+from app.api.Order.Domain.RepositoryInterface import OrderRepository
 from app.api.Order.Domain.Entity.Order import Order
 
-from app.api.Post.Domain.RepositoryInterface import PostReader
+from app.api.Post.Domain.RepositoryInterface import PostRepository
 
 
 class OrderService:
     def __init__(self,
-                 order_reader: OrderReader,
-                 order_writer: OrderWriter,
-                 post_reader: PostReader,
+                 post_repository: PostRepository,
+                 order_repository: OrderRepository,
                  order_create_service: OrderCreateService):
 
-        self.order_reader = order_reader
-        self.order_writer = order_writer
-        self.post_reader = post_reader
+        self.post_repository = post_repository
+        self.order_repository = order_repository
         self.order_create_service = order_create_service
 
     def get(self, post_id) -> Order:
         try:
-            order = self.order_reader.find_order_by_user_id(post_id, g.id)
+            order = self.order_repository.find_order_by_user_id(post_id, g.id)
         except exceptions.NotExistResource:
             raise exceptions.NotJoinedUser
         return order
 
     def get_list(self, post_id) -> List[Order]:
-        orders = self.order_reader.find_order_list_by_post_id(post_id)
+        orders = self.order_repository.find_order_list_by_post_id(post_id)
         return orders
 
     def join(self, post_id, order_json):
-        post = self.post_reader.find_post(post_id)
+        post = self.post_repository.find_post(post_id)
+        orders = self.order_repository.find_order_list_by_post_id(post_id)
 
-        orders = self.order_reader.find_order_list_by_post_id(post_id)
+        if post.status is not 'recruiting':
+            raise Exception
 
         join_user_id = [order.user_id for order in orders]
         if g.id in join_user_id:
             raise exceptions.AlreadyJoinedUser
 
-        order = self.order_create_service.create(post.store._id, post_id, g.id, g.nickname, order_json)
-        self.order_writer.save(order.post_id, order)
+        order = self.order_create_service.create(post.store._id, post_id, order_json)
+        self.order_repository.save(order.post_id, order)
 
     def quit(self, post_id):
-        post = self.post_reader.find_post(post_id)
-        orders = self.order_reader.find_order_list_by_post_id(post_id)
+        post = self.post_repository.find_post(post_id)
+        orders = self.order_repository.find_order_list_by_post_id(post_id)
 
-        if post.is_owner(g.id):
+        if post.status not in ['recruiting', 'closed']:
+            raise Exception
+
+        if post.user_id == g.id:
             raise exceptions.OwnerQuit
-
-        if post.is_recruit():
-            raise exceptions.ClosedPost
-
+3
         join_user_id = [order.user_id for order in orders]
         if g.id not in join_user_id:
             raise exceptions.NotJoinedUser
 
-        self.order_writer.delete(post_id, g.id)
+        self.order_repository.delete(post_id, g.id)

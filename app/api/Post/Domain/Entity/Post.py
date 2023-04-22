@@ -75,7 +75,7 @@ class Post:
             if status != 'delivered':
                 raise Exception
 
-    def delete(self):
+    def can_delete(self):
         self._check_permission()
         self._check_modifiable()
 
