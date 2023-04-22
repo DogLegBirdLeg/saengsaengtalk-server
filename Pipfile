@@ -15,6 +15,7 @@ pydantic = "*"
 cryptography = "*"
 pyjwt = "*"
 bcrypt = "*"
+blinker = "*"
 
 [dev-packages]
 

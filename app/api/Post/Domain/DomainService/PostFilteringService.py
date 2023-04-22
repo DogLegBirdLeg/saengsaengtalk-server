@@ -1,15 +1,15 @@
-from app.api.Post.Domain.RepositoryInterface import PostReader
-from app.api.Order.Domain.RepositoryInterface import OrderReader
+from app.api.Post.Domain.RepositoryInterface import PostRepository
+from app.api.Order.Domain.RepositoryInterface import OrderRepository
 
 
 class PostFilteringService:
-    def __init__(self, post_reader: PostReader, order_reader: OrderReader):
-        self.post_reader = post_reader
-        self.order_reader = order_reader
+    def __init__(self, post_repository: PostRepository, order_repository: OrderRepository):
+        self.post_repository = post_repository
+        self.order_repository = order_repository
 
     def filtering(self, option, user_id):
-        post_list = self.post_reader.find_post_list()
-        post_join_user = self.order_reader.find_post_join_user()
+        post_list = self.post_repository.find_post_list()
+        post_join_user = self.order_repository.find_post_join_user()
 
         posts = []
         for post in post_list:
@@ -21,7 +21,7 @@ class PostFilteringService:
 
         elif option == 'joinable':
             joinable_post_list = [post for post in posts
-                                  if (post[0].recruitment is True)
+                                  if (post[0].status is 'recruiting')
                                   and (str(user_id) not in post_join_user[post[0]._id])]
             return joinable_post_list
 

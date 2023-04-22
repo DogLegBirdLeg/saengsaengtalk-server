@@ -3,12 +3,12 @@ import json
 from typing import List
 
 from app.api.Post.Domain.Entity.Post import Post
-from app.api.Post.Domain.RepositoryInterface import PostReader, PostWriter
+from app.api.Post.Domain.RepositoryInterface import PostRepository
 
 from app.api.Post.util.PostMapper import PostMapper
 
 
-class RedisPostRepository(PostReader, PostWriter):
+class RedisPostRepository(PostRepository):
     def __init__(self, redis_connection):
         self.db = redis_connection
 
@@ -29,7 +29,7 @@ class RedisPostRepository(PostReader, PostWriter):
         ]
         return post_list
 
-    def set(self, post: Post):
+    def save(self, post: Post):
         self.db.set(post._id, json.dumps(post.json))
 
     def update(self, post: Post):

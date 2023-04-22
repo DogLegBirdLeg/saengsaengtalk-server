@@ -3,13 +3,13 @@ from bson import ObjectId
 from app import exceptions
 from typing import List
 
-from app.api.Store.Domain.RepositoryInterface import MenuReader
+from app.api.Store.Domain.RepositoryInterface import MenuRepository
 from app.api.Store.Domain.Model.Menu import Menu, Menus
 from app.api.Store.Domain.Model.MenuSummary import MenuSummary
 from app.api.Store.util.MenuMapper import MenuMapper, MenuSummaryMapper
 
 
-class MongoDBMenuRepository(MenuReader):
+class MongoDBMenuRepository(MenuRepository):
     def __init__(self, mongo_connection: MongoClient):
         self.db = mongo_connection['delivery']
 

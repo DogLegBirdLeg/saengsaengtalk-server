@@ -4,11 +4,11 @@ from app import exceptions
 from typing import List
 
 from app.api.Store.Domain.Model.Store import Store
-from app.api.Store.Domain.RepositoryInterface import StoreReader
+from app.api.Store.Domain.RepositoryInterface import StoreRepository
 from app.api.Store.util.StoreMapper import StoreMapper
 
 
-class MongoDBStoreRepository(StoreReader):
+class MongoDBStoreRepository(StoreRepository):
     def __init__(self, mongo_connection: MongoClient):
         self.db = mongo_connection['delivery']
 

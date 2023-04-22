@@ -1,4 +1,4 @@
-from app.api.History.Domain.RepositoryInterface import HistoryReader, HistoryWriter
+from app.api.History.Domain.RepositoryInterface import HistoryRepository
 from app.api.Post.Domain.Entity.Post import Post
 from app.api.Order.Domain.Entity.Order import Order
 from app.api.Post.util.PostMapper import PostMapper
@@ -6,7 +6,7 @@ from app.api.Order.util.Mapper import OrderMapper
 from typing import List
 
 
-class MongoDBHistoryRepository(HistoryReader, HistoryWriter):
+class MongoDBHistoryRepository(HistoryRepository):
     def __init__(self, mongodb_connection):
         self.db = mongodb_connection['delivery']
 
@@ -21,7 +21,10 @@ class MongoDBHistoryRepository(HistoryReader, HistoryWriter):
         orders = self.db.post.find_one(find)['orders']
         return [OrderMapper.order_mapper(post_id, order['user_id'], order['nickname'], order['order_lines']) for order in orders]
 
-    def save(self, post: Post, orders: List[Order]):
+    def save_post(self, post: Post):
         post_json = post.json
-        post_json['orders'] = [order.json for order in orders]
         self.db.post.insert_one(post_json)
+
+    def save_orders(self, orders: List[Order]):
+        orders = [order.json for order in orders]
+        self.db.order.insert_many(orders)

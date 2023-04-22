@@ -15,5 +15,9 @@ class HistoryRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def save(self, post: Post, orders: List[Order]):
+    def save_post(self, post: Post):
+        pass
+
+    @abstractmethod
+    def save_orders(self, orders: List[Order]):
         pass

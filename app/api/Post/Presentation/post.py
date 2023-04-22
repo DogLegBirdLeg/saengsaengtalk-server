@@ -18,7 +18,7 @@ post_model = post_ns.model('게시글', {
     'max_member': fields.Integer(description='최대 주문 인원', example=6),
     'order_time': fields.DateTime(description='주문 시간', example='2023-02-22T08:56:57'),
     'store': fields.Nested(store_model),
-    'recruitment': fields.Boolean(description='인원 모집 Flag', example=True),
+    'status': fields.String(description='현재 게시글 상태', example='recruiting'),
     'users': fields.List(fields.Integer(description='유저 ID', example=1674995732373))
 })
 from app.api.Order.Presentation.order import order_model
@@ -40,7 +40,7 @@ post_register_model = post_ns.model('게시글 등록 응답', {
     'post_id': fields.String(description='등록된 포스트의 ID', example='63da17abcc800e43227d91e4')
 })
 post_status_model = post_ns.model('상태 파라미터', {
-    'status': fields.Boolean(description='상태 변경, recruiting/closed/ordered/delivered', example='closed'),
+    'status': fields.String(description='상태 변경, recruiting/closed/ordered/delivered', example='closed'),
 })
 
 option = post_ns.parser()

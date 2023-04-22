@@ -5,10 +5,10 @@ from typing import List
 
 from app.api.Order.Domain.Entity.Order import Order
 from app.api.Order.util.Mapper import OrderMapper
-from app.api.Order.Domain.RepositoryInterface import OrderReader, OrderWriter
+from app.api.Order.Domain.RepositoryInterface import OrderRepository
 
 
-class RedisOrderRepository(OrderReader, OrderWriter):
+class RedisOrderRepository(OrderRepository):
     def __init__(self, redis_connection: Redis):
         self.db = redis_connection
 

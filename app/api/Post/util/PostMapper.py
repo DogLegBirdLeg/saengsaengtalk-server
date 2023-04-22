@@ -10,7 +10,7 @@ class PostMapper:
                     StoreMapper.store_mapping(post_json['store']),
                     post_json['user_id'],
                     post_json['nickname'],
-                    bool(post_json['recruitment']),
+                    post_json['status'],
                     post_json['place'],
                     post_json['order_time'],
                     post_json['min_member'],

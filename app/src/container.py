@@ -9,7 +9,7 @@ from app.api.Store.Service.MenuService import MenuService
 from app.api.Post.Service.PostService import PostService
 from app.api.History.Service.HistoryService import HistoryService
 
-from app.api.Order.Repository.OrderRepository import RedisOrderRepository
+from app.api.Order.infra.OrderRepository import RedisOrderRepository
 from app.api.Post.Repository.PostRepository import RedisPostRepository
 from app.api.Store.Repository.StoreRepository import MongoDBStoreRepository
 from app.api.Store.Repository.MenuRepository import MongoDBMenuRepository
@@ -33,7 +33,8 @@ class Container(containers.DeclarativeContainer):
                                                             'app.api.History.Presentation.history',
                                                             'app.auth.Presentation.signin',
                                                             'app.auth.Presentation.signup',
-                                                            'app.auth.Presentation.logout'])
+                                                            'app.auth.Presentation.logout',
+                                                            'app.api.Order.Service.PostEventHandler'])
 
     redis_post_connection = providers.Factory(
         StrictRedis,
@@ -78,8 +79,7 @@ class Container(containers.DeclarativeContainer):
     )
     post_create_service = providers.Factory(
         PostCreateService,
-        store_repository,
-        order_repository
+        store_repository
     )
 
     post_filtering_service = providers.Factory(
@@ -90,37 +90,33 @@ class Container(containers.DeclarativeContainer):
 
     order_service = providers.Factory(
         OrderService,
-        order_reader=order_repository,
-        order_writer=order_repository,
-        post_reader=post_repository,
+        order_repository=order_repository,
+        post_repository=post_repository,
         order_create_service=order_create_service
     )
 
     post_service = providers.Factory(
         PostService,
-        post_reader=post_repository,
-        post_writer=post_repository,
-        order_reader=order_repository,
-        order_writer=order_repository,
-        history_writer=history_repository,
+        post_repository=post_repository,
+        history_repository=history_repository,
+        order_repository=order_repository,
         post_filtering_service=post_filtering_service,
-        post_create_service=post_create_service,
-        order_create_service=order_create_service
+        post_create_service=post_create_service
     )
 
     store_service = providers.Factory(
         StoreService,
-        store_reader=store_repository
+        store_repository=store_repository
     )
 
     menu_service = providers.Factory(
         MenuService,
-        menu_reader=menu_repository
+        menu_repository=menu_repository
     )
 
     history_service = providers.Factory(
         HistoryService,
-        history_reader=history_repository
+        history_repository=history_repository
     )
 
     auth_service = providers.Factory(
