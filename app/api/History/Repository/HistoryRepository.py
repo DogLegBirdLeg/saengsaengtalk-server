@@ -16,9 +16,10 @@ class MongoDBHistoryRepository(HistoryRepository):
         return [PostMapper.post_mapping(post_history) for post_history in post_history_list]
 
     def find_order_history_list(self, post_id) -> List[Order]:
-        find = {'_id': post_id}
-        orders = self.db.post.find_one(find)['orders']
-        return [OrderMapper.order_mapper(post_id, order['user_id'], order['nickname'], order['order_lines']) for order in orders]
+        find = {'post_id': post_id}
+        orders = self.db.order.find(find)
+
+        return [OrderMapper.order_mapper(order) for order in orders]
 
     def save_post(self, post: Post):
         post_json = post.json
