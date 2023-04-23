@@ -20,11 +20,3 @@ class MongoDBHistoryRepository(HistoryRepository):
         orders = self.db.order.find(find)
 
         return [OrderMapper.order_mapper(order) for order in orders]
-
-    def save_post(self, post: Post):
-        post_json = post.json
-        self.db.post.insert_one(post_json)
-
-    def save_orders(self, orders: List[Order]):
-        orders = [order.json for order in orders]
-        self.db.order.insert_many(orders)

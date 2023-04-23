@@ -13,11 +13,3 @@ class HistoryRepository(metaclass=ABCMeta):
     @abstractmethod
     def find_order_history_list(self, post_id) -> List[Order]:
         pass
-
-    @abstractmethod
-    def save_post(self, post: Post):
-        pass
-
-    @abstractmethod
-    def save_orders(self, orders: List[Order]):
-        pass
