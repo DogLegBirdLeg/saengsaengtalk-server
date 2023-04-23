@@ -6,6 +6,8 @@ from app.api.Order.Domain.Entity.OrderGroup import OrderGroup
 from app.api.Order.Domain.Entity.OrderOption import OrderOption
 from app.api.Order.Domain.Entity.Order import Order
 
+from app import exceptions
+
 
 class OrderValidator:
     def validate_order(self, menus: Menus, order: Order):
@@ -15,13 +17,13 @@ class OrderValidator:
     def _validate_menu(self, order_menu: OrderMenu, menus: Menus):
         menu = menus[order_menu._id]
         if menu is None:
-            raise Exception
+            raise exceptions.NotValidOrder
 
         if order_menu.name != menu.name:
-            raise Exception
+            raise exceptions.NotValidOrder
 
         if order_menu.price != menu.price:
-            raise Exception
+            raise exceptions.NotValidOrder
 
         for order_group in order_menu.order_groups:
             self._validate_group(order_group, menu.groups)
@@ -29,16 +31,16 @@ class OrderValidator:
     def _validate_group(self, order_group: OrderGroup, groups: Groups):
         group = groups[order_group._id]
         if group is None:
-            raise Exception
+            raise exceptions.NotValidOrder
 
         if order_group.name != group.name:
-            raise Exception
+            raise exceptions.NotValidOrder
 
         if order_group.min_order_quantity != group.min_order_quantity:
-            raise Exception
+            raise exceptions.NotValidOrder
 
         if order_group.max_order_quantity != group.max_order_quantity:
-            raise Exception
+            raise exceptions.NotValidOrder
 
         for order_option in order_group.order_options:
             self._validate_option(order_option, group.options)
@@ -46,10 +48,10 @@ class OrderValidator:
     def _validate_option(self, order_option: OrderOption, options: Options):
         option = options[order_option._id]
         if option is None:
-            raise Exception
+            raise exceptions.NotValidOrder
 
         if option.name != order_option.name:
-            raise Exception
+            raise exceptions.NotValidOrder
 
         if option.price != order_option.price:
-            raise Exception
+            raise exceptions.NotValidOrder

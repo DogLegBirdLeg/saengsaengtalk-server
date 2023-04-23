@@ -35,8 +35,12 @@ def error_handler(api):
     def not_exist_store_handling(error):
         return error.json, 404
 
-    @api.errorhandler(exceptions.OrderCompleted)
-    def completed_order_handling(error):
+    @api.errorhandler(exceptions.CantModify)
+    def cant_modify_handling(error):
+        return error.json, 406
+
+    @api.errorhandler(exceptions.NotRecruiting)
+    def not_recruiting_handling(error):
         return error.json, 406
 
     @api.errorhandler(exceptions.AlreadyJoinedUser)
@@ -55,10 +59,10 @@ def error_handler(api):
     def max_member_handling(error):
         return error.json, 406
 
-    @api.errorhandler(exceptions.ClosedPost)
-    def closed_post_handling(error):
+    @api.errorhandler(exceptions.NotValidStatus)
+    def not_valid_status_handling(error):
         return error.json, 406
 
-    @api.errorhandler(exceptions.OrderConfirmed)
-    def confirmed_user_handling(error):
+    @api.errorhandler(exceptions.NotValidOrder)
+    def not_valid_order_handling(error):
         return error.json, 406

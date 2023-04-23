@@ -121,42 +121,47 @@ class NotExistPost(PostError):
         super().__init__(msg=msg, code=code)
 
 
+class CantModify(PostError):
+    def __init__(self, msg='게시글 수정 불가 상태', code=401):
+        super().__init__(msg=msg, code=code)
+
+
+class NotRecruiting(PostError):
+    def __init__(self, msg='인원 모집을 하지 않는 게시글', code=402):
+        super().__init__(msg=msg, code=code)
+
+
+class MaxMember(PostError):
+    def __init__(self, msg='최대 인원', code=403):
+        super().__init__(msg=msg, code=code)
+
+
+class OwnerQuit(PostError):
+    def __init__(self, msg='대표 유저 탈퇴', code=504):
+        super().__init__(msg=msg, code=code)
+
+
+class AlreadyJoinedUser(PostError):
+    def __init__(self, msg='참여 완료된 유저', code=505):
+        super().__init__(msg=msg, code=code)
+
+
+class NotJoinedUser(PostError):
+    def __init__(self, msg='참여하지 않은 유저', code=506):
+        super().__init__(msg=msg, code=code)
+
+
+class NotValidStatus(PostError):
+    def __init__(self, msg='올바르지 않은 상태 메시지', code=506):
+        super().__init__(msg=msg, code=code)
+
+
 # Order
 class OrderError(DomainError):
     def __init__(self, msg, code):
         super().__init__(msg=msg, code=code)
 
 
-class ClosedPost(OrderError):
-    def __init__(self, msg='참여가 마감된 게시글', code=500):
-        super().__init__(msg=msg, code=code)
-
-
-class OrderCompleted(OrderError):
-    def __init__(self, msg='주문이 완료된 게시글', code=501):
-        super().__init__(msg=msg, code=code)
-
-
-class OrderConfirmed(OrderError):
-    def __init__(self, msg='주문이 확정된 게시글', code=502):
-        super().__init__(msg=msg, code=code)
-
-
-class MaxMember(OrderError):
-    def __init__(self, msg='최대 인원', code=503):
-        super().__init__(msg=msg, code=code)
-
-
-class OwnerQuit(OrderError):
-    def __init__(self, msg='대표 유저 탈퇴', code=504):
-        super().__init__(msg=msg, code=code)
-
-
-class AlreadyJoinedUser(OrderError):
-    def __init__(self, msg='참여 완료된 유저', code=505):
-        super().__init__(msg=msg, code=code)
-
-
-class NotJoinedUser(OrderError):
-    def __init__(self, msg='참여하지 않은 유저', code=506):
+class NotValidOrder(OrderError):
+    def __init__(self, msg='올바르지 않은 주문', code=500):
         super().__init__(msg=msg, code=code)

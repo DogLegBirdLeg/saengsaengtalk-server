@@ -63,27 +63,27 @@ class Post:
 
     def _check_modifiable(self):
         if self.status not in ['recruiting', 'closed']:
-            raise Exception
+            raise exceptions.CantModify
 
     def _check_join(self):
         if self.status != 'recruiting':
-            raise Exception
+            raise exceptions.NotRecruiting
 
         if len(self.users) >= self.max_member:
-            raise Exception
+            raise exceptions.MaxMember
 
         if g.id in self.users:
-            raise Exception
+            raise exceptions.AlreadyJoinedUser
 
     def check_quit(self):
         if self.status != 'recruiting':
-            raise Exception
+            raise exceptions.NotRecruiting
 
         if g.id == self.user_id:
-            raise Exception
+            raise exceptions.OwnerQuit
 
         if g.id not in self.users:
-            raise Exception
+            raise exceptions.NotJoinedUser
 
     def modify_content(self, order_time, place, min_member, max_member):
         self._check_permission()
@@ -104,19 +104,19 @@ class Post:
 
     def _validate_change_status(self, status):
         if status not in ['recruiting', 'closed', 'ordered', 'delivered']:
-            raise Exception
+            raise exceptions.NotValidStatus
 
         if self.status == 'recruiting':
             if status != 'closed':
-                raise Exception
+                raise exceptions.NotValidStatus
 
         elif self.status == 'closed':
             if status not in ['recruiting', 'ordered']:
-                raise Exception
+                raise exceptions.NotValidStatus
 
         elif self.status == 'ordered':
             if status != 'delivered':
-                raise Exception
+                raise exceptions.NotValidStatus
 
     def join(self, order_json):
         self._check_join()

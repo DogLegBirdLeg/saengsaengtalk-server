@@ -81,10 +81,9 @@ class DeliveryPostDetail(Resource):
     @post_ns.marshal_with(code=200, description='조회 결과', fields=post_model, mask=None)
     @inject
     def get(self, post_id, post_service: PostService = Provide[Container.post_service]):
-        post, users = post_service.get(post_id)
+        post = post_service.get(post_id)
 
         post_json = post.json
-        post_json['users'] = users
 
         return post_json
 
