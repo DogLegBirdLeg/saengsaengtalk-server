@@ -25,33 +25,23 @@ class OrderService:
         return order
 
     def get_list(self, post_id) -> List[Order]:
-        orders = self.order_repository.find_order_list_by_post_id(post_id)
+        orders = self.order_repository.find_orders_by_post_id(post_id)
         return orders
 
     def join(self, post_id, order_json):
-        orders = self.order_repository.find_order_list_by_post_id(post_id)
         post = self.post_repository.find_post(post_id)
-        if post.status is not 'recruiting':
+        if post.status != 'recruiting':
             raise Exception
 
-        join_user_id = [order.user_id for order in orders]
-        if g.id in join_user_id:
-            raise exceptions.AlreadyJoinedUser
-
         order = self.order_create_service.create(post.store._id, post_id, order_json)
-        self.order_repository.save(order.post_id, order)
+        self.order_repository.save(order)
 
     def quit(self, post_id):
-        orders = self.order_repository.find_order_list_by_post_id(post_id)
         post = self.post_repository.find_post(post_id)
-        if post.status not in ['recruiting', 'closed']:
+        if post.status != 'recruiting':
             raise Exception
 
         if post.user_id == g.id:
             raise exceptions.OwnerQuit
-
-        join_user_id = [order.user_id for order in orders]
-        if g.id not in join_user_id:
-            raise exceptions.NotJoinedUser
 
         self.order_repository.delete(post_id, g.id)

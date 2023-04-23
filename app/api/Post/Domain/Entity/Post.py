@@ -2,12 +2,18 @@ from app.api.Store.Domain.Model.Store import Store
 from datetime import datetime
 from app import exceptions
 from flask import g
+from bson import ObjectId
+from typing import List
+from blinker import Namespace
 '''
 recruiting : 모집중
 closed : 마감됨
 ordered: 주문 완료
 delivered: 배달 완료
 '''
+
+post_ns = Namespace()
+post_event = post_ns.signal('post-event')
 
 
 class Post:
@@ -21,7 +27,8 @@ class Post:
                  place: str,
                  order_time: str,
                  min_member: int,
-                 max_member: int):
+                 max_member: int,
+                 users: List[int]):
         self._id = _id
         self.title = title
         self.store = store
@@ -32,6 +39,23 @@ class Post:
         self.order_time = order_time
         self.min_member = min_member
         self.max_member = max_member
+        self.users = users
+
+    @staticmethod
+    def create(store: Store, place, order_time, min_member, max_member, order_json):
+        title = Post.make_title(order_time, store.name)
+        post = Post(_id=str(ObjectId()),
+                    title=title,
+                    store=store,
+                    user_id=g.id,
+                    nickname=g.nickname,
+                    status='recruiting',
+                    place=place,
+                    order_time=order_time,
+                    min_member=min_member,
+                    max_member=max_member,
+                    users=[g.id])
+        post_event.send('created', store_id=store._id, post_id=post._id, order_json=order_json)
 
     def _check_permission(self):
         if self.user_id is g.id:
@@ -39,6 +63,16 @@ class Post:
 
     def _check_modifiable(self):
         if self.status not in ['recruiting', 'closed']:
+            raise Exception
+
+    def _check_joinable(self):
+        if self.status != 'recruiting':
+            raise Exception
+
+        if len(self.users) >= self.max_member:
+            raise Exception
+
+        if g.id in self.users:
             raise Exception
 
     def modify_content(self, order_time, place, min_member, max_member):
@@ -68,12 +102,17 @@ class Post:
                 raise Exception
 
         elif self.status == 'closed':
-            if status != 'recruiting' or status != 'ordered':
+            if status not in ['recruiting', 'ordered']:
                 raise Exception
 
         elif self.status == 'ordered':
             if status != 'delivered':
                 raise Exception
+
+    def join(self, order_json):
+        self._check_joinable()
+        self.users.append(g.id)
+        post_event.send('join', order_json=order_json)
 
     def can_delete(self):
         self._check_permission()

@@ -38,3 +38,32 @@ class RedisPostRepository(PostRepository):
     def delete(self, post_id: str):
         self.db.delete(post_id)
 
+
+class MongoDBPostRepository(PostRepository):
+    def __init__(self, mongodb_connection):
+        self.db = mongodb_connection['delivery']
+
+    def find_post(self, post_id: str) -> Post:
+        find = {'_id': post_id}
+        post_json = self.db.post.find_one(find)
+        if post_json is None:
+            raise exceptions.NotExistPost
+
+        return PostMapper.post_mapping(post_json)
+
+    def find_post_list(self) -> List[Post]:
+        find = {'$nin': {'status': ['delivered', 'canceled']}}
+        posts = self.db.post.find(find)
+
+        return [PostMapper.post_mapping(post.json) for post in posts]
+
+    def save(self, post: Post):
+        self.db.post.insert_one(post.json)
+
+    def update(self, post: Post):
+        pass
+
+    def delete(self, post_id: str):
+        find = {'_id': post_id}
+        update = {'status': 'deleted'}
+        self.db.post.update(find, update)

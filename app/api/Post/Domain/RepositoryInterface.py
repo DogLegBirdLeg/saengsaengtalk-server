@@ -18,9 +18,5 @@ class PostRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def update(self, post: Post):
-        pass
-
-    @abstractmethod
     def delete(self, post_id):
         pass
