@@ -11,7 +11,12 @@ class MongoDBOrderRepository(OrderRepository):
         self.db = mongodb_connection['delivery']
 
     def find_order_by_user_id(self, post_id, user_id) -> Order:
-        find = {'post_id': post_id, 'user_id': user_id}
+        find = {
+            '$and': [
+                {'post_id': post_id},
+                {'user_id': user_id}
+            ]
+        }
         order_json = self.db.order.find_one(find)
         if order_json is None:
             raise exceptions.NotJoinedUser
@@ -30,4 +35,4 @@ class MongoDBOrderRepository(OrderRepository):
 
     def delete(self, post_id: str, user_id: str):
         find = {'post_id': post_id, 'user_id': user_id}
-        self.db.order.delete(find)
+        self.db.order.delete_one(find)

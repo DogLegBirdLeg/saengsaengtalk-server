@@ -26,8 +26,7 @@ def create_app():
             return
 
         if "/api/delivery" in request.path:
-            #g.id = request.headers['user_id']
-            #g.nickname = request.headers['nickname'].encode('iso-8859-1').decode('utf-8')
-            g.id=11111111
-            g.nickname='test'
+            g.id = request.headers['user_id']
+            g.nickname = request.headers['nickname'].encode('iso-8859-1').decode('utf-8')
+
     return app

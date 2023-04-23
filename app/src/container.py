@@ -9,16 +9,15 @@ from app.api.Store.Service.MenuService import MenuService
 from app.api.Post.Service.PostService import PostService
 from app.api.History.Service.HistoryService import HistoryService
 
-from app.api.Order.infra.OrderRepository import RedisOrderRepository
-from app.api.Post.Repository.PostRepository import RedisPostRepository
+from app.api.Order.infra.OrderRepository import MongoDBOrderRepository
+from app.api.Post.Repository.PostRepository import MongoDBPostRepository
 from app.api.Store.Repository.StoreRepository import MongoDBStoreRepository
 from app.api.Store.Repository.MenuRepository import MongoDBMenuRepository
 from app.api.History.Repository.HistoryRepository import MongoDBHistoryRepository
+from app.api.Post.Repository.PostDAO import MongoDBPostDAO
 
 from app.api.Order.Domain.DomainService.OrderCreateService import OrderValidator
 from app.api.Order.Domain.DomainService.OrderCreateService import OrderCreateService
-from app.api.Post.Domain.DomainService.PostCreateService import PostCreateService
-from app.api.Post.Domain.DomainService.PostFilteringService import PostFilteringService
 
 # auth
 from app.auth.Repository.UserRepository import MongoDBUserRepository
@@ -62,11 +61,13 @@ class Container(containers.DeclarativeContainer):
         port=mongodb.port,
     )
 
-    order_repository = providers.Factory(RedisOrderRepository, redis_order_connection)
-    post_repository = providers.Factory(RedisPostRepository, redis_post_connection)
+    order_repository = providers.Factory(MongoDBOrderRepository, mongoDB_connection)
+    post_repository = providers.Factory(MongoDBPostRepository, mongoDB_connection)
     store_repository = providers.Factory(MongoDBStoreRepository, mongoDB_connection)
     menu_repository = providers.Factory(MongoDBMenuRepository, mongoDB_connection)
     history_repository = providers.Factory(MongoDBHistoryRepository, mongoDB_connection)
+
+    post_dao = providers.Factory(MongoDBPostDAO, mongoDB_connection)
 
     user_repository = providers.Factory(MongoDBUserRepository, mongoDB_connection)
     token_repository = providers.Factory(MongoDBTokenRepository, mongoDB_connection)
@@ -76,16 +77,6 @@ class Container(containers.DeclarativeContainer):
         OrderCreateService,
         menu_repository,
         order_validator
-    )
-    post_create_service = providers.Factory(
-        PostCreateService,
-        store_repository
-    )
-
-    post_filtering_service = providers.Factory(
-        PostFilteringService,
-        post_repository,
-        order_repository
     )
 
     order_service = providers.Factory(
@@ -98,10 +89,8 @@ class Container(containers.DeclarativeContainer):
     post_service = providers.Factory(
         PostService,
         post_repository=post_repository,
-        history_repository=history_repository,
-        order_repository=order_repository,
-        post_filtering_service=post_filtering_service,
-        post_create_service=post_create_service
+        store_repository=store_repository,
+        post_dao=post_dao
     )
 
     store_service = providers.Factory(
@@ -126,6 +115,3 @@ class Container(containers.DeclarativeContainer):
         token_reader=token_repository,
         token_writer=token_repository
     )
-
-
-

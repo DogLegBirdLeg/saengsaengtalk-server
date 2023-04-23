@@ -60,3 +60,13 @@ class PostService:
         elif status == 'delivered':
             # push 알림 코드
             pass
+
+    def join(self, post_id, order_json):
+        post = self.post_repository.find_post(post_id)
+        post.join(order_json)
+        self.post_dao.update_users(post)
+
+    def quit(self, post_id):
+        post = self.post_repository.find_post(post_id)
+        post.quit()
+        self.post_dao.update_users(post)

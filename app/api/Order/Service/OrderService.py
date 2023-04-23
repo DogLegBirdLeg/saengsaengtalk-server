@@ -28,20 +28,3 @@ class OrderService:
         orders = self.order_repository.find_orders_by_post_id(post_id)
         return orders
 
-    def join(self, post_id, order_json):
-        post = self.post_repository.find_post(post_id)
-        if post.status != 'recruiting':
-            raise Exception
-
-        order = self.order_create_service.create(post.store._id, post_id, order_json)
-        self.order_repository.save(order)
-
-    def quit(self, post_id):
-        post = self.post_repository.find_post(post_id)
-        if post.status != 'recruiting':
-            raise Exception
-
-        if post.user_id == g.id:
-            raise exceptions.OwnerQuit
-
-        self.order_repository.delete(post_id, g.id)

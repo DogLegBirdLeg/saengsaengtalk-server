@@ -57,13 +57,7 @@ class DeliveryPostList(Resource):
 
         posts = post_service.get_list(option)
 
-        posts_json = []
-        for post, users in posts:
-            post_json = post.json
-            post_json['users'] = list(map(lambda user_id: int(user_id), users))
-            posts_json.append(post_json)
-
-        return posts_json
+        return [post.json for post in posts]
 
     @post_ns.doc(security='jwt', body=post_format_model, description="게시글을 작성합니다")
     @post_ns.marshal_with(code=201, description='등록 성공', fields=post_register_model, mask=None)

@@ -1,42 +1,10 @@
 from app import exceptions
-import json
 from typing import List
 
 from app.api.Post.Domain.Entity.Post import Post
 from app.api.Post.Domain.RepositoryInterface import PostRepository
 
 from app.api.Post.util.PostMapper import PostMapper
-
-
-class RedisPostRepository(PostRepository):
-    def __init__(self, redis_connection):
-        self.db = redis_connection
-
-    def find_post(self, post_id: str) -> Post:
-        data = self.db.get(post_id)
-        if data is None:
-            raise exceptions.NotExistPost
-
-        post_json = json.loads(data)
-        return PostMapper.post_mapping(post_json)
-
-    def find_post_list(self) -> List[Post]:
-        datas = self.db.mget(self.db.keys())
-
-        post_list = [
-            PostMapper.post_mapping(json.loads(data))
-            for data in datas
-        ]
-        return post_list
-
-    def save(self, post: Post):
-        self.db.set(post._id, json.dumps(post.json))
-
-    def update(self, post: Post):
-        self.db.set(post._id, json.dumps(post.json))
-
-    def delete(self, post_id: str):
-        self.db.delete(post_id)
 
 
 class MongoDBPostRepository(PostRepository):
@@ -52,18 +20,14 @@ class MongoDBPostRepository(PostRepository):
         return PostMapper.post_mapping(post_json)
 
     def find_post_list(self) -> List[Post]:
-        find = {'$nin': {'status': ['delivered', 'canceled']}}
+        find = {'status': {'$nin': ['delivered', 'canceled']}}
         posts = self.db.post.find(find)
-
-        return [PostMapper.post_mapping(post.json) for post in posts]
+        return [PostMapper.post_mapping(post_json) for post_json in posts]
 
     def save(self, post: Post):
         self.db.post.insert_one(post.json)
 
-    def update(self, post: Post):
-        pass
-
     def delete(self, post_id: str):
         find = {'_id': post_id}
-        update = {'status': 'deleted'}
-        self.db.post.update(find, update)
+        update = {'$set': {'status': 'canceled'}}
+        self.db.post.update_one(find, update)

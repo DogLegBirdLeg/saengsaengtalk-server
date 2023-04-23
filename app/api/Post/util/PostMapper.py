@@ -14,6 +14,7 @@ class PostMapper:
                     post_json['place'],
                     post_json['order_time'],
                     post_json['min_member'],
-                    post_json['max_member'])
+                    post_json['max_member'],
+                    post_json['users'])
 
         return post

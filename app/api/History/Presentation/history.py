@@ -8,6 +8,7 @@ from app.api.Order.Presentation.order import order_model
 history_ns = Namespace('history', description='이전 기록 관련')
 history_model = history_ns.inherit('history', post_model, order_model)
 
+
 @history_ns.route('')
 class DeliveryPostHistoryList(Resource):
     @history_ns.doc(security='jwt', description="사용자의 참여 게시글 목록을 반환합니다")

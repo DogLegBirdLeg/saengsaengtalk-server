@@ -3,6 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from dependency_injector.wiring import inject, Provide
 from app.src.container import Container
 from app.api.Order.Service.OrderService import OrderService
+from app.api.Post.Service.PostService import PostService
 
 order_ns = Namespace('order', description='주문 관련')
 
@@ -48,10 +49,10 @@ class DeliveryPostOrder(Resource):
     @order_ns.doc(security='jwt', body=order_model, description="내 주문을 생성합니다")
     @order_ns.response(code=204, description='주문 성공')
     @inject
-    def post(self, post_id, order_service: OrderService = Provide[Container.order_service]):
+    def post(self, post_id, post_service: PostService = Provide[Container.post_service]):
         data = request.get_json()
 
-        order_service.join(post_id, data)
+        post_service.join(post_id, data)
         return '', 204
 
 
@@ -69,6 +70,6 @@ class DeliveryOrderDetail(Resource):
     @order_ns.doc(security='jwt', description="내 주문을 삭제합니다")
     @order_ns.response(code=204, description='변경 성공')
     @inject
-    def delete(self, post_id, order_service: OrderService = Provide[Container.order_service]):
-        order_service.quit(post_id)
+    def delete(self, post_id, post_service: PostService = Provide[Container.post_service]):
+        post_service.quit(post_id)
         return '', 204

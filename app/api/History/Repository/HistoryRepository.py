@@ -11,9 +11,8 @@ class MongoDBHistoryRepository(HistoryRepository):
         self.db = mongodb_connection['delivery']
 
     def find_post_history_list(self, user_id) -> List[Post]:
-        find = {'orders.user_id': user_id}
-        projection = {'orders': False}
-        post_history_list = self.db.post.find(find, projection)
+        find = {'users': {'$eq': user_id}}
+        post_history_list = self.db.post.find(find)
         return [PostMapper.post_mapping(post_history) for post_history in post_history_list]
 
     def find_order_history_list(self, post_id) -> List[Order]:

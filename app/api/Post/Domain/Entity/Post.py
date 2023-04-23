@@ -4,7 +4,7 @@ from app import exceptions
 from flask import g
 from bson import ObjectId
 from typing import List
-from blinker import Namespace
+from blinker import signal
 '''
 recruiting : 모집중
 closed : 마감됨
@@ -12,8 +12,7 @@ ordered: 주문 완료
 delivered: 배달 완료
 '''
 
-post_ns = Namespace()
-post_event = post_ns.signal('post-event')
+post_event = signal('post-event')
 
 
 class Post:
@@ -56,6 +55,7 @@ class Post:
                     max_member=max_member,
                     users=[g.id])
         post_event.send('created', store_id=store._id, post_id=post._id, order_json=order_json)
+        return post
 
     def _check_permission(self):
         if self.user_id is g.id:
@@ -65,7 +65,7 @@ class Post:
         if self.status not in ['recruiting', 'closed']:
             raise Exception
 
-    def _check_joinable(self):
+    def _check_join(self):
         if self.status != 'recruiting':
             raise Exception
 
@@ -73,6 +73,16 @@ class Post:
             raise Exception
 
         if g.id in self.users:
+            raise Exception
+
+    def check_quit(self):
+        if self.status != 'recruiting':
+            raise Exception
+
+        if g.id == self.user_id:
+            raise Exception
+
+        if g.id not in self.users:
             raise Exception
 
     def modify_content(self, order_time, place, min_member, max_member):
@@ -88,7 +98,6 @@ class Post:
 
     def set_status(self, status):
         self._check_permission()
-        self._check_modifiable()
         self._validate_change_status(status)
 
         self.status = status
@@ -110,9 +119,14 @@ class Post:
                 raise Exception
 
     def join(self, order_json):
-        self._check_joinable()
+        self._check_join()
+        post_event.send('joined', store_id=self.store._id, post_id=self._id, order_json=order_json)
         self.users.append(g.id)
-        post_event.send('join', order_json=order_json)
+
+    def quit(self):
+        self.check_quit()
+        post_event.send('quited', post_id=self._id, user_id=g.id)
+        self.users.remove(g.id)
 
     def can_delete(self):
         self._check_permission()
@@ -135,4 +149,5 @@ class Post:
             'order_time': self.order_time,
             'min_member': self.min_member,
             'max_member': self.max_member,
+            'users': self.users
         }
