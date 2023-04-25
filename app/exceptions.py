@@ -26,7 +26,7 @@ class DuplicateKeyError(DatabaseError):
         super().__init__(msg=msg, code=code)
 
 
-# Domain Error
+# domain Error
 class DomainError(BaseException):
     def __init__(self, msg, code):
         super().__init__(msg=msg, code=code)

@@ -1,5 +1,8 @@
 from flask import Flask, g, request
-from app.src.container import Container
+from src.order_container import OrderContainer
+from src.post_container import PostContainer
+from src.store_container import StoreContainer
+from src.auth_container import AuthContainer
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_restx import apidoc
 
@@ -8,7 +11,10 @@ apidoc.apidoc.url_prefix = URL_PREFIX
 
 
 def create_app():
-    container = Container()
+    auth_container = AuthContainer()
+    order_container = OrderContainer()
+    post_container = PostContainer()
+    store_container = StoreContainer()
 
     app = Flask(__name__)
     app.config.from_envvar('APP_CONFIG_FILE')
