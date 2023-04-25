@@ -2,6 +2,7 @@ from flask import Flask, g, request
 from src.order_container import OrderContainer
 from src.post_container import PostContainer
 from src.store_container import StoreContainer
+from src.comment_container import CommentContainer
 from src.auth_container import AuthContainer
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_restx import apidoc
@@ -15,6 +16,7 @@ def create_app():
     order_container = OrderContainer()
     post_container = PostContainer()
     store_container = StoreContainer()
+    comment_container = CommentContainer()
 
     app = Flask(__name__)
     app.config.from_envvar('APP_CONFIG_FILE')
