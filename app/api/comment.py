@@ -2,32 +2,31 @@ from flask import request
 from flask_restx import Namespace, Resource, fields
 from dependency_injector.wiring import inject, Provide
 from src.comment_container import CommentContainer
-from src.post_container import PostContainer
 from logic.delivery.comment.application.CommentUseCase import CommentUseCase
 
 comment_ns = Namespace('comment', description='댓글 관련')
 
 sub_comment_model = comment_ns.model('대댓글', {
-    '_id': fields.String(description='댓글 ID', example=1674995732373),
-    'post_id': fields.String(description='게시글 ID', example=1674995732373),
+    '_id': fields.String(description='댓글 ID', example='6447d6884c5c7f0de2717ec4'),
+    'post_id': fields.String(description='게시글 ID', example='6447d6884c5c7f0de2717ec3'),
     'user_id': fields.Integer(description='유저 ID', example=1674995732373),
-    'nickname': fields.String(description='닉네임', example=1674995732373),
+    'nickname': fields.String(description='닉네임', example='개발이여친'),
     'status': fields.String(description='상태', example='created'),
-    'content': fields.String(description='내용', example=1674995732373)
+    'content': fields.String(description='내용', example='이건 대댓글임')
 })
 
 main_comment_model = comment_ns.model('댓글', {
-    '_id': fields.String(description='댓글 ID', example=1674995732373),
-    'post_id': fields.String(description='게시글 ID', example=1674995732373),
+    '_id': fields.String(description='댓글 ID', example='6447d6884c5c7f0de2717ec1'),
+    'post_id': fields.String(description='게시글 ID', example='6447d6884c5c7f0de2717ec2'),
     'user_id': fields.Integer(description='유저 ID', example=1674995732373),
-    'nickname': fields.String(description='닉네임', example=1674995732373),
+    'nickname': fields.String(description='닉네임', example='개발이'),
     'status': fields.String(description='상태', example='created'),
-    'content': fields.String(description='내용', example=1674995732373),
+    'content': fields.String(description='내용', example='이건 댓글임'),
     'sub_comments': fields.List(fields.Nested(model=sub_comment_model))
 })
 
 content_model = comment_ns.model('댓글 작성', {
-    'content': fields.String(descripton='내용', example='')
+    'content': fields.String(descripton='내용', example='댓글 쓸거임')
 })
 
 
