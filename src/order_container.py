@@ -20,6 +20,7 @@ class OrderContainer(containers.DeclarativeContainer):
         username=mongodb.user,
         password=mongodb.pwd,
         port=mongodb.port,
+        connect=False
     )
 
     order_repository = providers.Singleton(MongoDBOrderRepository, mongodb_connection)

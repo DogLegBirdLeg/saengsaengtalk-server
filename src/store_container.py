@@ -21,6 +21,7 @@ class StoreContainer(containers.DeclarativeContainer):
         username=mongodb.user,
         password=mongodb.pwd,
         port=mongodb.port,
+        connect=False
     )
 
     store_repository = providers.Singleton(MongoDBStoreRepository, mongodb_connection)

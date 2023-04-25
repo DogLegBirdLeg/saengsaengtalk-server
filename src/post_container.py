@@ -19,6 +19,7 @@ class PostContainer(containers.DeclarativeContainer):
         username=mongodb.user,
         password=mongodb.pwd,
         port=mongodb.port,
+        connect=False
     )
 
     post_repository = providers.Singleton(MongoDBPostRepository, mongodb_connection)

@@ -16,6 +16,7 @@ class CommentContainer(containers.DeclarativeContainer):
         username=mongodb.user,
         password=mongodb.pwd,
         port=mongodb.port,
+        connect=False
     )
 
     comment_repository = providers.Singleton(MongoDBCommentRepository, mongodb_connection)

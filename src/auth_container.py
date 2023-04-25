@@ -34,6 +34,7 @@ class AuthContainer(containers.DeclarativeContainer):
         username=mongodb.user,
         password=mongodb.pwd,
         port=mongodb.port,
+        connect=False
     )
 
     user_repository = providers.Singleton(
