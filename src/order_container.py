@@ -14,7 +14,7 @@ class OrderContainer(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(modules=['app.api.order',
                                                             'logic.delivery.order.usecase.PostEventHandler'])
 
-    mongodb_connection = providers.Factory(
+    mongodb_connection = providers.Singleton(
         MongoClient,
         host=mongodb.host,
         username=mongodb.user,
@@ -22,13 +22,13 @@ class OrderContainer(containers.DeclarativeContainer):
         port=mongodb.port,
     )
 
-    order_repository = providers.Factory(MongoDBOrderRepository, mongodb_connection)
-    menu_repository = providers.Factory(MongoDBMenuRepository, mongodb_connection)
+    order_repository = providers.Singleton(MongoDBOrderRepository, mongodb_connection)
+    menu_repository = providers.Singleton(MongoDBMenuRepository, mongodb_connection)
 
-    order_use_case = providers.Factory(OrderUseCase, order_repository=order_repository)
+    order_use_case = providers.Singleton(OrderUseCase, order_repository=order_repository)
 
-    order_validator = providers.Factory(OrderValidator)
-    order_create_service = providers.Factory(
+    order_validator = providers.Singleton(OrderValidator)
+    order_create_service = providers.Singleton(
         OrderCreateService,
         menu_repository,
         order_validator

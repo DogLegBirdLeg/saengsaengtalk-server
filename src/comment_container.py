@@ -10,7 +10,7 @@ from logic.delivery.comment.infra.CommentDAO import MongoDBCommentDAO
 class CommentContainer(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(modules=['app.api.comment'])
 
-    mongodb_connection = providers.Factory(
+    mongodb_connection = providers.Singleton(
         MongoClient,
         host=mongodb.host,
         username=mongodb.user,
@@ -18,6 +18,6 @@ class CommentContainer(containers.DeclarativeContainer):
         port=mongodb.port,
     )
 
-    comment_repository = providers.Factory(MongoDBCommentRepository, mongodb_connection)
-    comment_dao = providers.Factory(MongoDBCommentDAO, mongodb_connection)
-    comment_use_case = providers.Factory(CommentUseCase, comment_repository=comment_repository, comment_dao=comment_dao)
+    comment_repository = providers.Singleton(MongoDBCommentRepository, mongodb_connection)
+    comment_dao = providers.Singleton(MongoDBCommentDAO, mongodb_connection)
+    comment_use_case = providers.Singleton(CommentUseCase, comment_repository=comment_repository, comment_dao=comment_dao)

@@ -19,7 +19,7 @@ class AuthContainer(containers.DeclarativeContainer):
                                                             'app.auth.signin',
                                                             'app.auth.logout'])
 
-    redis_connection = providers.Factory(
+    redis_connection = providers.Singleton(
         StrictRedis,
         host=redis.host,
         port=redis.port,
@@ -28,7 +28,7 @@ class AuthContainer(containers.DeclarativeContainer):
         decode_responses=True
     )
 
-    mongodb_connection = providers.Factory(
+    mongodb_connection = providers.Singleton(
         MongoClient,
         host=mongodb.host,
         username=mongodb.user,
@@ -36,28 +36,28 @@ class AuthContainer(containers.DeclarativeContainer):
         port=mongodb.port,
     )
 
-    user_repository = providers.Factory(
+    user_repository = providers.Singleton(
         MongoDBUserRepository,
         mongodb_connection=mongodb_connection
     )
 
-    user_dao = providers.Factory(
+    user_dao = providers.Singleton(
         MongoDBUserDAO,
         mongodb_connection=mongodb_connection
     )
 
-    token_dao = providers.Factory(
+    token_dao = providers.Singleton(
         MongoDBTokenDAO,
         mongodb_connection=mongodb_connection
     )
 
-    email_sender = providers.Factory(EmailSender)
-    code_cache = providers.Factory(
+    email_sender = providers.Singleton(EmailSender)
+    code_cache = providers.Singleton(
         RedisCodeCache,
         redis_connection=redis_connection
     )
 
-    signup_use_case = providers.Factory(
+    signup_use_case = providers.Singleton(
         SignupUseCase,
         user_repository=user_repository,
         user_dao=user_dao,
@@ -65,7 +65,7 @@ class AuthContainer(containers.DeclarativeContainer):
         code_cache=code_cache
     )
 
-    authentication_use_case = providers.Factory(
+    authentication_use_case = providers.Singleton(
         JwtAuthenticationUseCase,
         user_repository=user_repository,
         token_dao=token_dao

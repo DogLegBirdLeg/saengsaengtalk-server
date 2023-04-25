@@ -13,7 +13,7 @@ class PostContainer(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(modules=['app.api.post',
                                                             'app.api.order'])
 
-    mongodb_connection = providers.Factory(
+    mongodb_connection = providers.Singleton(
         MongoClient,
         host=mongodb.host,
         username=mongodb.user,
@@ -21,11 +21,11 @@ class PostContainer(containers.DeclarativeContainer):
         port=mongodb.port,
     )
 
-    post_repository = providers.Factory(MongoDBPostRepository, mongodb_connection)
-    post_dao = providers.Factory(MongoDBPostDAO, mongodb_connection)
-    store_dao = providers.Factory(MongoDBStoreDAO, mongodb_connection)
+    post_repository = providers.Singleton(MongoDBPostRepository, mongodb_connection)
+    post_dao = providers.Singleton(MongoDBPostDAO, mongodb_connection)
+    store_dao = providers.Singleton(MongoDBStoreDAO, mongodb_connection)
 
-    post_use_case = providers.Factory(
+    post_use_case = providers.Singleton(
         PostUseCase,
         post_repository=post_repository,
         store_dao=store_dao,
