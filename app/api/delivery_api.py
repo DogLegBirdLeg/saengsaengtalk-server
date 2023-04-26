@@ -17,7 +17,7 @@ authorizations = {
 }
 
 delivery_bp = Blueprint('delivery', __name__, url_prefix='/api/delivery')
-delivery_api = Api(delivery_bp, authorizations=authorizations, title='delivery', description='배달 기능과 관련된 api', doc='/docs')
+delivery_api = Api(delivery_bp, authorizations=authorizations, title='delivery', description='배달 API', doc='/docs')
 error_handler(delivery_api)
 
 delivery_api.add_namespace(store_ns, path='/store')

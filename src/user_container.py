@@ -4,20 +4,25 @@ from redis import StrictRedis
 from config.production import mongodb, redis
 
 
-from logic.auth.infra.UserRepository import MongoDBUserRepository
-from logic.auth.infra.UserDAO import MongoDBUserDAO
-from logic.auth.use_case.SignupUseCase import SignupUseCase
-from logic.auth.infra.TokenDAO import MongoDBTokenDAO
+from logic.user.infra.UserRepository import MongoDBUserRepository
+from logic.user.infra.UserDAO import MongoDBUserDAO
+from logic.user.use_case.SignupUseCase import SignupUseCase
+from logic.user.infra.TokenDAO import MongoDBTokenDAO
 
-from logic.auth.infra.EmailSender import EmailSender
-from logic.auth.infra.CodeCache import RedisCodeCache
-from logic.auth.use_case.AuthenticationUseCase import JwtAuthenticationUseCase
+from logic.user.infra.EmailSender import EmailSender
+from logic.user.infra.CodeCache import RedisCodeCache
+from logic.user.use_case.AuthenticationUseCase import JwtAuthentication
+from logic.user.use_case.ForgotUseCase import ForgotUseCase
+from logic.user.use_case.ProfileUseCase import ProfileUseCase
 
 
-class AuthContainer(containers.DeclarativeContainer):
-    wiring_config = containers.WiringConfiguration(modules=['app.auth.signup',
-                                                            'app.auth.signin',
-                                                            'app.auth.logout'])
+class UserContainer(containers.DeclarativeContainer):
+    wiring_config = containers.WiringConfiguration(modules=['app.user.forgot',
+                                                            'app.user.profile',
+                                                            'app.user.signup',
+                                                            'app.auth.login',
+                                                            'app.auth.logout',
+                                                            'app.auth.refresh'])
 
     redis_connection = providers.Singleton(
         StrictRedis,
@@ -67,10 +72,25 @@ class AuthContainer(containers.DeclarativeContainer):
     )
 
     authentication_use_case = providers.Singleton(
-        JwtAuthenticationUseCase,
+        JwtAuthentication,
         user_repository=user_repository,
         token_dao=token_dao
     )
+
+    forgot_use_case = providers.Singleton(
+        ForgotUseCase,
+        code_cache=code_cache,
+        email_sender=email_sender,
+        user_repository=user_repository
+    )
+
+    profile_use_case = providers.Singleton(
+        ProfileUseCase,
+        user_repository=user_repository,
+        user_dao=user_dao
+    )
+
+
 
 
 

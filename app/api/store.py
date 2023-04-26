@@ -5,7 +5,7 @@ from flask_restx import Namespace, Resource, fields
 from logic.delivery.store.usecase.StoreUseCase import StoreUseCase
 from logic.delivery.store.usecase.MenuUseCase import MenuUseCase
 
-store_ns = Namespace('store', description='가게 정보 관련')
+store_ns = Namespace('store', description='가게')
 
 store_model = store_ns.model('가게', {
     '_id': fields.String(description='가게 id', example='6345a45f1c32cd7c4b64d895'),
@@ -46,7 +46,7 @@ menu_detail_model = store_ns.model('메뉴 상세', {
 
 
 @store_ns.route('')
-class StoreList(Resource):
+class Store(Resource):
     @store_ns.doc(security='jwt', description="가게 목록을 반환합니다")
     @store_ns.marshal_list_with(code=200, description='조회 결과', fields=store_model, mask=None)
     @inject
@@ -57,7 +57,7 @@ class StoreList(Resource):
 
 
 @store_ns.route('/<string:store_id>')
-class StoreMenuList(Resource):
+class StoreDetail(Resource):
     @store_ns.doc(security='jwt', params={'store_id': {'description': '가게 ID'}}, description="해당 가게의 상세 정보를 반환합니다")
     @store_ns.marshal_with(code=200, description='조회 결과', fields=store_detail_model, mask=None)
     @inject
@@ -73,7 +73,7 @@ class StoreMenuList(Resource):
 
 
 @store_ns.route('/<string:store_id>/<string:menu_id>')
-class StoreMenuDetail(Resource):
+class MenuDetail(Resource):
     @store_ns.doc(security='jwt', description="메뉴의 상세 정보를 반환합니다")
     @store_ns.marshal_with(code=200, description='조회 결과', fields=menu_detail_model, mask=None)
     @inject

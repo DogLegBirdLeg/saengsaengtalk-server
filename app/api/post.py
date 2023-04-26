@@ -6,7 +6,7 @@ from datetime import datetime
 
 from logic.delivery.post.usecase.PostUseCase import PostUseCase
 
-post_ns = Namespace('post', description='게시글 관련')
+post_ns = Namespace('post', description='게시글')
 
 from app.api.store import store_model
 post_model = post_ns.model('게시글', {
@@ -49,11 +49,12 @@ option.add_argument('option', type=str, help='필터링 옵션', choices=('all',
 
 
 @post_ns.route('')
-class DeliveryPostList(Resource):
+class Post(Resource):
     @post_ns.doc(security='jwt', parser=option, description="현재 작성된 게시글 목록을 반환합니다")
     @post_ns.marshal_list_with(code=200, description='조회 결과', fields=post_model, mask=None)
     @inject
     def get(self, post_use_case: PostUseCase = Provide[PostContainer.post_use_case]):
+        """게시글 목록 조회"""
         option = request.args['option']
 
         posts = post_use_case.get_list(option)
@@ -64,6 +65,7 @@ class DeliveryPostList(Resource):
     @post_ns.marshal_with(code=201, description='등록 성공', fields=post_register_model, mask=None)
     @inject
     def post(self, post_use_case: PostUseCase = Provide[PostContainer.post_use_case]):
+        """게시글 작성"""
         data = request.get_json()
         store_id = data['store_id']
         place = data['place']
@@ -77,11 +79,12 @@ class DeliveryPostList(Resource):
 
 
 @post_ns.route('/<string:post_id>')
-class DeliveryPostDetail(Resource):
+class PostDetail(Resource):
     @post_ns.doc(security='jwt', description="게시글 상세 정보를 반환합니다")
     @post_ns.marshal_with(code=200, description='조회 결과', fields=post_model, mask=None)
     @inject
     def get(self, post_id, post_use_case: PostUseCase = Provide[PostContainer.post_use_case]):
+        """게시글 상세 조회"""
         post = post_use_case.get(post_id)
 
         post_json = post.json
@@ -92,6 +95,7 @@ class DeliveryPostDetail(Resource):
     @post_ns.response(code=204, description='수정 성공')
     @inject
     def patch(self, post_id, post_use_case: PostUseCase = Provide[PostContainer.post_use_case]):
+        """게시글 수정"""
         data = request.get_json()
 
         post_use_case.modify(post_id, data['order_time'], data['place'], int(data['min_member']), int(data['max_member']))
@@ -101,16 +105,18 @@ class DeliveryPostDetail(Resource):
     @post_ns.response(code=204, description='삭제 성공')
     @inject
     def delete(self, post_id, post_use_case: PostUseCase = Provide[PostContainer.post_use_case]):
+        """게시글 삭제"""
         post_use_case.delete(post_id)
         return '', 204
 
 
 @post_ns.route('/<string:post_id>/status')
-class DeliveryPostOpenStatus(Resource):
+class PostStatus(Resource):
     @post_ns.doc(security='jwt', body=post_status_model, description="상태를 변경합니다, recruiting/closed/ordered/delivered 중 하나 입력")
     @post_ns.response(code=204, description='변경 성공')
     @inject
     def patch(self, post_id, post_use_case: PostUseCase = Provide[PostContainer.post_use_case]):
+        """게시글 상태 변경"""
         data = request.get_json()
         post_use_case.change_status(post_id, data['status'])
         return '', 204

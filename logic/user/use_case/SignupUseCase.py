@@ -1,8 +1,8 @@
-from logic.auth.domain.Entity.User import User
-from logic.auth.domain.RepositoryInterface import UserRepository
-from logic.auth.use_case.EmailSenderInterface import EmailSenderInterface
-from logic.auth.infra.UserDAO import UserDAO
-from logic.auth.infra.CodeCache import CodeCache
+from logic.user.domain.Entity.User import User
+from logic.user.domain.RepositoryInterface import UserRepository
+from logic.user.use_case.EmailSenderInterface import EmailSenderInterface
+from logic.user.infra.UserDAO import UserDAO
+from logic.user.infra.CodeCache import CodeCache
 
 from app import exceptions
 from datetime import datetime
@@ -17,13 +17,13 @@ class SignupUseCase:
 
     def send_auth_email(self, email):
         auth_code = self.email_sender.send_auth_email(email)
-        self.code_cache.save(auth_code, email)
+        self.code_cache.save(email, auth_code)
 
     def signup(self, auth_code, name, username, pw, nickname, account_number, email):
-        cached_email = self.code_cache.get_email_by_code(auth_code)
-        if email != cached_email:
+        cached_code = self.code_cache.get_code_by_email(email)
+        if auth_code != cached_code:
             raise exceptions.NotValidAuthCode
-        self.code_cache.delete(auth_code)
+        self.code_cache.delete(email)
 
         user = User(_id=int(round(datetime.today().timestamp() * 1000)),
                     name=name,

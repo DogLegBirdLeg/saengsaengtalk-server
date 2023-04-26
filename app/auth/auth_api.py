@@ -1,18 +1,24 @@
-from app.auth.signup import signup_ns
-from app.auth.signin import signin_ns
+from app.auth.login import login_ns
 from app.auth.logout import logout_ns
-#from app.auth.user import user_ns
-
+from app.auth.refresh import refresh_ns
 from flask import Blueprint
 from flask_restx import Api
 
 from app.util.error_handling import error_handler
 
-auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
-auth_api = Api(auth_bp, title='auth', doc='/docs')
+authorizations = {
+    'jwt': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization'
+    }
+}
+
+auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
+auth_api = Api(auth_bp, authorizations=authorizations, title='auth', description='인증 API', doc='/docs')
 error_handler(auth_api)
 
-auth_api.add_namespace(signup_ns)
-auth_api.add_namespace(signin_ns)
-auth_api.add_namespace(logout_ns)
-#auth_api.add_namespace(user_ns)
+auth_api.add_namespace(login_ns, path='/login')
+auth_api.add_namespace(logout_ns, path='/logout')
+auth_api.add_namespace(refresh_ns, path='/refresh')
+

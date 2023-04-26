@@ -1,4 +1,4 @@
-from logic.auth.domain.Entity.Token import Token
+from logic.user.domain.Entity.Token import Token
 
 
 class TokenMapper:

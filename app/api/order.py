@@ -6,7 +6,7 @@ from src.post_container import PostContainer
 from logic.delivery.order.usecase.OrderUseCase import OrderUseCase
 from logic.delivery.post.usecase.PostUseCase import PostUseCase
 
-order_ns = Namespace('order', description='주문 관련')
+order_ns = Namespace('order', description='주문')
 
 order_line_model = order_ns.model('주문내역', {
     'quantity': fields.Integer(description='개수', example=2),
@@ -37,13 +37,14 @@ order_model = order_ns.model('주문', {
 
 
 @order_ns.route('/<string:post_id>')
-class DeliveryPostOrder(Resource):
+class Order(Resource):
     @order_ns.doc(security='jwt', description="모든 주문을 반환합니다")
     @order_ns.marshal_with(code=200, fields=order_ns.model('주문리스트', {
         'orders': fields.List(fields.Nested(model=order_model))
     }), mask=None)
     @inject
     def get(self, post_id, order_use_case: OrderUseCase = Provide[OrderContainer.order_use_case]):
+        """게시글 주문 조회"""
         orders = order_use_case.get_list(post_id)
 
         return {'orders': [order.json for order in orders]}
@@ -52,6 +53,7 @@ class DeliveryPostOrder(Resource):
     @order_ns.response(code=204, description='주문 성공')
     @inject
     def post(self, post_id, post_use_case: PostUseCase = Provide[PostContainer.post_use_case]):
+        """주문 추가(참여)"""
         data = request.get_json()
 
         post_use_case.join(post_id, data)
@@ -59,13 +61,14 @@ class DeliveryPostOrder(Resource):
 
 
 @order_ns.route('/<string:post_id>/me')
-class DeliveryOrderDetail(Resource):
+class MyOrder(Resource):
     @order_ns.doc(security='jwt', description="내 주문을 반환합니다")
     @order_ns.marshal_with(code=200, fields=order_ns.model('주문응답', {
         'order': fields.Nested(model=order_model)
     }), mask=None)
     @inject
     def get(self, post_id, order_use_case: OrderUseCase = Provide[OrderContainer.order_use_case]):
+        """내 주문 조회"""
         order = order_use_case.get(post_id)
         return {'order': order.json}
 
@@ -73,5 +76,6 @@ class DeliveryOrderDetail(Resource):
     @order_ns.response(code=204, description='변경 성공')
     @inject
     def delete(self, post_id, post_use_case: PostUseCase = Provide[PostContainer.post_use_case]):
+        """주문 삭제(탈퇴)"""
         post_use_case.quit(post_id)
         return '', 204

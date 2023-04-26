@@ -1,11 +1,11 @@
 from flask import request
 from flask_restx import Resource, Namespace, fields
-from logic.auth.use_case.SignupUseCase import SignupUseCase
+from logic.user.use_case.SignupUseCase import SignupUseCase
 from app import exceptions
 from dependency_injector.wiring import inject, Provide
-from src.auth_container import AuthContainer
+from src.user_container import UserContainer
 
-signup_ns = Namespace('signup', description='회원가입 API')
+signup_ns = Namespace('signup', description='회원가입')
 
 
 duplicate_result_model = signup_ns.model("중복 여부", {
@@ -32,7 +32,8 @@ class UsernameCheck(Resource):
     @signup_ns.doc(parser=parser, description="필드의 값이 중복되는지 검사합니다")
     @signup_ns.response(code=200, description="검사 결과", model=duplicate_result_model)
     @inject
-    def get(self, signup_use_case: SignupUseCase = Provide[AuthContainer.signup_use_case]):
+    def get(self, signup_use_case: SignupUseCase = Provide[UserContainer.signup_use_case]):
+        """중복체크"""
         is_duplicated = signup_use_case.check_field(request.args['field'], request.args['value'])
 
         return {'is_duplicated': is_duplicated}
@@ -44,10 +45,11 @@ email_parser.add_argument('email', type=str, help='이메일')
 
 @signup_ns.route('')
 class Signup(Resource):
-    @signup_ns.doc(parser=email_parser, description="인증코드 전송 요청")
+    @signup_ns.doc(parser=email_parser, description="이메일에 인증코드를 발송합니다")
     @signup_ns.response(code=201, description='요청 성공')
     @inject
-    def get(self, signup_use_case: SignupUseCase = Provide[AuthContainer.signup_use_case]):
+    def get(self, signup_use_case: SignupUseCase = Provide[UserContainer.signup_use_case]):
+        """회원가입 인증코드 발송"""
         email = request.args['email']
 
         signup_use_case.send_auth_email(email)
@@ -57,7 +59,8 @@ class Signup(Resource):
     @signup_ns.expect(signup_format_model)
     @signup_ns.response(code=201, description='가입 성공')
     @inject
-    def post(self, signup_use_case: SignupUseCase = Provide[AuthContainer.signup_use_case]):
+    def post(self, signup_use_case: SignupUseCase = Provide[UserContainer.signup_use_case]):
+        """회원가입"""
         data = request.get_json()
 
         try:

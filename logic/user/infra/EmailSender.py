@@ -1,4 +1,4 @@
-from logic.auth.use_case.EmailSenderInterface import EmailSenderInterface
+from logic.user.use_case.EmailSenderInterface import EmailSenderInterface
 import random
 import smtplib
 from email.mime.text import MIMEText
@@ -22,3 +22,13 @@ class EmailSender(EmailSenderInterface):
         smtp.quit()
 
         return auth_code
+
+    def send_username_email(self, email, username):
+        smtp = smtplib.SMTP('smtp.gmail.com', 587)
+        smtp.starttls()
+        smtp.login('xoals3094@gmail.com', 'sakagnjqdgotmkzv')
+        msg = MIMEText(f'아이디 : {username}')
+        msg['Subject'] = '아이디'
+
+        smtp.sendmail('xoals3094@gmail.com', email, msg.as_string())
+        smtp.quit()
