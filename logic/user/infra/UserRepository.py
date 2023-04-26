@@ -14,7 +14,7 @@ class MongoDBUserRepository(UserRepository):
     def find_user_by_id(self, user_id) -> User:
         find = {'_id': user_id}
         user_json = self.db.user.find_one(find)
-        print(find)
+
         if user_json is None:
             raise exceptions.NotExistUser
 

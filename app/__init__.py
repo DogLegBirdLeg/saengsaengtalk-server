@@ -34,9 +34,8 @@ def create_app():
     @app.before_request
     def init_g():
         try:
-            g.id = request.headers['user_id']
+            g.id = int(request.headers['user_id'])
             g.nickname = request.headers['nickname']
-            print(g.id)
         except KeyError:
             pass
 
