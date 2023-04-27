@@ -4,6 +4,7 @@ from logic.delivery.post.usecase.IDao import IStoreDAO
 from logic.delivery.post.domain.RepositoryInterface import IPostRepository
 from logic.delivery.post.domain.entity.Post import Post
 from logic.delivery.post.domain.dto.PostDto import PostDto
+from logic.common.push_message.application.IMessagePuhser import IMessagePusher
 
 from flask import g
 from app import exceptions
@@ -69,9 +70,10 @@ class PostDeleteUseCase:
 
 
 class PostUpdateUseCase:
-    def __init__(self, post_repository: IPostRepository, post_dao: IPostDAO):
+    def __init__(self, post_repository: IPostRepository, post_dao: IPostDAO, message_pusher: IMessagePusher):
         self.post_repository = post_repository
         self.post_dao = post_dao
+        self.message_pusher = message_pusher
 
     def modify(self, post_id, order_time, place, min_member, max_member):
         post = PostUseCaseHelper.find_post_by_id(self.post_repository, post_id)
@@ -84,12 +86,10 @@ class PostUpdateUseCase:
         self.post_dao.update_status(post)
 
         if status == 'ordered':
-            # push 알림 코드
-            pass
+            self.message_pusher.push(post.users, '주문이 완료되었습니다!', '조금만 기다려주세요!')
 
         elif status == 'delivered':
-            # push 알림 코드
-            pass
+            self.message_pusher.push(post.users, '배달이 완료되었습니다!', f'{post.place}으로 와주세요!')
 
 
 class PostUserPoolUseCase:
