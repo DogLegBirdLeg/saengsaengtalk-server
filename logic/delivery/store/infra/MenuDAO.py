@@ -10,17 +10,10 @@ class MongoDBMenuDAO(MenuDAO):
         self.db = mongodb_connection['delivery']
 
     def find_all_menu_summary_by_store_id(self, store_id) -> List[MenuSummaryDto]:
-        pipe1 = {'$match': {'store_id': ObjectId(store_id)}}
-        pipe2 = {
-            '$lookup': {
-                'from': 'option',
-                'localField': 'groups',
-                'foreignField': '_id',
-                'as': 'groups'
-            }
-        }
+        find = {'store_id': ObjectId(store_id)}
+        projection = {'groups': False}
 
-        menus_json = list(self.db.menu.aggregate([pipe1, pipe2]))
+        menus_json = list(self.db.menu.find(find, projection))
         if menus_json is None:
             raise exceptions.NotExistMenu
 

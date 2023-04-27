@@ -13,34 +13,20 @@ class MongoDBMenuRepository(MenuRepository):
         self.db = mongo_connection['delivery']
 
     def find_menu_by_id(self, _id) -> Menu:
-        pipe1 = {'$match': {'_id': ObjectId(_id)}}
-        pipe2 = {
-            '$lookup': {
-                'from': 'option',
-                'localField': 'groups',
-                'foreignField': '_id',
-                'as': 'groups'
-            }
-        }
+        find = {'_id': ObjectId(_id)}
 
-        menu_json = list(self.db.menu.aggregate([pipe1, pipe2]))
+        menu_json = self.db.menu.find_one(find)
+
         if menu_json is None:
             raise exceptions.NotExistMenu
 
-        return MenuMapper.menu_mapping(menu_json[0])
+        return MenuMapper.menu_mapping(menu_json)
 
     def find_all_menu_by_store_id(self, store_id: str) -> List[Menu]:
-        pipe1 = {'$match': {'store_id': ObjectId(store_id)}}
-        pipe2 = {
-            '$lookup': {
-                'from': 'option',
-                'localField': 'groups',
-                'foreignField': '_id',
-                'as': 'groups'
-            }
-        }
+        find = {'store_id': store_id}
 
-        menus_json = list(self.db.menu.aggregate([pipe1, pipe2]))
+        menus_json = list(self.db.menu.find(find))
+
         if len(menus_json) == 0:
             raise exceptions.NotExistStore
 

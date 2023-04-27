@@ -11,16 +11,16 @@ order_ns = Namespace('order', description='주문')
 order_line_model = order_ns.model('주문내역', {
     'quantity': fields.Integer(description='개수', example=2),
     'menu': fields.Nested(model=order_ns.model('주문 메뉴', {
-        '_id': fields.String(description='메뉴 ID', example='6431272e7d80e0f26d3fc3b1'),
+        '_id': fields.String(description='메뉴 ID', example='644a65234163ebbd6fd78900'),
         'name': fields.String(description='메뉴 이름', example='싱글떡강정세트'),
         'price': fields.Integer(description='메뉴 가격', example=9200),
         'groups': fields.List(fields.Nested(model=order_ns.model('주문 그룹', {
-            '_id': fields.String(description='그룹 ID', example='6431272e7d80e0f26d3fc3b2'),
+            '_id': fields.String(description='그룹 ID', example='644a65234163ebbd6fd78901'),
             'name': fields.String(description='그룹 이름', example='치킨선택'),
             'min_order_quantity': fields.Integer(description='최소 선택 가능', example='1'),
             'max_order_quantity': fields.Integer(description='최대 선택 가능', example='1'),
             'options': fields.List(fields.Nested(model=order_ns.model('주문 옵션', {
-                '_id': fields.String(description='옵션 ID', example='6431272e7d80e0f26d3fc3b3'),
+                '_id': fields.String(description='옵션 ID', example='644a65234163ebbd6fd78902'),
                 'name': fields.String(description='옵션 이름', example='케이준떡강정(S)'),
                 'price': fields.Integer(description='옵션 가격', example=0)
             })))
