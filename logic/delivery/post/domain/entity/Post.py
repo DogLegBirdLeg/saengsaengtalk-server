@@ -48,26 +48,6 @@ class Post:
         if self.status not in ['recruiting', 'closed']:
             raise exceptions.CantModify
 
-    def _check_join(self, user_id):
-        if self.status != 'recruiting':
-            raise exceptions.NotRecruiting
-
-        if len(self.users) >= self.max_member:
-            raise exceptions.MaxMember
-
-        if user_id in self.users:
-            raise exceptions.AlreadyJoinedUser
-
-    def check_quit(self, handling_user_id):
-        if self.status != 'recruiting':
-            raise exceptions.NotRecruiting
-
-        if handling_user_id == self.user_id:
-            raise exceptions.OwnerQuit
-
-        if handling_user_id not in self.users:
-            raise exceptions.NotJoinedUser
-
     def modify_content(self, handling_user_id, order_time, place, min_member, max_member):
         self._check_permission(handling_user_id)
         self._check_modifiable()
@@ -102,12 +82,28 @@ class Post:
                 raise exceptions.NotValidStatus
 
     def join(self, handling_user_id, handling_nickname, order_json):
-        self._check_join(handling_user_id)
+        if self.status != 'recruiting':
+            raise exceptions.NotRecruiting
+
+        if len(self.users) >= self.max_member:
+            raise exceptions.MaxMember
+
+        if handling_user_id in self.users:
+            raise exceptions.AlreadyJoinedUser
+
         post_event.send('joined', store_id=self.store._id, post_id=self._id, user_id=handling_user_id, nickname=handling_nickname, order_json=order_json)
         self.users.append(handling_user_id)
 
     def quit(self, handling_user_id):
-        self.check_quit(handling_user_id)
+        if self.status != 'recruiting':
+            raise exceptions.NotRecruiting
+
+        if handling_user_id == self.user_id:
+            raise exceptions.OwnerQuit
+
+        if handling_user_id not in self.users:
+            raise exceptions.NotJoinedUser
+
         post_event.send('quited', post_id=self._id, user_id=handling_user_id)
         self.users.remove(handling_user_id)
 

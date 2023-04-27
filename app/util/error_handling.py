@@ -1,38 +1,54 @@
-from http import HTTPStatus
 from app import exceptions
 
 
-def error_handler(api):
-    @api.errorhandler(exceptions.TokenDecodeFail)
-    def decode_error_handling(error):
+def auth_error_handler(api):
+    login_error_handling(api)
+
+
+def login_error_handling(api):
+    @api.errorhandler(exceptions.NotExistToken)
+    def not_exist_token_handling(error):
         return error.json, 401
 
-    @api.errorhandler(exceptions.ExpiredToken)
-    def expired_token_handling(error):
+    @api.errorhandler(exceptions.SigninFail)
+    def signin_fail(error):
         return error.json, 401
 
-    @api.errorhandler(exceptions.NotIncludeAuthorization)
-    def not_include_authorization(error):
+
+def user_error_handling(api):
+    signup_error_handling(api)
+    profile_error_handling(api)
+
+
+def profile_error_handling(api):
+    @api.errorhandler(exceptions.PasswordMismatch)
+    def password_mismatch(error):
         return error.json, 401
 
-    @api.errorhandler(exceptions.AccessDenied)
-    def access_denied(error):
-        return error.json, 403
 
+def signup_error_handling(api):
     @api.errorhandler(exceptions.NotValidAuthCode)
     def not_valid_auth_code(error):
         return error.json, 401
 
-    @api.errorhandler(exceptions.NotExistPost)
+    @api.errorhandler(exceptions.DuplicateUser)
+    def duplicate_user_handling(error):
+        return error.json, 406
+
+
+def delivery_error_handler(api):
+    @api.errorhandler(exceptions.AccessDenied)
     def access_denied(error):
-        return error.json, 404
+        return error.json, 403
 
-    @api.errorhandler(exceptions.NotExistStore)
-    def not_exist_store_handling(error):
-        return error.json, 404
+    post_error_handler(api)
+    store_error_handler(api)
+    order_error_handler(api)
 
-    @api.errorhandler(exceptions.NotExistMenu)
-    def not_exist_store_handling(error):
+
+def post_error_handler(api):
+    @api.errorhandler(exceptions.NotExistPost)
+    def not_exist_post_handling(error):
         return error.json, 404
 
     @api.errorhandler(exceptions.CantModify)
@@ -63,6 +79,22 @@ def error_handler(api):
     def not_valid_status_handling(error):
         return error.json, 406
 
+    @api.errorhandler(exceptions.NotValidOrder)
+    def not_valid_order_handling(error):
+        return error.json, 406
+
+
+def store_error_handler(api):
+    @api.errorhandler(exceptions.NotExistStore)
+    def not_exist_store_handling(error):
+        return error.json, 404
+
+    @api.errorhandler(exceptions.NotExistMenu)
+    def not_exist_menu_handling(error):
+        return error.json, 404
+
+
+def order_error_handler(api):
     @api.errorhandler(exceptions.NotValidOrder)
     def not_valid_order_handling(error):
         return error.json, 406

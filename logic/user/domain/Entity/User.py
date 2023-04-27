@@ -1,7 +1,5 @@
 import bcrypt
 
-from app import exceptions
-
 
 class User:
     def __init__(self, _id, name, username, pw, nickname, account_number, email):
@@ -14,8 +12,7 @@ class User:
         self.email = email
 
     def compare_pw(self, pw):
-        if not bcrypt.checkpw(pw.encode('utf-8'), self.pw.encode('utf-8')):
-            raise exceptions.PasswordMismatch
+        return bcrypt.checkpw(pw.encode('utf-8'), self.pw.encode('utf-8'))
 
     @staticmethod
     def pw_hashing(pw):

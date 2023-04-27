@@ -2,10 +2,10 @@ from app import exceptions
 
 from logic.delivery.post.util.PostMapper import PostMapper
 from logic.delivery.post.domain.entity.Post import Post
-from logic.delivery.post.domain.RepositoryInterface import PostRepository
+from logic.delivery.post.domain.RepositoryInterface import IPostRepository
 
 
-class MongoDBPostRepository(PostRepository):
+class MongoDBPostRepository(IPostRepository):
     def __init__(self, mongodb_connection):
         self.db = mongodb_connection['delivery']
 

@@ -1,6 +1,6 @@
 from flask_restx import Resource, Namespace, fields
 from dependency_injector.wiring import inject, Provide
-from logic.user.use_case.ForgotUseCase import ForgotUseCase
+from logic.user.use_case.ForgotUseCase import ForgotEmailSendUseCase, ForgotTempTokenPublishUseCase
 from flask import request, make_response
 from src.user_container import UserContainer
 
@@ -21,7 +21,7 @@ class ForgotUsername(Resource):
     @forgot_ns.doc(description='이메일로 유저 아이디를 발송합니다', parser=email_parser)
     @forgot_ns.response(code=204, description='조회 성공')
     @inject
-    def get(self, forgot_use_case: ForgotUseCase = Provide[UserContainer.forgot_use_case]):
+    def get(self, forgot_use_case: ForgotEmailSendUseCase = Provide[UserContainer.forgot_email_send_use_case]):
         """아이디 찾기"""
 
         email = request.args['email']
@@ -34,7 +34,7 @@ class ForgotPassword(Resource):
     @forgot_ns.doc(description='이메일로 비밀번호 찾기 인증 번호를 발송합니다', parser=email_parser)
     @forgot_ns.response(code=204, description='발송 성공')
     @inject
-    def get(self, forgot_use_case: ForgotUseCase = Provide[UserContainer.forgot_use_case]):
+    def get(self, forgot_use_case: ForgotEmailSendUseCase = Provide[UserContainer.forgot_email_send_use_case]):
         """비밀번호 찾기 인증 메일 발송"""
         email = request.args['email']
         forgot_use_case.send_auth_email(email)
@@ -44,7 +44,7 @@ class ForgotPassword(Resource):
     @forgot_ns.expect(auth_code_model)
     @forgot_ns.response(code=200, description='인증 성공', headers={'Authentication': 'access_token'})
     @inject
-    def post(self, forgot_use_case: ForgotUseCase = Provide[UserContainer.forgot_use_case]):
+    def post(self, forgot_use_case: ForgotTempTokenPublishUseCase = Provide[UserContainer.forgot_temp_token_publish_use_case]):
         """임시 인가 토큰 발급"""
         data = request.get_json()
         access_token = forgot_use_case.publish_temp_access_token(data['auth_code'], data['email'])

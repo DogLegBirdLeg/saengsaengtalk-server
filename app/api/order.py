@@ -4,7 +4,7 @@ from dependency_injector.wiring import inject, Provide
 from src.order_container import OrderContainer
 from src.post_container import PostContainer
 from logic.delivery.order.usecase.OrderUseCase import OrderUseCase
-from logic.delivery.post.usecase.PostUseCase import PostUseCase
+from logic.delivery.post.usecase.PostUseCase import PostUserPoolUseCase
 
 order_ns = Namespace('order', description='주문')
 
@@ -52,7 +52,7 @@ class Order(Resource):
     @order_ns.doc(security='jwt', body=order_model, description="내 주문을 생성합니다")
     @order_ns.response(code=204, description='주문 성공')
     @inject
-    def post(self, post_id, post_use_case: PostUseCase = Provide[PostContainer.post_use_case]):
+    def post(self, post_id, post_use_case: PostUserPoolUseCase = Provide[PostContainer.post_user_pool_use_case]):
         """주문 추가(참여)"""
         data = request.get_json()
 
@@ -75,7 +75,7 @@ class MyOrder(Resource):
     @order_ns.doc(security='jwt', description="내 주문을 삭제합니다")
     @order_ns.response(code=204, description='변경 성공')
     @inject
-    def delete(self, post_id, post_use_case: PostUseCase = Provide[PostContainer.post_use_case]):
+    def delete(self, post_id, post_use_case: PostUserPoolUseCase = Provide[PostContainer.post_user_pool_use_case]):
         """주문 삭제(탈퇴)"""
         post_use_case.quit(post_id)
         return '', 204

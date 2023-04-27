@@ -11,6 +11,10 @@ class UserDAO(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def is_already_exist_email(self, email) -> bool:
+        pass
+
+    @abstractmethod
     def update_pw(self, user_id, pw):
         pass
 
@@ -38,6 +42,11 @@ class MongoDBUserDAO(UserDAO):
 
     def is_already_exist_nickname(self, nickname) -> bool:
         find = {'nickname': nickname}
+        user_json = self.db.user.find_one(find)
+        return user_json is not None
+
+    def is_already_exist_email(self, email) -> bool:
+        find = {'email': email}
         user_json = self.db.user.find_one(find)
         return user_json is not None
 

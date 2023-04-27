@@ -20,6 +20,7 @@ class Refresh(Resource):
         refresh_token = request.headers['Authorization']
 
         access_token = authentication_use_case.refresh(refresh_token)
+
         res = make_response()
         res.headers['Authentication'] = f'{access_token}'
 

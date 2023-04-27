@@ -79,21 +79,6 @@ class NotExistToken(TokenError):
         super().__init__(msg=msg, code=code)
 
 
-class TokenDecodeFail(TokenError):
-    def __init__(self, msg='유효하지 않은 토큰', code=201):
-        super().__init__(msg=msg, code=code)
-
-
-class ExpiredToken(TokenError):
-    def __init__(self, msg='만료된 토큰', code=202):
-        super().__init__(msg=msg, code=code)
-
-
-class NotIncludeAuthorization(TokenError):
-    def __init__(self, msg='Authorization 필드 누락', code=203):
-        super().__init__(msg=msg, code=code)
-
-
 # Store
 class StoreError(DomainError):
     def __init__(self, msg, code):
@@ -137,22 +122,22 @@ class MaxMember(PostError):
 
 
 class OwnerQuit(PostError):
-    def __init__(self, msg='대표 유저 탈퇴', code=504):
+    def __init__(self, msg='대표 유저 탈퇴', code=404):
         super().__init__(msg=msg, code=code)
 
 
 class AlreadyJoinedUser(PostError):
-    def __init__(self, msg='참여 완료된 유저', code=505):
+    def __init__(self, msg='참여 완료된 유저', code=405):
         super().__init__(msg=msg, code=code)
 
 
 class NotJoinedUser(PostError):
-    def __init__(self, msg='참여하지 않은 유저', code=506):
+    def __init__(self, msg='참여하지 않은 유저', code=406):
         super().__init__(msg=msg, code=code)
 
 
 class NotValidStatus(PostError):
-    def __init__(self, msg='올바르지 않은 상태 메시지', code=506):
+    def __init__(self, msg='올바르지 않은 상태 메시지', code=407):
         super().__init__(msg=msg, code=code)
 
 

@@ -1,6 +1,6 @@
 from flask_restx import Resource, Namespace, fields
 from dependency_injector.wiring import inject, Provide
-from logic.user.use_case.ProfileUseCase import ProfileUseCase
+from logic.user.use_case.ProfileUseCase import ProfileQueryUseCase, ProfileUpdateUseCase, ProfileDeleteUseCase
 from src.user_container import UserContainer
 from flask import request
 
@@ -22,7 +22,7 @@ class Profile(Resource):
     @profile_ns.doc(security='jwt', description='유저 정보를 반환합니다')
     @profile_ns.marshal_with(code=200, description='조회 성공', fields=user_model, mask=None)
     @inject
-    def get(self, profile_use_case: ProfileUseCase = Provide[UserContainer.profile_use_case]):
+    def get(self, profile_use_case: ProfileQueryUseCase = Provide[UserContainer.profile_query_use_case]):
         """유저 정보"""
         user = profile_use_case.get()
         return user.json
@@ -30,9 +30,9 @@ class Profile(Resource):
     @profile_ns.doc(security='jwt', description='회원탈퇴')
     @profile_ns.response(code=204, description='탈퇴 성공')
     @inject
-    def delete(self, my_use_case: ProfileUseCase = Provide[UserContainer.profile_use_case]):
+    def delete(self, profile_use_case: ProfileDeleteUseCase = Provide[UserContainer.profile_delete_use_case]):
         """회원탈퇴"""
-        my_use_case.delete()
+        profile_use_case.delete()
         return '', 204
 
 
@@ -45,26 +45,11 @@ class ModifyPassword(Resource):
     }))
     @profile_ns.response(code=204, description='변경 성공')
     @inject
-    def patch(self, profile_use_case: ProfileUseCase = Provide[UserContainer.profile_use_case]):
+    def patch(self, profile_use_case: ProfileUpdateUseCase = Provide[UserContainer.profile_update_use_case]):
         """비밀번호 변경"""
         data = request.get_json()
 
         profile_use_case.update_password(data['current_password'], data['new_password'])
-        return '', 204
-
-
-@profile_ns.route('/email')
-class ModifyEmail(Resource):
-    @profile_ns.doc(security='jwt', description='이메일을 변경합니다')
-    @profile_ns.expect(profile_ns.model('이메일 변경', {
-        'email': fields.String(description='변경 이메일', example='newEmail1234@naver.com')
-    }))
-    @profile_ns.response(code=204, description='변경 성공')
-    @inject
-    def patch(self, profile_use_case: ProfileUseCase = Provide[UserContainer.profile_use_case]):
-        """이메일 변경"""
-        data = request.get_json()
-        profile_use_case.update_email(data['email'])
         return '', 204
 
 
@@ -76,7 +61,7 @@ class ModifyNickname(Resource):
     }))
     @profile_ns.response(code=204, description='변경 성공')
     @inject
-    def patch(self, profile_use_case: ProfileUseCase = Provide[UserContainer.profile_use_case]):
+    def patch(self, profile_use_case: ProfileUpdateUseCase = Provide[UserContainer.profile_update_use_case]):
         """닉네임 변경"""
         data = request.get_json()
         profile_use_case.update_nickname(data['nickname'])
@@ -91,7 +76,7 @@ class ModifyAccountNumber(Resource):
     }))
     @profile_ns.response(code=204, description='변경 성공')
     @inject
-    def patch(self, profile_use_case: ProfileUseCase = Provide[UserContainer.profile_use_case]):
+    def patch(self, profile_use_case: ProfileUpdateUseCase = Provide[UserContainer.profile_update_use_case]):
         """계좌번호 변경"""
         data = request.get_json()
         profile_use_case.update_account_number(data['account_number'])

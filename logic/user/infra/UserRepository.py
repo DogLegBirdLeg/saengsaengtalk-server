@@ -16,7 +16,7 @@ class MongoDBUserRepository(UserRepository):
         user_json = self.db.user.find_one(find)
 
         if user_json is None:
-            raise exceptions.NotExistUser
+            raise exceptions.NotExistResource
 
         user = UserMapper.mapping_user(user_json)
         return user
@@ -26,7 +26,7 @@ class MongoDBUserRepository(UserRepository):
         user_json = self.db.user.find_one(find)
 
         if user_json is None:
-            raise exceptions.NotExistUser
+            raise exceptions.NotExistResource
 
         user = UserMapper.mapping_user(user_json)
         return user
@@ -36,7 +36,7 @@ class MongoDBUserRepository(UserRepository):
         user_json = self.db.user.find_one(find)
 
         if user_json is None:
-            raise exceptions.NotExistUser
+            raise exceptions.NotExistResource
 
         user = UserMapper.mapping_user(user_json)
         return user
@@ -45,7 +45,7 @@ class MongoDBUserRepository(UserRepository):
         try:
             self.db.user.insert_one(user.json)
         except pymongo.errors.DuplicateKeyError:
-            raise exceptions.DuplicateUser
+            raise exceptions.DuplicateKeyError
 
     def delete(self, user_id):
         find = {'_id': user_id}

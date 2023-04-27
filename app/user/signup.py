@@ -1,16 +1,11 @@
 from flask import request
 from flask_restx import Resource, Namespace, fields
-from logic.user.use_case.SignupUseCase import SignupUseCase
-from app import exceptions
+from logic.user.use_case.SignupUseCase import SignupUseCase, SignupEmailSendUseCase
 from dependency_injector.wiring import inject, Provide
 from src.user_container import UserContainer
 
 signup_ns = Namespace('signup', description='회원가입')
 
-
-duplicate_result_model = signup_ns.model("중복 여부", {
-    'is_duplicated': fields.Boolean(description="중복 여부")
-})
 
 signup_format_model = signup_ns.model('회원가입', {
     'auth_code': fields.String(description='인증 코드', example='MiryangCampus2023'),
@@ -22,23 +17,6 @@ signup_format_model = signup_ns.model('회원가입', {
     'email': fields.String(description='이메일', required=True, example='milcampus1234@naver.com')
 })
 
-parser = signup_ns.parser()
-parser.add_argument('field', type=str, help='중복을 검사할 필드', choices=('username', 'nickname'))
-parser.add_argument('value', type=str, help='중복을 검사할 값')
-
-
-@signup_ns.route('/duplicate-check')
-class UsernameCheck(Resource):
-    @signup_ns.doc(parser=parser, description="필드의 값이 중복되는지 검사합니다")
-    @signup_ns.response(code=200, description="검사 결과", model=duplicate_result_model)
-    @inject
-    def get(self, signup_use_case: SignupUseCase = Provide[UserContainer.signup_use_case]):
-        """중복체크"""
-        is_duplicated = signup_use_case.check_field(request.args['field'], request.args['value'])
-
-        return {'is_duplicated': is_duplicated}
-
-
 email_parser = signup_ns.parser()
 email_parser.add_argument('email', type=str, help='이메일')
 
@@ -46,14 +24,14 @@ email_parser.add_argument('email', type=str, help='이메일')
 @signup_ns.route('')
 class Signup(Resource):
     @signup_ns.doc(parser=email_parser, description="이메일에 인증코드를 발송합니다")
-    @signup_ns.response(code=201, description='요청 성공')
+    @signup_ns.response(code=204, description='요청 성공')
     @inject
-    def get(self, signup_use_case: SignupUseCase = Provide[UserContainer.signup_use_case]):
+    def get(self, signup_use_case: SignupEmailSendUseCase = Provide[UserContainer.signup_email_send_use_case]):
         """회원가입 인증코드 발송"""
         email = request.args['email']
 
         signup_use_case.send_auth_email(email)
-        return '', 201
+        return '', 204
 
     @signup_ns.doc(description="회원가입")
     @signup_ns.expect(signup_format_model)
@@ -63,9 +41,6 @@ class Signup(Resource):
         """회원가입"""
         data = request.get_json()
 
-        try:
-            signup_use_case.signup(data['auth_code'], data['name'], data['username'], data['pw'], data['nickname'], data['account_number'], data['email'])
-        except exceptions.DuplicateUser as error:
-            return error.json, 409
+        signup_use_case.signup(data['auth_code'], data['name'], data['username'], data['pw'], data['nickname'], data['account_number'], data['email'])
 
         return '', 201

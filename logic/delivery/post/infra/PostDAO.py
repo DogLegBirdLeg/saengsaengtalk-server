@@ -1,10 +1,10 @@
 from typing import List
 from logic.delivery.post.domain.entity.Post import Post
-from logic.delivery.post.usecase.DAOInterface import PostDAO
+from logic.delivery.post.usecase.IDao import IPostDAO
 from logic.delivery.post.util.PostMapper import PostMapper
 
 
-class MongoDBPostDAO(PostDAO):
+class MongoDBPostDAO(IPostDAO):
     def __init__(self, mongodb_connection):
         self.db = mongodb_connection['delivery']
 

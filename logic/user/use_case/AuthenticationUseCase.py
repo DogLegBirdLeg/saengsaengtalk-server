@@ -10,7 +10,7 @@ from logic.user.domain.RepositoryInterface import UserRepository
 from logic.user.infra.TokenDAO import TokenDAO
 
 
-class AuthenticationUseCase(metaclass=ABCMeta):
+class IAuthenticationUseCase(metaclass=ABCMeta):
     @abstractmethod
     def login(self, username, pw, registration_token):
         pass
@@ -20,7 +20,7 @@ class AuthenticationUseCase(metaclass=ABCMeta):
         pass
 
 
-class JwtAuthentication(AuthenticationUseCase):
+class JwtAuthentication(IAuthenticationUseCase):
     def __init__(self, user_repository: UserRepository, token_dao: TokenDAO):
         self.user_repository = user_repository
         self.token_dao = token_dao
@@ -29,9 +29,10 @@ class JwtAuthentication(AuthenticationUseCase):
         try:
             user = self.user_repository.find_user_by_username(username)
         except exceptions.NotExistResource:
-            raise exceptions.NotExistUser
+            raise exceptions.SigninFail
 
-        user.compare_pw(pw)
+        if user.compare_pw(pw) is False:
+            raise exceptions.SigninFail
 
         try:
             token = self.token_dao.find_token_by_user_id(user._id)

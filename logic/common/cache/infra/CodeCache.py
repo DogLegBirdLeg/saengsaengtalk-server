@@ -1,19 +1,5 @@
-from abc import *
+from logic.common.cache.use_case.ICodeCache import CodeCache
 from redis import StrictRedis
-
-
-class CodeCache(metaclass=ABCMeta):
-    @abstractmethod
-    def get_code_by_email(self, email) -> str:
-        pass
-
-    @abstractmethod
-    def save(self, email, code):
-        pass
-
-    @abstractmethod
-    def delete(self, email):
-        pass
 
 
 class RedisCodeCache(CodeCache):

@@ -1,7 +1,6 @@
 from flask import make_response, request
 from flask_restx import Namespace, Resource, fields
-from logic.user.use_case.AuthenticationUseCase import AuthenticationUseCase
-from app import exceptions
+from logic.user.use_case.AuthenticationUseCase import IAuthenticationUseCase
 from dependency_injector.wiring import inject, Provide
 from src.user_container import UserContainer
 
@@ -20,19 +19,10 @@ class Login(Resource):
     @login_ns.expect(signin_format_model)
     @login_ns.response(code=200, description='로그인 성공', headers={'Authentication': 'access_token/refresh_token'})
     @inject
-    def post(self, authentication_use_case: AuthenticationUseCase = Provide[UserContainer.authentication_use_case]):
+    def post(self, authentication_use_case: IAuthenticationUseCase = Provide[UserContainer.authentication_use_case]):
         """로그인"""
         data = request.get_json()
-
-        try:
-            access_token, refresh_token = authentication_use_case.login(data['username'], data['pw'], data['registration_token'])
-        except exceptions.NotExistUser:
-            error = exceptions.SigninFail()
-            return error.json, 401
-
-        except exceptions.PasswordMismatch:
-            error = exceptions.SigninFail()
-            return error.json, 401
+        access_token, refresh_token = authentication_use_case.login(data['username'], data['pw'], data['registration_token'])
 
         res = make_response()
         res.headers['Authentication'] = f'{access_token}/{refresh_token}'

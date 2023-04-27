@@ -3,7 +3,7 @@ from abc import *
 from logic.delivery.post.domain.entity.Post import Post
 
 
-class PostRepository(metaclass=ABCMeta):
+class IPostRepository(metaclass=ABCMeta):
     @abstractmethod
     def find_post_by_id(self, post_id) -> Post:
         pass

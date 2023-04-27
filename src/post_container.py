@@ -3,7 +3,8 @@ from pymongo import MongoClient
 from config.production import mongodb
 
 
-from logic.delivery.post.usecase.PostUseCase import PostUseCase
+from logic.delivery.post.usecase.PostUseCase \
+    import PostQueryUseCase, PostCreateUseCase, PostDeleteUseCase, PostUpdateUseCase, PostUserPoolUseCase
 from logic.delivery.post.infra.PostRepository import MongoDBPostRepository
 from logic.delivery.post.infra.PostDAO import MongoDBPostDAO
 from logic.delivery.post.infra.StoreDAO import MongoDBStoreDAO
@@ -26,9 +27,31 @@ class PostContainer(containers.DeclarativeContainer):
     post_dao = providers.Singleton(MongoDBPostDAO, mongodb_connection)
     store_dao = providers.Singleton(MongoDBStoreDAO, mongodb_connection)
 
-    post_use_case = providers.Singleton(
-        PostUseCase,
+    post_query_use_case = providers.Singleton(
+        PostQueryUseCase,
         post_repository=post_repository,
-        store_dao=store_dao,
+        post_dao=post_dao
+    )
+
+    post_create_use_case = providers.Singleton(
+        PostCreateUseCase,
+        post_repository=post_repository,
+        store_dao=store_dao
+    )
+
+    post_delete_use_case = providers.Singleton(
+        PostDeleteUseCase,
+        post_repository=post_repository
+    )
+
+    post_update_use_case = providers.Singleton(
+        PostUpdateUseCase,
+        post_repository=post_repository,
+        post_dao=post_dao
+    )
+
+    post_user_pool_use_case = providers.Singleton(
+        PostUserPoolUseCase,
+        post_repository=post_repository,
         post_dao=post_dao
     )
