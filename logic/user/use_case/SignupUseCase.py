@@ -32,7 +32,7 @@ class SignupEmailUseCase:
             raise exceptions.NotValidAuthCode
         self.code_cache.delete(email)
 
-        return jwt.encode({'exp': datetime.utcnow() + timedelta(minutes=1)}, current_app.secret_key)
+        return jwt.encode({'exp': datetime.utcnow() + timedelta(minutes=5)}, current_app.secret_key)
 
 
 class SignupUseCase:
