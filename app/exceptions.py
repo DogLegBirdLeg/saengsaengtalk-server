@@ -137,7 +137,7 @@ class NotJoinedUser(PostError):
 
 
 class NotValidStatus(PostError):
-    def __init__(self, msg='올바르지 않은 상태 메시지', code=407):
+    def __init__(self, msg='유효하지 않은 상태 메시지', code=407):
         super().__init__(msg=msg, code=code)
 
 
@@ -148,5 +148,5 @@ class OrderError(DomainError):
 
 
 class NotValidOrder(OrderError):
-    def __init__(self, msg='올바르지 않은 주문', code=500):
+    def __init__(self, msg='유효하지 않은 주문', code=500):
         super().__init__(msg=msg, code=code)
