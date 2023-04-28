@@ -28,10 +28,7 @@ class ProfileUpdateUseCase:
         self.user_repository = user_repository
         self.user_dao = user_dao
 
-    def update_password(self, current_password, new_password):
-        user = self.user_repository.find_user_by_id(g.id)
-        if user.compare_pw(current_password) is False:
-            raise exceptions.PasswordMismatch
+    def update_password(self, new_password):
         hashed_pw = User.pw_hashing(new_password)
         self.user_dao.update_pw(g.id, hashed_pw)
 
