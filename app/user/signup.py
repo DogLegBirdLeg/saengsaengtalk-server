@@ -1,6 +1,6 @@
 from flask import request
 from flask_restx import Resource, Namespace, fields
-from logic.user.use_case.SignupUseCase import SignupUseCase, SignupEmailSendUseCase
+from logic.user.use_case.SignupUseCase import SignupUseCase, SignupEmailUseCase
 from dependency_injector.wiring import inject, Provide
 from src.user_container import UserContainer
 
@@ -8,7 +8,7 @@ signup_ns = Namespace('signup', description='회원가입')
 
 
 signup_format_model = signup_ns.model('회원가입', {
-    'auth_code': fields.String(description='인증 코드', example='MiryangCampus2023'),
+    'auth_token': fields.String(description='인증 토큰', example='jwt'),
     'name': fields.String(description='이름', required=True, example='김개발'),
     'username': fields.String(description='유저 ID', required=True, example='milcampus1234'),
     'pw': fields.String(description='비밀번호', required=True, example='dogLegBirdLeg1234'),
@@ -26,7 +26,7 @@ class Signup(Resource):
     @signup_ns.doc(parser=email_parser, description="이메일에 인증코드를 발송합니다")
     @signup_ns.response(code=204, description='요청 성공')
     @inject
-    def get(self, signup_use_case: SignupEmailSendUseCase = Provide[UserContainer.signup_email_send_use_case]):
+    def get(self, signup_use_case: SignupEmailUseCase = Provide[UserContainer.signup_email_send_use_case]):
         """회원가입 인증코드 발송"""
         email = request.args['email']
 
@@ -41,6 +41,28 @@ class Signup(Resource):
         """회원가입"""
         data = request.get_json()
 
-        signup_use_case.signup(data['auth_code'], data['name'], data['username'], data['pw'], data['nickname'], data['account_number'], data['email'])
+        signup_use_case.signup(data['auth_token'], data['name'], data['username'], data['pw'], data['nickname'], data['account_number'], data['email'])
 
         return '', 201
+
+
+validation_parser = signup_ns.parser()
+validation_parser.add_argument('auth-code', type=str, help='이메일')
+validation_parser.add_argument('email', type=str, help='인증코드')
+
+
+@signup_ns.route('/validation-check')
+class SignupValidation(Resource):
+    @signup_ns.doc(parser=validation_parser, description="인증코드의 유효성을 검사 후 인증 토큰을 발급합니다")
+    @signup_ns.response(code=200, description='인증 성공', model=signup_ns.model('인증성공', {
+        'auth_token': fields.String(description='인증을 성공적으로 완수했음을 증명해주는 토큰', example='jwt')
+    }))
+    @inject
+    def get(self, signup_use_case: SignupEmailUseCase = Provide[UserContainer.signup_email_send_use_case]):
+        """인증코드 유효성 검사"""
+        auth_code = request.args['auth-code']
+        email = request.args['email']
+
+        auth_token = signup_use_case.validate_auth_code(email, auth_code)
+        return {'auth_token': auth_token}, 200
+0

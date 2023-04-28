@@ -35,6 +35,14 @@ def signup_error_handling(api):
     def duplicate_user_handling(error):
         return error.json, 406
 
+    @api.errorhandler(exceptions.NotExistToken)
+    def not_exist_token_handling(error):
+        return error.json, 401
+
+    @api.errorhandler(exceptions.ExpiredToken)
+    def expired_token_handling(error):
+        return error.json, 401
+
 
 def delivery_error_handler(api):
     @api.errorhandler(exceptions.AccessDenied)

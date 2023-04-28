@@ -11,7 +11,7 @@ from logic.user.infra.TokenDAO import MongoDBTokenDAO
 from logic.common.email.infra.EmailSender import EmailSender
 from logic.common.cache.infra.CodeCache import RedisCodeCache
 from logic.user.use_case.AuthenticationUseCase import JwtAuthentication
-from logic.user.use_case.SignupUseCase import SignupUseCase, SignupEmailSendUseCase
+from logic.user.use_case.SignupUseCase import SignupUseCase, SignupEmailUseCase
 from logic.user.use_case.ForgotUseCase import ForgotEmailSendUseCase, ForgotTempTokenPublishUseCase
 from logic.user.use_case.ProfileUseCase import ProfileQueryUseCase, ProfileDeleteUseCase, ProfileUpdateUseCase
 from logic.user.use_case.UserUseCase import UserUseCase
@@ -72,7 +72,7 @@ class UserContainer(containers.DeclarativeContainer):
     )
 
     signup_email_send_use_case = providers.Singleton(
-        SignupEmailSendUseCase,
+        SignupEmailUseCase,
         email_sender=email_sender,
         code_cache=code_cache
     )

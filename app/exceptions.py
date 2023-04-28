@@ -79,6 +79,11 @@ class NotExistToken(TokenError):
         super().__init__(msg=msg, code=code)
 
 
+class ExpiredToken(TokenError):
+    def __init__(self, msg='만료된 토큰', code=201):
+        super().__init__(msg=msg, code=code)
+
+
 # Store
 class StoreError(DomainError):
     def __init__(self, msg, code):
