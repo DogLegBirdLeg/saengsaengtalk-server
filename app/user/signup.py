@@ -47,8 +47,8 @@ class Signup(Resource):
 
 
 validation_parser = signup_ns.parser()
-validation_parser.add_argument('auth-code', type=str, help='이메일')
-validation_parser.add_argument('email', type=str, help='인증코드')
+validation_parser.add_argument('auth-code', type=str, help='인증코드')
+validation_parser.add_argument('email', type=str, help='이메일')
 
 
 @signup_ns.route('/validation-check')
