@@ -59,7 +59,7 @@ class UserContainer(containers.DeclarativeContainer):
         mongodb_connection=mongodb_connection
     )
 
-    email_sender = providers.Singleton(EmailSender)
+    email_sender = providers.Factory(EmailSender)
     code_cache = providers.Singleton(
         RedisCodeCache,
         redis_connection=redis_connection

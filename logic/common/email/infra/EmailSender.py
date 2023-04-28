@@ -14,6 +14,7 @@ class EmailSender(IEmailSender):
         msg['Subject'] = '인증코드'
 
         self.smtp.sendmail('xoals3094@gmail.com', email, msg.as_string())
+        self.smtp.quit()
 
         return auth_code
 
@@ -22,3 +23,4 @@ class EmailSender(IEmailSender):
         msg['Subject'] = '아이디'
 
         self.smtp.sendmail('xoals3094@gmail.com', email, msg.as_string())
+        self.smtp.quit()
