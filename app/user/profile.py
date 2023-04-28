@@ -40,7 +40,7 @@ class Profile(Resource):
 class ModifyPassword(Resource):
     @profile_ns.doc(security='jwt', description='현재 비밀번호가 일치하면 신규 비밀번호로 변경합니다')
     @profile_ns.expect(profile_ns.model('비밀번호 변경', {
-        'current_password': fields.String(description='현재 비밀번호', example='currentPassword1234')
+        'new_password': fields.String(description='신규 비밀번호', example='newPassword4321')
     }))
     @profile_ns.response(code=204, description='변경 성공')
     @inject
