@@ -25,7 +25,8 @@ class MongoDBPostRepository(IPostRepository):
                 '_id': post.store._id,
                 'name': post.store.name,
                 'fee': post.store.fee,
-                'min_order': post.store.min_order
+                'min_order': post.store.min_order,
+                'note': post.store.note
             },
             'user_id': post.user_id,
             'nickname': post.nickname,

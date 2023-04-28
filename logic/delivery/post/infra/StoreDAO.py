@@ -15,4 +15,4 @@ class MongoDBStoreDAO(IStoreDAO):
         if store_json is None:
             raise exceptions.NotExistResource
 
-        return StoreVO(store_json['_id'], store_json['name'], store_json['fee'], store_json['min_order'])
+        return StoreVO(store_json['_id'], store_json['name'], store_json['fee'], store_json['min_order'], store_json['note'])

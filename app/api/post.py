@@ -25,7 +25,7 @@ post_model = post_ns.model('게시글', {
 })
 from app.api.order import order_model
 post_format_model = post_ns.model('게시글 포멧', {
-    'store_id': fields.String(description='가게 ID', example='644a65224163ebbd6fd788ff'),
+    'store_id': fields.String(description='가게 ID', example='644bb4cc735de5ca8a93c365'),
     'place': fields.String(description='수령 장소', example='기숙사'),
     'order_time': fields.DateTime(description='주문 시간', example=datetime.today().strftime("%Y-%m-%dT%H:%M:%S")),
     'min_member': fields.Integer(description='최소 주문 인원', example=3),

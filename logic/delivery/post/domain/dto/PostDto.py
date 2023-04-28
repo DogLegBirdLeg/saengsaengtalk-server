@@ -37,7 +37,8 @@ class PostDto:
                 '_id': self.store._id,
                 'name': self.store.name,
                 'fee': self.store.fee,
-                'min_order': self.min_member
+                'min_order': self.store.min_order,
+                'note': self.store.note
             },
             'user_id': self.user_id,
             'nickname': self.nickname,

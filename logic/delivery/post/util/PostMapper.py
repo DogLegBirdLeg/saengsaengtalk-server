@@ -8,7 +8,7 @@ class PostMapper:
         store_json = post_json['store']
         post = Post(post_json['_id'],
                     post_json['title'],
-                    StoreVO(store_json['_id'], store_json['name'], store_json['fee'], store_json['min_order']),
+                    StoreVO(store_json['_id'], store_json['name'], store_json['fee'], store_json['min_order'], store_json['note']),
                     post_json['user_id'],
                     post_json['nickname'],
                     post_json['status'],

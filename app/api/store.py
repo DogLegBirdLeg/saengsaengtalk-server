@@ -11,13 +11,15 @@ store_model = store_ns.model('가게', {
     '_id': fields.String(description='가게 id', example='6345a45f1c32cd7c4b64d895'),
     'name': fields.String(description='가게 이름', example='맘스터치'),
     'min_order': fields.Integer(description='최소 주문 금액', example=12000),
-    'fee': fields.Integer(description='배달비', example=3000)
+    'fee': fields.Integer(description='배달비', example=3000),
+    'note': fields.List(fields.String(description='특이사항', example='세트메뉴 3개 이상 주문 가능'))
 })
 store_detail_model = store_ns.model('가게 상세', {
     '_id': fields.String(description='가게 id', example='6345a45f1c32cd7c4b64d895'),
     'name': fields.String(description='가게 이름', example='맘스터치'),
     'min_order': fields.Integer(description='최소 주문 금액', example=12000),
     'fee': fields.Integer(description='배달비', example=3000),
+    'note': fields.List(fields.String(description='특이사항', example='세트메뉴 3개 이상 주문 가능')),
     'sections': fields.List(fields.Nested(model=store_ns.model('섹션', {
         'section_name': fields.String(description='섹션 이름', example='세트메뉴'),
         'menus': fields.List(fields.Nested(model=store_ns.model('메뉴 요약', {
