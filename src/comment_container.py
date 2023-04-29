@@ -8,7 +8,7 @@ from logic.delivery.comment.infra.CommentDAO import MongoDBCommentDAO
 
 
 class CommentContainer(containers.DeclarativeContainer):
-    wiring_config = containers.WiringConfiguration(modules=['app.api.comment'])
+    wiring_config = containers.WiringConfiguration(modules=['app.api.post'])
 
     mongodb_connection = providers.Singleton(
         MongoClient,

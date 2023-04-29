@@ -1,7 +1,7 @@
 from app.api.store import store_ns
 from app.api.post import post_ns
 from app.api.order import order_ns
-from app.api.comment import comment_ns
+#from app.api.comment import post_ns
 
 from flask import Blueprint
 from flask_restx import Api
@@ -23,4 +23,4 @@ delivery_error_handler(delivery_api)
 delivery_api.add_namespace(store_ns, path='/store')
 delivery_api.add_namespace(post_ns, path='/post')
 delivery_api.add_namespace(order_ns, path='/order')
-delivery_api.add_namespace(comment_ns, path='/comment')
+#delivery_api.add_namespace(post_ns, path='/comment')
