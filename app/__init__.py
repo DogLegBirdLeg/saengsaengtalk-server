@@ -35,7 +35,7 @@ def create_app():
     def init_g():
         try:
             g.id = int(request.headers['user_id'])
-            g.nickname = request.headers['nickname']
+            g.nickname = request.headers['nickname'].encode('iso-8859-1').decode('utf-8')
         except KeyError:
             pass
 
