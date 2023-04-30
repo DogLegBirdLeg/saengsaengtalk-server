@@ -3,9 +3,10 @@ from logic.delivery.comment.domain.entity.Comment import Comment
 
 
 class CommentDto:
-    def __init__(self, _id, post_id, user_id, nickname, status, content):
+    def __init__(self, _id, post_id, datetime, user_id, nickname, status, content):
         self._id = _id
         self.post_id = post_id
+        self.datetime = datetime
         self.user_id = user_id
         self.nickname = nickname
         self.status = status
@@ -17,6 +18,7 @@ class SubCommentDto(CommentDto):
     def mapping(comment: Comment):
         return SubCommentDto(_id=comment._id,
                              post_id=comment.post_id,
+                             datetime=comment.datetime,
                              user_id=comment.user_id,
                              nickname=comment.nickname,
                              status=comment.status,
@@ -27,6 +29,7 @@ class SubCommentDto(CommentDto):
         return {
             '_id': self._id,
             'post_id': self.post_id,
+            'datetime': self.datetime,
             'user_id': self.user_id,
             'nickname': self.nickname,
             'status': self.status,
@@ -35,14 +38,15 @@ class SubCommentDto(CommentDto):
 
 
 class MainCommentDto(CommentDto):
-    def __init__(self, _id, post_id, user_id, nickname, status, content):
-        super().__init__(_id, post_id, user_id, nickname, status, content)
+    def __init__(self, _id, post_id, datetime, user_id, nickname, status, content):
+        super().__init__(_id, post_id, datetime, user_id, nickname, status, content)
         self.sub_comments: List[SubCommentDto] = []
 
     @staticmethod
     def mapping(comment: Comment):
         return MainCommentDto(_id=comment._id,
                               post_id=comment.post_id,
+                              datetime=comment.datetime,
                               user_id=comment.user_id,
                               nickname=comment.nickname,
                               status=comment.status,
@@ -53,6 +57,7 @@ class MainCommentDto(CommentDto):
         return {
             '_id': self._id,
             'post_id': self.post_id,
+            'datetime': self.datetime,
             'user_id': self.user_id,
             'nickname': self.nickname,
             'status': self.status,

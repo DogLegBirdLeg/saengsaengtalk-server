@@ -9,6 +9,7 @@ post_ns = Namespace('comment', description='댓글')
 sub_comment_model = post_ns.model('대댓글', {
     '_id': fields.String(description='댓글 ID', example='6447d6884c5c7f0de2717ec4'),
     'post_id': fields.String(description='게시글 ID', example='6447d6884c5c7f0de2717ec3'),
+    'datetime': fields.String(description='시간', example='2023-04-30T19:10:50'),
     'user_id': fields.Integer(description='유저 ID', example=1674995732373),
     'nickname': fields.String(description='닉네임', example='개발이여친'),
     'status': fields.String(description='상태', example='created'),
@@ -18,6 +19,7 @@ sub_comment_model = post_ns.model('대댓글', {
 main_comment_model = post_ns.model('댓글', {
     '_id': fields.String(description='댓글 ID', example='6447d6884c5c7f0de2717ec1'),
     'post_id': fields.String(description='게시글 ID', example='6447d6884c5c7f0de2717ec2'),
+    'datetime': fields.String(description='시간', example='2023-04-30T19:10:50'),
     'user_id': fields.Integer(description='유저 ID', example=1674995732373),
     'nickname': fields.String(description='닉네임', example='개발이'),
     'status': fields.String(description='상태', example='created'),
