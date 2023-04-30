@@ -12,7 +12,7 @@ from logic.delivery.store.infra.MenuRepository import MongoDBMenuRepository
 
 class OrderContainer(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(modules=['app.api.order',
-                                                            'logic.delivery.order.usecase.PostEventHandler'])
+                                                            'logic.delivery.order.application.PostEventHandler'])
 
     mongodb_connection = providers.Singleton(
         MongoClient,

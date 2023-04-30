@@ -4,7 +4,7 @@ from dependency_injector.wiring import inject, Provide
 from src.order_container import OrderContainer
 from src.post_container import PostContainer
 from logic.delivery.order.usecase.OrderUseCase import OrderUseCase
-from logic.delivery.post.usecase.PostUseCase import PostUserPoolUseCase
+from logic.delivery.post.application.post_use_case import PostUserPoolUseCase
 
 order_ns = Namespace('order', description='주문')
 

@@ -1,6 +1,6 @@
 from typing import List
 from logic.delivery.post.domain.entity.Post import Post
-from logic.delivery.post.usecase.IDao import IPostDAO
+from logic.delivery.post.application.IDao import IPostDAO
 from logic.delivery.post.util.PostMapper import PostMapper
 
 

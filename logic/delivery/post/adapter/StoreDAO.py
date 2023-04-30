@@ -1,5 +1,5 @@
 from app import exceptions
-from logic.delivery.post.usecase.IDao import IStoreDAO
+from logic.delivery.post.application.IDao import IStoreDAO
 from logic.delivery.post.domain.vo.store_vo import StoreVO
 from bson import ObjectId
 

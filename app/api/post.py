@@ -4,7 +4,7 @@ from src.post_container import PostContainer
 from flask_restx import Namespace, Resource, fields
 from datetime import datetime
 
-from logic.delivery.post.usecase.PostUseCase \
+from logic.delivery.post.application.post_use_case \
     import PostQueryUseCase, PostCreateUseCase, PostDeleteUseCase, PostUpdateUseCase
 
 post_ns = Namespace('post', description='게시글')

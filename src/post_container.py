@@ -5,11 +5,11 @@ from config.production import mongodb
 from logic.common.push_message.infra.MessagePusher import MessagePusher
 from logic.common.push_message.infra.TokenDAO import MongoDBTokenDAO
 
-from logic.delivery.post.usecase.PostUseCase \
+from logic.delivery.post.application.post_use_case \
     import PostQueryUseCase, PostCreateUseCase, PostDeleteUseCase, PostUpdateUseCase, PostUserPoolUseCase
-from logic.delivery.post.infra.PostRepository import MongoDBPostRepository
-from logic.delivery.post.infra.PostDAO import MongoDBPostDAO
-from logic.delivery.post.infra.StoreDAO import MongoDBStoreDAO
+from logic.delivery.post.adapter.PostRepository import MongoDBPostRepository
+from logic.delivery.post.adapter.PostDAO import MongoDBPostDAO
+from logic.delivery.post.adapter.StoreDAO import MongoDBStoreDAO
 
 
 class PostContainer(containers.DeclarativeContainer):

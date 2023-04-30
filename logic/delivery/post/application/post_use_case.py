@@ -1,6 +1,6 @@
 from typing import List
-from logic.delivery.post.usecase.IDao import IPostDAO
-from logic.delivery.post.usecase.IDao import IStoreDAO
+from logic.delivery.post.application.IDao import IPostDAO
+from logic.delivery.post.application.IDao import IStoreDAO
 from logic.delivery.post.domain.RepositoryInterface import IPostRepository
 from logic.delivery.post.domain.entity.Post import Post
 from logic.delivery.post.domain.dto.PostDto import PostDto
@@ -9,6 +9,7 @@ from logic.common.push_message.application.IMessagePuhser import IMessagePusher
 from flask import g
 from app import exceptions
 
+from abc import ABCMeta
 
 class PostUseCaseHelper:
     @staticmethod
@@ -20,6 +21,9 @@ class PostUseCaseHelper:
 
         return post
 
+
+class PostQueryUseCase(metaclass=ABCMeta):
+    def get_list(self, option) -> :
 
 class PostQueryUseCase:
     def __init__(self, post_repository: IPostRepository, post_dao: IPostDAO):
