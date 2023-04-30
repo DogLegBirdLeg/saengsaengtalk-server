@@ -20,7 +20,7 @@ class CommentUseCase:
     def create_comment(self, post_id, content):
         comment = Comment(_id=str(ObjectId()),
                           post_id=post_id,
-                          datetime=datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
+                          create_at=datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
                           user_id=g.id,
                           nickname=g.nickname,
                           status='created',
@@ -31,7 +31,7 @@ class CommentUseCase:
     def create_reply(self, post_id, super_comment_id, content):
         comment = Comment(_id=str(ObjectId()),
                           post_id=post_id,
-                          datetime=datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
+                          create_at=datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
                           user_id=g.id,
                           nickname=g.nickname,
                           status='created',

@@ -2,10 +2,10 @@ from app import exceptions
 
 
 class Comment:
-    def __init__(self, _id, post_id, datetime, user_id, nickname, status, content, super_comment_id=None):
+    def __init__(self, _id, post_id, create_at, user_id, nickname, status, content, super_comment_id=None):
         self._id = _id
         self.post_id = post_id
-        self.datetime = datetime
+        self.create_at = create_at
         self.user_id = user_id
         self.nickname = nickname
         self.status = status
