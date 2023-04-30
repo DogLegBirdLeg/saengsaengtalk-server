@@ -89,7 +89,7 @@ class PostUpdateUseCase:
             self.message_pusher.push(post.users, '주문이 완료되었습니다!', '조금만 기다려주세요!')
 
         elif status == 'delivered':
-            self.message_pusher.push(post.users, '배달이 완료되었습니다!', f'{post.place}으로 와주세요!')
+            self.message_pusher.push(post.users, '배달이 완료되었습니다!', f'{post.place}로 와주세요!')
 
 
 class PostUserPoolUseCase:
