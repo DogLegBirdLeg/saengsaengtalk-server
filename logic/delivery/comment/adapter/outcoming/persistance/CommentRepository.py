@@ -15,6 +15,7 @@ class MongoDBCommentRepository(CommentRepository):
 
         return Comment(_id=comment_json['_id'],
                        post_id=comment_json['post_id'],
+                       create_at=comment_json['create_at'],
                        user_id=comment_json['user_id'],
                        nickname=comment_json['nickname'],
                        status=comment_json['status'],
@@ -28,6 +29,7 @@ class MongoDBCommentRepository(CommentRepository):
         return [
             Comment(_id=comment_json['_id'],
                     post_id=comment_json['post_id'],
+                    create_at=comment_json['create_at'],
                     user_id=comment_json['user_id'],
                     nickname=comment_json['nickname'],
                     status=comment_json['status'],
@@ -40,6 +42,7 @@ class MongoDBCommentRepository(CommentRepository):
         data = {
             '_id': comment._id,
             'post_id': comment.post_id,
+            'create_at': comment.create_at,
             'user_id': comment.user_id,
             'nickname': comment.nickname,
             'status': comment.status,

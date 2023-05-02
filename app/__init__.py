@@ -41,6 +41,5 @@ def create_app():
             g.nickname = request.headers['nickname']
         except KeyError:
             pass
-        g.id=11111112
-        g.nickname='test2'
+
     return app

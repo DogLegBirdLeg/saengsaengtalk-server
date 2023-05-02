@@ -2,6 +2,7 @@ from logic.delivery.comment.application.port.incoming.CommentCreateUseCase impor
 from logic.delivery.comment.domain.entity.Comment import Comment
 from logic.delivery.comment.application.port.outcoming.persistance.CommentRepository import CommentRepository
 from bson import ObjectId
+from datetime import datetime
 
 
 class CommentCreateService(CommentCreateUseCase):
@@ -11,6 +12,7 @@ class CommentCreateService(CommentCreateUseCase):
     def create_comment(self, user_id, nickname, post_id, content):
         comment = Comment(_id=str(ObjectId()),
                           post_id=post_id,
+                          create_at=datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
                           user_id=user_id,
                           nickname=nickname,
                           status='created',
@@ -21,6 +23,7 @@ class CommentCreateService(CommentCreateUseCase):
     def create_reply(self, user_id, nickname, post_id, super_comment_id, content):
         comment = Comment(_id=str(ObjectId()),
                           post_id=post_id,
+                          create_at=datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
                           user_id=user_id,
                           nickname=nickname,
                           status='created',
