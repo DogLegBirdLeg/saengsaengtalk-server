@@ -1,6 +1,7 @@
 from logic.delivery.comment.application.port.outcoming.persistance.CommentRepository import CommentRepository
 from logic.delivery.comment.domain.entity.Comment import Comment
 from typing import List
+from app import exceptions
 
 
 class MongoDBCommentRepository(CommentRepository):
@@ -11,7 +12,7 @@ class MongoDBCommentRepository(CommentRepository):
         find = {'_id': _id}
         comment_json = self.db.comment.find_one(find)
         if comment_json is None:
-            raise Exception
+            raise exceptions.NotExistComment
 
         return Comment(_id=comment_json['_id'],
                        post_id=comment_json['post_id'],

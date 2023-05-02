@@ -9,7 +9,7 @@ from logic.delivery.comment.adapter.outcoming.persistance.CommentRepository impo
 
 
 class CommentContainer(containers.DeclarativeContainer):
-    wiring_config = containers.WiringConfiguration(modules=['app.api.post'])
+    wiring_config = containers.WiringConfiguration(modules=['app.api.comment'])
 
     mongodb_connection = providers.Singleton(
         MongoClient,

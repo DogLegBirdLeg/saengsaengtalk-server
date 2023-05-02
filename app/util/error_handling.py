@@ -52,6 +52,7 @@ def delivery_error_handler(api):
     post_error_handler(api)
     store_error_handler(api)
     order_error_handler(api)
+    comment_error_handler(api)
 
 
 def post_error_handler(api):
@@ -106,3 +107,9 @@ def order_error_handler(api):
     @api.errorhandler(exceptions.NotValidOrder)
     def not_valid_order_handling(error):
         return error.json, 406
+
+
+def comment_error_handler(api):
+    @api.errorhandler(exceptions.NotExistComment)
+    def not_exist_comment_handling(error):
+        return error.json, 404

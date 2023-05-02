@@ -2,6 +2,7 @@ from typing import List
 from logic.delivery.post.application.port.incoming.PostQueryUseCase import PostQueryUseCase
 from logic.delivery.post.application.port.outgoing.persistence.PostQueryDao import PostQueryDao
 from logic.delivery.post.dto.persistance import Post
+from app import exceptions
 
 
 class PostQueryService(PostQueryUseCase):
@@ -19,4 +20,9 @@ class PostQueryService(PostQueryUseCase):
             return self.post_query_dao.find_all_posts_by_user_id(handling_user_id)
 
     def get(self, post_id) -> Post:
-        return self.post_query_dao.find_post_by_id(post_id)
+        try:
+            post = self.post_query_dao.find_post_by_id(post_id)
+        except exceptions.NotExistResource:
+            raise exceptions.NotExistPost
+
+        return post

@@ -155,3 +155,14 @@ class OrderError(DomainError):
 class NotValidOrder(OrderError):
     def __init__(self, msg='주문 정보가 유효하지 않습니다', code=500):
         super().__init__(msg=msg, code=code)
+
+
+# Comment
+class CommentError(DomainError):
+    def __init__(self, msg, code):
+        super().__init__(msg=msg, code=code)
+
+
+class NotExistComment(CommentError):
+    def __init__(self, msg='댓글 정보를 찾을 수 없습니다', code=600):
+        super().__init__(msg=msg, code=code)

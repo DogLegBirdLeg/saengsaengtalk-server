@@ -1,4 +1,3 @@
-from abc import *
 from logic.common.push_message.application.port.outgoing.TokenQueryDao import TokenQueryDao
 
 
@@ -7,9 +6,7 @@ class MongoDBTokenQueryDao(TokenQueryDao):
         self.db = mongodb_connection['auth']
 
     def find_all_registration_token_user_id(self, users):
-        find = {
-            'user._id': {'$incoming': users}
-        }
+        find = {'user._id': {'$incoming': users}}
         projection = {'_id': False, 'registration_token': True}
 
         tokens = [token['registration_token'] for token in self.db.token.find(find, projection)]

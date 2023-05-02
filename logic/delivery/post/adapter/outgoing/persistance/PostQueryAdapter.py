@@ -1,6 +1,7 @@
 from typing import List
 from logic.delivery.post.dto.persistance import Post
 from logic.delivery.post.application.port.outgoing.persistence.PostQueryDao import PostQueryDao
+from app import exceptions
 
 
 class MongoDBPostQueryDao(PostQueryDao):
@@ -32,5 +33,8 @@ class MongoDBPostQueryDao(PostQueryDao):
     def find_post_by_id(self, post_id) -> Post:
         find = {'_id': post_id}
         post_json = self.db.post.find_one(find)
+
+        if post_json is None:
+            raise exceptions.NotExistPost
 
         return Post.mapping(post_json)
