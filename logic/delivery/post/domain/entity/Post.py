@@ -1,18 +1,14 @@
 from app import exceptions
 from bson import ObjectId
-from datetime import datetime
 from blinker import signal
-
-from logic.delivery.post.domain.vo.store_vo import StoreVO
 
 post_event = signal('post-event')
 
 
 class Post:
-    def __init__(self, _id, title, store: StoreVO, user_id, nickname, status, place, order_time, min_member, max_member, users):
+    def __init__(self, _id, store_id, user_id, nickname, status, place, order_time, min_member, max_member, users):
         self._id = _id
-        self.title = title
-        self.store = store
+        self.store_id = store_id
         self.user_id = user_id
         self.nickname = nickname
         self.status = status
@@ -23,11 +19,9 @@ class Post:
         self.users = users
 
     @staticmethod
-    def create(user_id, nickname, store: StoreVO, place, order_time, min_member, max_member, order_json):
-        title = Post.make_title(order_time, store.name)
+    def create(store_id, user_id, nickname, place, order_time, min_member, max_member, order_json):
         post = Post(_id=str(ObjectId()),
-                    title=title,
-                    store=store,
+                    store_id=store_id,
                     user_id=user_id,
                     nickname=nickname,
                     status='recruiting',
@@ -37,33 +31,37 @@ class Post:
                     max_member=max_member,
                     users=[user_id])
 
-        post_event.send('created', store_id=store._id, post_id=post._id, user_id=user_id, nickname=nickname, order_json=order_json)
+        post_event.send('created', post_id=post._id, store_id=store_id, user_id=user_id, nickname=nickname, order_json=order_json)
         return post
 
-    def _check_permission(self, handling_user_id):
-        if self.user_id != handling_user_id:
+    def _check_permission(self, user_id):
+        if self.user_id != user_id:
             raise exceptions.AccessDenied
 
     def _check_modifiable(self):
         if self.status not in ['recruiting', 'closed']:
             raise exceptions.CantModify
 
-    def modify_content(self, handling_user_id, order_time, place, min_member, max_member):
-        self._check_permission(handling_user_id)
+    def modify_content(self, user_id, order_time, place, min_member, max_member):
+        self._check_permission(user_id)
         self._check_modifiable()
 
-        title = self.make_title(order_time, self.store.name)
         self.order_time = order_time
-        self.title = title
         self.place = place
         self.min_member = min_member
         self.max_member = max_member
 
-    def set_status(self, handling_user_id, status):
-        self._check_permission(handling_user_id)
+    def set_status(self, user_id, status):
+        self._check_permission(user_id)
         self._validate_change_status(status)
 
         self.status = status
+
+        if status == 'ordered':
+            post_event.send('ordered', users=self.users)
+
+        elif status == 'delivered':
+            post_event.send('delivered', users=self.users, place=self.place)
 
     def _validate_change_status(self, status):
         if status not in ['recruiting', 'closed', 'ordered', 'delivered']:
@@ -81,36 +79,32 @@ class Post:
             if status != 'delivered':
                 raise exceptions.NotValidStatus
 
-    def join(self, handling_user_id, handling_nickname, order_json):
+    def join(self, user_id, nickname, order_json):
         if self.status != 'recruiting':
             raise exceptions.NotRecruiting
 
         if len(self.users) >= self.max_member:
             raise exceptions.MaxMember
 
-        if handling_user_id in self.users:
+        if user_id in self.users:
             raise exceptions.AlreadyJoinedUser
 
-        post_event.send('joined', store_id=self.store._id, post_id=self._id, user_id=handling_user_id, nickname=handling_nickname, order_json=order_json)
-        self.users.append(handling_user_id)
+        self.users.append(user_id)
+        post_event.send('joined', store_id=self.store_id, post_id=self._id, user_id=user_id, nickname=nickname, order_json=order_json)
 
-    def quit(self, handling_user_id):
+    def quit(self, user_id):
         if self.status != 'recruiting':
             raise exceptions.NotRecruiting
 
-        if handling_user_id == self.user_id:
+        if user_id == self.user_id:
             raise exceptions.OwnerQuit
 
-        if handling_user_id not in self.users:
+        if user_id not in self.users:
             raise exceptions.NotJoinedUser
 
-        post_event.send('quited', post_id=self._id, user_id=handling_user_id)
-        self.users.remove(handling_user_id)
+        self.users.remove(user_id)
+        post_event.send('quited', post_id=self._id, user_id=user_id)
 
-    def can_delete(self, handling_user_id):
-        self._check_permission(handling_user_id)
+    def can_delete(self, user_id):
+        self._check_permission(user_id)
         self._check_modifiable()
-
-    @staticmethod
-    def make_title(order_time, store_name):
-        return f'[{datetime.fromisoformat(order_time).strftime("%H:%M")}] {store_name}'

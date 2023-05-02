@@ -9,7 +9,7 @@ from app.util.error_handling import auth_error_handler
 authorizations = {
     'jwt': {
         'type': 'apiKey',
-        'in': 'header',
+        'incoming': 'header',
         'name': 'Authorization'
     }
 }

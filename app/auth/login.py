@@ -1,8 +1,10 @@
 from flask import make_response, request
 from flask_restx import Namespace, Resource, fields
-from logic.user.use_case.AuthenticationUseCase import IAuthenticationUseCase
 from dependency_injector.wiring import inject, Provide
 from src.user_container import UserContainer
+
+from logic.user.application.port.incoming.AuthUseCase import AuthUseCase
+
 
 login_ns = Namespace('login', description='로그인')
 
@@ -19,7 +21,7 @@ class Login(Resource):
     @login_ns.expect(signin_format_model)
     @login_ns.response(code=200, description='로그인 성공', headers={'Authentication': 'access_token/refresh_token'})
     @inject
-    def post(self, authentication_use_case: IAuthenticationUseCase = Provide[UserContainer.authentication_use_case]):
+    def post(self, authentication_use_case: AuthUseCase = Provide[UserContainer.auth_service]):
         """로그인"""
         data = request.get_json()
         access_token, refresh_token = authentication_use_case.login(data['username'], data['pw'], data['registration_token'])

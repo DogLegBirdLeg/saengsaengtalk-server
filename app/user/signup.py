@@ -1,8 +1,9 @@
 from flask import request
 from flask_restx import Resource, Namespace, fields
-from logic.user.use_case.SignupUseCase import SignupUseCase, SignupEmailUseCase
 from dependency_injector.wiring import inject, Provide
 from src.user_container import UserContainer
+
+from logic.user.application.port.incoming.SignupUseCase import SignupUseCase, SignupAuthUseCase
 
 signup_ns = Namespace('signup', description='회원가입')
 
@@ -26,7 +27,7 @@ class Signup(Resource):
     @signup_ns.doc(parser=email_parser, description="이메일에 인증코드를 발송합니다")
     @signup_ns.response(code=204, description='요청 성공')
     @inject
-    def get(self, signup_use_case: SignupEmailUseCase = Provide[UserContainer.signup_email_send_use_case]):
+    def get(self, signup_use_case: SignupAuthUseCase = Provide[UserContainer.signup_auth_service]):
         """회원가입 인증코드 발송"""
         email = request.args['email']
 
@@ -37,7 +38,7 @@ class Signup(Resource):
     @signup_ns.expect(signup_format_model)
     @signup_ns.response(code=201, description='가입 성공')
     @inject
-    def post(self, signup_use_case: SignupUseCase = Provide[UserContainer.signup_use_case]):
+    def post(self, signup_use_case: SignupUseCase = Provide[UserContainer.signup_service]):
         """회원가입"""
         data = request.get_json()
 
@@ -58,7 +59,7 @@ class SignupValidation(Resource):
         'auth_token': fields.String(description='인증을 성공적으로 완수했음을 증명해주는 토큰', example='jwt')
     }))
     @inject
-    def get(self, signup_use_case: SignupEmailUseCase = Provide[UserContainer.signup_email_send_use_case]):
+    def get(self, signup_use_case: SignupAuthUseCase = Provide[UserContainer.signup_auth_service]):
         """인증코드 유효성 검사"""
         auth_code = request.args['auth-code']
         email = request.args['email']

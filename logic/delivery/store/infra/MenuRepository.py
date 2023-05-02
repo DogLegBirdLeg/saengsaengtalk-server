@@ -23,8 +23,8 @@ class MongoDBMenuRepository(MenuRepository):
         return MenuMapper.menu_mapping(menu_json)
 
     def find_all_menu_by_store_id(self, store_id: str) -> List[Menu]:
-        find = {'store_id': store_id}
-
+        find = {'store_id': ObjectId(store_id)}
+        print(find)
         menus_json = list(self.db.menu.find(find))
 
         if len(menus_json) == 0:

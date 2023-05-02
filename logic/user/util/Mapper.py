@@ -1,4 +1,4 @@
-from logic.user.domain.Entity.User import User
+from logic.user.domain.entity.User import User
 
 
 class UserMapper:
