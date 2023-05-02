@@ -17,12 +17,12 @@ class DatabaseError(BaseException):
 
 
 class NotExistResource(DatabaseError):
-    def __init__(self, msg='존재하지 않는 리소스', code=2):
+    def __init__(self, msg='존재하지 않는 리소스입니다', code=2):
         super().__init__(msg=msg, code=code)
 
 
 class DuplicateKeyError(DatabaseError):
-    def __init__(self, msg='중복 키 존재', code=3):
+    def __init__(self, msg='중복 키가 존재합니다', code=3):
         super().__init__(msg=msg, code=code)
 
 
@@ -39,32 +39,32 @@ class AuthError(DomainError):
 
 
 class AccessDenied(AuthError):
-    def __init__(self, msg='접근 권한 없음', code=100):
+    def __init__(self, msg='접근 권한이 없습니다', code=100):
         super().__init__(msg=msg, code=code)
 
 
 class SigninFail(AuthError):
-    def __init__(self, msg='아이디 혹은 비밀번호가 일치하지 않음', code=101):
+    def __init__(self, msg='아이디 혹은 비밀번호가 일치하지 않습니다', code=101):
         super().__init__(msg=msg, code=code)
 
 
 class NotExistUser(SigninFail):
-    def __int__(self, msg='존재하지 않는 유저', code=102):
+    def __int__(self, msg='유저 데이터를 찾을 수 없습니다', code=102):
         super().__init__(msg=msg, code=code)
 
 
 class DuplicateUser(SigninFail):
-    def __init__(self, msg='중복 유저 존재', code=103):
+    def __init__(self, msg='중복 유저가 존재합니다.', code=103):
         super().__init__(msg=msg, code=code)
 
 
 class PasswordMismatch(AuthError):
-    def __init__(self, msg='비밀번호 불일치', code=104):
+    def __init__(self, msg='비밀번호가 일치하지 않습니다', code=104):
         super().__init__(msg=msg, code=code)
 
 
 class NotValidAuthCode(AuthError):
-    def __init__(self, msg='인증 코드 불일치', code=105):
+    def __init__(self, msg='유효하지 않은 인증코드입니다', code=105):
         super().__init__(msg=msg, code=code)
 
 
@@ -75,12 +75,12 @@ class TokenError(DomainError):
 
 
 class NotExistToken(TokenError):
-    def __init__(self, msg='존재하지 않는 토큰', code=200):
+    def __init__(self, msg='토큰 정보를 찾을 수 없습니다', code=200):
         super().__init__(msg=msg, code=code)
 
 
 class ExpiredToken(TokenError):
-    def __init__(self, msg='만료된 토큰', code=201):
+    def __init__(self, msg='토큰이 만료되었습니다', code=201):
         super().__init__(msg=msg, code=code)
 
 
@@ -91,12 +91,12 @@ class StoreError(DomainError):
 
 
 class NotExistStore(StoreError):
-    def __init__(self, msg='가게 리소스 찾을 수 없음', code=300):
+    def __init__(self, msg='가게 정보를 찾을 수 없습니다', code=300):
         super().__init__(msg=msg, code=code)
 
 
 class NotExistMenu(StoreError):
-    def __init__(self, msg='메뉴 리소스 찾을 수 없음', code=301):
+    def __init__(self, msg='메뉴 정보를 찾을 수 없습니다', code=301):
         super().__init__(msg=msg, code=code)
 
 
@@ -107,42 +107,42 @@ class PostError(DomainError):
 
 
 class NotExistPost(PostError):
-    def __init__(self, msg='게시글 리소스 찾을 수 없음', code=400):
+    def __init__(self, msg='게시글 정보를 찾을 수 없습니다', code=400):
         super().__init__(msg=msg, code=code)
 
 
 class CantModify(PostError):
-    def __init__(self, msg='게시글 수정 불가 상태', code=401):
+    def __init__(self, msg='게시글의 수정/삭제가 불가능한 상태입니다', code=401):
         super().__init__(msg=msg, code=code)
 
 
 class NotRecruiting(PostError):
-    def __init__(self, msg='인원 모집을 하지 않는 게시글', code=402):
+    def __init__(self, msg='인원을 모집하지 않는 게시글입니다', code=402):
         super().__init__(msg=msg, code=code)
 
 
 class MaxMember(PostError):
-    def __init__(self, msg='최대 인원', code=403):
+    def __init__(self, msg='현재 참여자 수가 최대 인원에 도달하여 참가할 수 없습니다', code=403):
         super().__init__(msg=msg, code=code)
 
 
 class OwnerQuit(PostError):
-    def __init__(self, msg='대표 유저 탈퇴', code=404):
+    def __init__(self, msg='대표 유저는 게시글을 탈퇴할 수 없습니다', code=404):
         super().__init__(msg=msg, code=code)
 
 
 class AlreadyJoinedUser(PostError):
-    def __init__(self, msg='참여 완료된 유저', code=405):
+    def __init__(self, msg='이미 참여가 완료된 유저입니다', code=405):
         super().__init__(msg=msg, code=code)
 
 
 class NotJoinedUser(PostError):
-    def __init__(self, msg='참여하지 않은 유저', code=406):
+    def __init__(self, msg='참여하지 않은 유저입니다', code=406):
         super().__init__(msg=msg, code=code)
 
 
 class NotValidStatus(PostError):
-    def __init__(self, msg='유효하지 않은 상태 메시지', code=407):
+    def __init__(self, msg='유효하지 않은 상태 메시지입니다', code=407):
         super().__init__(msg=msg, code=code)
 
 
@@ -153,5 +153,5 @@ class OrderError(DomainError):
 
 
 class NotValidOrder(OrderError):
-    def __init__(self, msg='유효하지 않은 주문', code=500):
+    def __init__(self, msg='주문 정보가 유효하지 않습니다', code=500):
         super().__init__(msg=msg, code=code)
