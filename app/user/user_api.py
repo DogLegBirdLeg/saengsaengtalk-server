@@ -11,7 +11,7 @@ from app.util.error_handling import user_error_handling
 authorizations = {
     'jwt': {
         'type': 'apiKey',
-        'in': 'header',
+        'incoming': 'header',
         'name': 'Authorization'
     }
 }

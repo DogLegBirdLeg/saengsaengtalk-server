@@ -2,14 +2,14 @@ from dependency_injector import containers, providers
 from pymongo import MongoClient
 from config.production import mongodb
 
-from logic.common.push_message.infra.MessagePusher import MessagePusher
-from logic.common.push_message.infra.TokenDAO import MongoDBTokenDAO
-
-from logic.delivery.post.application.post_use_case \
-    import PostQueryUseCase, PostCreateUseCase, PostDeleteUseCase, PostUpdateUseCase, PostUserPoolUseCase
-from logic.delivery.post.adapter.PostRepository import MongoDBPostRepository
-from logic.delivery.post.adapter.PostDAO import MongoDBPostDAO
-from logic.delivery.post.adapter.StoreDAO import MongoDBStoreDAO
+from logic.delivery.post.application.PostCreateService import PostCreateService
+from logic.delivery.post.application.PostQueryService import PostQueryService
+from logic.delivery.post.application.PostDeleteService import PostDeleteService
+from logic.delivery.post.application.PostUpdateService import PostUpdateService
+from logic.delivery.post.application.PostUserPoolService import PostUserPoolService
+from logic.delivery.post.adapter.outgoing.persistance.PostRepository import MongoDBPostRepository
+from logic.delivery.post.adapter.outgoing.persistance.PostQueryAdapter import MongoDBPostQueryDao
+from logic.delivery.post.adapter.outgoing.persistance.PostUpdateAdapter import MongoDBPostUpdateDao
 
 
 class PostContainer(containers.DeclarativeContainer):
@@ -26,41 +26,11 @@ class PostContainer(containers.DeclarativeContainer):
     )
 
     post_repository = providers.Singleton(MongoDBPostRepository, mongodb_connection)
-    post_dao = providers.Singleton(MongoDBPostDAO, mongodb_connection)
-    store_dao = providers.Singleton(MongoDBStoreDAO, mongodb_connection)
-    token_dao = providers.Singleton(MongoDBTokenDAO, mongodb_connection)
+    post_query_dao = providers.Singleton(MongoDBPostQueryDao, mongodb_connection)
+    post_update_dao = providers.Singleton(MongoDBPostUpdateDao, mongodb_connection)
 
-    message_pusher = providers.Singleton(
-        MessagePusher,
-        token_dao=token_dao
-    )
-
-    post_query_use_case = providers.Singleton(
-        PostQueryUseCase,
-        post_repository=post_repository,
-        post_dao=post_dao
-    )
-
-    post_create_use_case = providers.Singleton(
-        PostCreateUseCase,
-        post_repository=post_repository,
-        store_dao=store_dao
-    )
-
-    post_delete_use_case = providers.Singleton(
-        PostDeleteUseCase,
-        post_repository=post_repository
-    )
-
-    post_update_use_case = providers.Singleton(
-        PostUpdateUseCase,
-        post_repository=post_repository,
-        post_dao=post_dao,
-        message_pusher=message_pusher
-    )
-
-    post_user_pool_use_case = providers.Singleton(
-        PostUserPoolUseCase,
-        post_repository=post_repository,
-        post_dao=post_dao
-    )
+    post_query_service = providers.Singleton(PostQueryService, post_query_dao=post_query_dao)
+    post_create_service = providers.Singleton(PostCreateService, post_repository=post_repository)
+    post_delete_service = providers.Singleton(PostDeleteService, post_repository=post_repository)
+    post_update_service = providers.Singleton(PostUpdateService, post_repository=post_repository, post_update_dao=post_update_dao)
+    post_user_pool_service = providers.Singleton(PostUserPoolService, post_repository=post_repository, post_update_dao=post_update_dao)

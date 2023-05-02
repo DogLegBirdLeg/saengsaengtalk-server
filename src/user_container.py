@@ -4,17 +4,16 @@ from redis import StrictRedis
 from config.production import mongodb, redis
 
 
-from logic.user.infra.UserRepository import MongoDBUserRepository
-from logic.user.infra.UserDAO import MongoDBUserDAO
-from logic.user.infra.TokenDAO import MongoDBTokenDAO
+from logic.user.adapter.outgoing.UserRepository import MongoDBUserRepository
+from logic.user.adapter.outgoing.UserAdapter import MongoDBUserDao
+from logic.user.adapter.outgoing.TokenAdapter import MongoDBTokenDao
+from logic.user.adapter.outgoing.CodeCacheAdapter import RedisCodeCacher
 
-from logic.common.email.infra.EmailSender import EmailSender
-from logic.common.cache.infra.CodeCache import RedisCodeCache
-from logic.user.use_case.AuthenticationUseCase import JwtAuthentication
-from logic.user.use_case.SignupUseCase import SignupUseCase, SignupEmailUseCase
-from logic.user.use_case.ForgotUseCase import ForgotEmailSendUseCase, ForgotTempTokenPublishUseCase
-from logic.user.use_case.ProfileUseCase import ProfileQueryUseCase, ProfileDeleteUseCase, ProfileUpdateUseCase
-from logic.user.use_case.UserUseCase import UserUseCase
+from logic.user.application.SignupService import SignupService, SignupAuthService
+from logic.user.application.UserService import UserService
+from logic.user.application.ForgotService import ForgotPasswordService, ForgotUsernameService
+from logic.user.application.AuthService import JwtAuthService
+from logic.user.application.ProfileService import ProfileQueryService, ProfileUpdateService, ProfileDeleteService
 
 
 class UserContainer(containers.DeclarativeContainer):
@@ -44,85 +43,21 @@ class UserContainer(containers.DeclarativeContainer):
         connect=False
     )
 
-    user_repository = providers.Singleton(
-        MongoDBUserRepository,
-        mongodb_connection=mongodb_connection
-    )
+    user_repository = providers.Singleton(MongoDBUserRepository, mongodb_connection=mongodb_connection)
+    user_dao = providers.Singleton(MongoDBUserDao, mongodb_connection=mongodb_connection)
+    token_dao = providers.Singleton(MongoDBTokenDao, mongodb_connection=mongodb_connection)
+    code_cacher = providers.Singleton(RedisCodeCacher, redis_connection=redis_connection)
 
-    user_dao = providers.Singleton(
-        MongoDBUserDAO,
-        mongodb_connection=mongodb_connection
-    )
+    signup_service = providers.Singleton(SignupService, user_repository=user_repository, code_cacher=code_cacher)
+    signup_auth_service = providers.Singleton(SignupAuthService, code_cacher=code_cacher)
 
-    token_dao = providers.Singleton(
-        MongoDBTokenDAO,
-        mongodb_connection=mongodb_connection
-    )
+    user_service = providers.Singleton(UserService, user_dao=user_dao)
 
-    email_sender = providers.Factory(EmailSender)
-    code_cache = providers.Singleton(
-        RedisCodeCache,
-        redis_connection=redis_connection
-    )
+    forgot_username_service = providers.Singleton(ForgotUsernameService, user_repository=user_repository)
+    forgot_password_service = providers.Singleton(ForgotPasswordService, code_cacher=code_cacher, user_repository=user_repository)
 
-    signup_use_case = providers.Singleton(
-        SignupUseCase,
-        user_repository=user_repository,
-        code_cache=code_cache
-    )
+    auth_service = providers.Singleton(JwtAuthService, user_repository=user_repository, token_dao=token_dao)
 
-    signup_email_send_use_case = providers.Singleton(
-        SignupEmailUseCase,
-        email_sender=email_sender,
-        code_cache=code_cache
-    )
-
-    authentication_use_case = providers.Singleton(
-        JwtAuthentication,
-        user_repository=user_repository,
-        token_dao=token_dao
-    )
-
-    forgot_email_send_use_case = providers.Singleton(
-        ForgotEmailSendUseCase,
-        code_cache=code_cache,
-        email_sender=email_sender,
-        user_repository=user_repository
-    )
-
-    forgot_temp_token_publish_use_case = providers.Singleton(
-        ForgotTempTokenPublishUseCase,
-        code_cache=code_cache,
-        user_repository=user_repository
-    )
-
-    profile_query_use_case = providers.Singleton(
-        ProfileQueryUseCase,
-        user_repository=user_repository,
-        user_dao=user_dao
-    )
-
-    profile_delete_use_case = providers.Singleton(
-        ProfileDeleteUseCase,
-        user_repository=user_repository,
-        user_dao=user_dao
-    )
-
-    profile_update_use_case = providers.Singleton(
-        ProfileUpdateUseCase,
-        user_repository=user_repository,
-        user_dao=user_dao
-    )
-
-    user_use_case = providers.Singleton(
-        UserUseCase,
-        user_dao=user_dao
-    )
-
-
-
-
-
-
-
-
+    profile_query_service = providers.Singleton(ProfileQueryService, user_repository=user_repository)
+    profile_delete_service = providers.Singleton(ProfileDeleteService, user_repository=user_repository)
+    profile_update_service = providers.Singleton(ProfileUpdateService, user_dao=user_dao)

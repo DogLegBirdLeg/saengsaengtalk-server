@@ -1,6 +1,6 @@
 from flask_restx import Resource, Namespace, fields
 from dependency_injector.wiring import inject, Provide
-from logic.user.use_case.UserUseCase import UserUseCase
+from logic.user.application.port.incoming.UserUseCase import UserUseCase
 from src.user_container import UserContainer
 from flask import request
 
@@ -20,7 +20,7 @@ class UsernameCheck(Resource):
     @duplicate_check_ns.doc(parser=parser, description="필드의 값이 중복되는지 검사합니다")
     @duplicate_check_ns.response(code=200, description="검사 결과", model=duplicate_result_model)
     @inject
-    def get(self, user_use_case: UserUseCase = Provide[UserContainer.user_use_case]):
+    def get(self, user_use_case: UserUseCase = Provide[UserContainer.user_service]):
         """중복체크"""
         is_duplicated = user_use_case.check_exist_user(request.args['field'], request.args['value'])
 

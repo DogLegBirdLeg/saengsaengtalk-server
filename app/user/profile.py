@@ -1,6 +1,7 @@
+from flask import g
 from flask_restx import Resource, Namespace, fields
 from dependency_injector.wiring import inject, Provide
-from logic.user.use_case.ProfileUseCase import ProfileQueryUseCase, ProfileUpdateUseCase, ProfileDeleteUseCase
+from logic.user.application.port.incoming.ProfileUseCase import ProfileQueryUseCase, ProfileUpdateUseCase, ProfileDeleteUseCase
 from src.user_container import UserContainer
 from flask import request
 
@@ -22,33 +23,33 @@ class Profile(Resource):
     @profile_ns.doc(security='jwt', description='유저 정보를 반환합니다')
     @profile_ns.marshal_with(code=200, description='조회 성공', fields=user_model, mask=None)
     @inject
-    def get(self, profile_use_case: ProfileQueryUseCase = Provide[UserContainer.profile_query_use_case]):
+    def get(self, profile_use_case: ProfileQueryUseCase = Provide[UserContainer.profile_query_service]):
         """유저 정보"""
-        user = profile_use_case.get()
+        user = profile_use_case.get(g.id)
         return user.json
 
     @profile_ns.doc(security='jwt', description='회원탈퇴')
     @profile_ns.response(code=204, description='탈퇴 성공')
     @inject
-    def delete(self, profile_use_case: ProfileDeleteUseCase = Provide[UserContainer.profile_delete_use_case]):
+    def delete(self, profile_use_case: ProfileDeleteUseCase = Provide[UserContainer.profile_delete_service]):
         """회원탈퇴"""
-        profile_use_case.delete()
+        profile_use_case.delete(g.id)
         return '', 204
 
 
 @profile_ns.route('/password')
 class ModifyPassword(Resource):
-    @profile_ns.doc(security='jwt', description='현재 비밀번호가 일치하면 신규 비밀번호로 변경합니다')
+    @profile_ns.doc(security='jwt', description='신규 비밀번호로 변경합니다')
     @profile_ns.expect(profile_ns.model('비밀번호 변경', {
         'new_password': fields.String(description='신규 비밀번호', example='newPassword4321')
     }))
     @profile_ns.response(code=204, description='변경 성공')
     @inject
-    def patch(self, profile_use_case: ProfileUpdateUseCase = Provide[UserContainer.profile_update_use_case]):
+    def patch(self, profile_use_case: ProfileUpdateUseCase = Provide[UserContainer.profile_update_service]):
         """비밀번호 변경"""
         data = request.get_json()
 
-        profile_use_case.update_password(data['new_password'])
+        profile_use_case.update_password(g.id, data['new_password'])
         return '', 204
 
 
@@ -60,10 +61,10 @@ class ModifyNickname(Resource):
     }))
     @profile_ns.response(code=204, description='변경 성공')
     @inject
-    def patch(self, profile_use_case: ProfileUpdateUseCase = Provide[UserContainer.profile_update_use_case]):
+    def patch(self, profile_use_case: ProfileUpdateUseCase = Provide[UserContainer.profile_update_service]):
         """닉네임 변경"""
         data = request.get_json()
-        profile_use_case.update_nickname(data['nickname'])
+        profile_use_case.update_nickname(g.id, data['nickname'])
         return '', 204
 
 
@@ -75,8 +76,8 @@ class ModifyAccountNumber(Resource):
     }))
     @profile_ns.response(code=204, description='변경 성공')
     @inject
-    def patch(self, profile_use_case: ProfileUpdateUseCase = Provide[UserContainer.profile_update_use_case]):
+    def patch(self, profile_use_case: ProfileUpdateUseCase = Provide[UserContainer.profile_update_service]):
         """계좌번호 변경"""
         data = request.get_json()
-        profile_use_case.update_account_number(data['account_number'])
+        profile_use_case.update_account_number(g.id, data['account_number'])
         return '', 204

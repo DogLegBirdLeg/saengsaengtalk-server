@@ -1,12 +1,13 @@
-from flask import request
+from flask import request, g
 from flask_restx import Namespace, Resource, fields
 from dependency_injector.wiring import inject, Provide
 from src.order_container import OrderContainer
 from src.post_container import PostContainer
-from logic.delivery.order.usecase.OrderUseCase import OrderUseCase
-from logic.delivery.post.application.post_use_case import PostUserPoolUseCase
+from logic.delivery.order.util.JsonConverter import order_to_json
+from logic.delivery.order.application.port.incoming.OrderQueryUseCase import OrderQueryUseCase
+from logic.delivery.post.application.port.incoming.PostUserPoolUseCase import PostUserPoolUseCase
 
-order_ns = Namespace('order', description='주문')
+order_ns = Namespace('order', description='게시글 주문')
 
 order_line_model = order_ns.model('주문내역', {
     'quantity': fields.Integer(description='개수', example=2),
@@ -36,46 +37,46 @@ order_model = order_ns.model('주문', {
 })
 
 
-@order_ns.route('/<string:post_id>')
+@order_ns.route('/<string:post_id>/orders')
 class Order(Resource):
     @order_ns.doc(security='jwt', description="모든 주문을 반환합니다")
     @order_ns.marshal_with(code=200, fields=order_ns.model('주문리스트', {
         'orders': fields.List(fields.Nested(model=order_model))
     }), mask=None)
     @inject
-    def get(self, post_id, order_use_case: OrderUseCase = Provide[OrderContainer.order_use_case]):
+    def get(self, post_id, order_use_case: OrderQueryUseCase = Provide[OrderContainer.order_query_service]):
         """게시글 주문 조회"""
         orders = order_use_case.get_list(post_id)
 
-        return {'orders': [order.json for order in orders]}
+        return {'orders': [order_to_json(order) for order in orders]}
 
     @order_ns.doc(security='jwt', body=order_model, description="내 주문을 생성합니다")
     @order_ns.response(code=204, description='주문 성공')
     @inject
-    def post(self, post_id, post_use_case: PostUserPoolUseCase = Provide[PostContainer.post_user_pool_use_case]):
+    def post(self, post_id, post_use_case: PostUserPoolUseCase = Provide[PostContainer.post_user_pool_service]):
         """주문 추가(참여)"""
         data = request.get_json()
 
-        post_use_case.join(post_id, data)
+        post_use_case.join(post_id, g.id, g.nickname, data)
         return '', 204
 
 
-@order_ns.route('/<string:post_id>/me')
+@order_ns.route('/<string:post_id>/orders/me')
 class MyOrder(Resource):
     @order_ns.doc(security='jwt', description="내 주문을 반환합니다")
     @order_ns.marshal_with(code=200, fields=order_ns.model('주문응답', {
         'order': fields.Nested(model=order_model)
     }), mask=None)
     @inject
-    def get(self, post_id, order_use_case: OrderUseCase = Provide[OrderContainer.order_use_case]):
+    def get(self, post_id, order_use_case: OrderQueryUseCase = Provide[OrderContainer.order_query_service]):
         """내 주문 조회"""
         order = order_use_case.get(post_id)
-        return {'order': order.json}
+        return {'order': order_to_json(order)}
 
     @order_ns.doc(security='jwt', description="내 주문을 삭제합니다")
     @order_ns.response(code=204, description='변경 성공')
     @inject
-    def delete(self, post_id, post_use_case: PostUserPoolUseCase = Provide[PostContainer.post_user_pool_use_case]):
+    def delete(self, post_id, post_use_case: PostUserPoolUseCase = Provide[PostContainer.post_user_pool_service]):
         """주문 삭제(탈퇴)"""
-        post_use_case.quit(post_id)
+        post_use_case.quit(post_id, g.id)
         return '', 204
