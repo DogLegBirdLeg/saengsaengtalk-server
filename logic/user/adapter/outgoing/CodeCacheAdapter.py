@@ -10,7 +10,7 @@ class RedisCodeCacher(CodeCacher):
         return self.db.get(email)
 
     def save(self, email, code):
-        self.db.set(email, code)
+        self.db.setex(email, 300, code)
 
     def delete(self, email):
         self.db.delete(email)
