@@ -40,6 +40,7 @@ class MongoDBPostRepository(PostRepository):
             'max_member': post.max_member,
             'users': post.users
         }
+
         self.db.post.insert_one(data)
 
     def delete(self, post_id: str):

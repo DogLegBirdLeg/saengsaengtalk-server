@@ -1,5 +1,6 @@
 from app import exceptions
 from bson import ObjectId
+from datetime import datetime
 from blinker import signal
 
 post_event = signal('post-event')
@@ -13,7 +14,7 @@ class Post:
         self.nickname = nickname
         self.status = status
         self.place = place
-        self.order_time = order_time
+        self.order_time = datetime.strptime(order_time, '%Y-%m-%dT%H:%M:%S')
         self.min_member = min_member
         self.max_member = max_member
         self.users = users
