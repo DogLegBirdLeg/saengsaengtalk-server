@@ -1,3 +1,5 @@
+import pymongo
+
 from logic.delivery.comment.application.port.outcoming.persistance.CommentRepository import CommentRepository
 from logic.delivery.comment.domain.entity.Comment import Comment
 from typing import List
@@ -25,7 +27,7 @@ class MongoDBCommentRepository(CommentRepository):
 
     def find_all_comment_by_post_id(self, post_id) -> List[Comment]:
         find = {'post_id': post_id}
-        comments_json = self.db.comment.find(find)
+        comments_json = self.db.comment.find(find).sort('create_at', pymongo.ASCENDING)
 
         return [
             Comment(_id=comment_json['_id'],
