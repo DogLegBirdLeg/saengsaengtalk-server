@@ -10,9 +10,9 @@ post_event = signal('post-event')
 
 @post_event.connect_via('ordered')
 @inject
-def push_ordered_message(users,
-         token_query_dao: TokenQueryDao = Provide[CommonContainer.token_query_dao],
-         message_pusher: MessagePusher = Provide[CommonContainer.message_pusher]):
+def push_ordered_message(sender, users,
+                         token_query_dao: TokenQueryDao = Provide[CommonContainer.token_query_dao],
+                         message_pusher: MessagePusher = Provide[CommonContainer.message_pusher]):
     tokens = token_query_dao.find_all_registration_token_user_id(users)
 
     title = '주문이 완료되었습니다!'
@@ -23,9 +23,9 @@ def push_ordered_message(users,
 
 @post_event.connect_via('delivered')
 @inject
-def push_delivered_message(users, place,
-         token_query_dao: TokenQueryDao = Provide[CommonContainer.token_query_dao],
-         message_pusher: MessagePusher = Provide[CommonContainer.message_pusher]):
+def push_delivered_message(sender, users, place,
+                           token_query_dao: TokenQueryDao = Provide[CommonContainer.token_query_dao],
+                           message_pusher: MessagePusher = Provide[CommonContainer.message_pusher]):
     tokens = token_query_dao.find_all_registration_token_user_id(users)
 
     title = '배달이 완료되었습니다!'
