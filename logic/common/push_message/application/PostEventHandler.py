@@ -10,7 +10,7 @@ post_event = signal('post-event')
 
 @post_event.connect_via('ordered')
 @inject
-def push(users,
+def push_ordered_message(users,
          token_query_dao: TokenQueryDao = Provide[CommonContainer.token_query_dao],
          message_pusher: MessagePusher = Provide[CommonContainer.message_pusher]):
     tokens = token_query_dao.find_all_registration_token_user_id(users)
@@ -23,7 +23,7 @@ def push(users,
 
 @post_event.connect_via('delivered')
 @inject
-def push(users, place,
+def push_delivered_message(users, place,
          token_query_dao: TokenQueryDao = Provide[CommonContainer.token_query_dao],
          message_pusher: MessagePusher = Provide[CommonContainer.message_pusher]):
     tokens = token_query_dao.find_all_registration_token_user_id(users)
