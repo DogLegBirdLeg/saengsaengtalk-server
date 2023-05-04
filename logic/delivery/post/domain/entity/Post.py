@@ -80,6 +80,9 @@ class Post:
             if status != 'delivered':
                 raise exceptions.NotValidStatus
 
+        elif self.status == 'delivered':
+            raise exceptions.NotValidStatus
+
     def join(self, user_id, nickname, order_json):
         if self.status != 'recruiting':
             raise exceptions.NotRecruiting
