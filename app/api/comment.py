@@ -11,12 +11,7 @@ from datetime import datetime
 comment_ns = Namespace('comment', description='댓글')
 
 
-class NullableString(fields.String):
-    __schema_type__ = ['string', 'null']
-    __schema_example__ = 'nullable string'
-
-
-comment_model = comment_ns.model('댓글', {
+comment_model = comment_ns.model('댓글조회', {
     '_id': fields.String(description='댓글 ID', example='6447d6884c5c7f0de2717ec1'),
     'post_id': fields.String(description='게시글 ID', example='6447d6884c5c7f0de2717ec2'),
     'create_at': fields.DateTime(description='시간', example=datetime.today().strftime("%Y-%m-%dT%H:%M:%S")),
@@ -24,7 +19,7 @@ comment_model = comment_ns.model('댓글', {
     'nickname': fields.String(description='닉네임', example='개발이'),
     'status': fields.String(description='상태', example='created'),
     'content': fields.String(description='내용', example='이건 댓글임'),
-    'super_comment_id': NullableString(description='부모 댓글 ID', example='6447d6884c5c7f0de2717ec0')
+    'super_comment_id': fields.String(description='부모 댓글 ID', example='6447d6884c5c7f0de2717ec0')
 })
 
 content_model = comment_ns.model('댓글 작성', {
@@ -35,7 +30,7 @@ content_model = comment_ns.model('댓글 작성', {
 @comment_ns.route('/<string:post_id>/comments')
 class Comment(Resource):
     @comment_ns.doc(security='jwt', description="게시글의 모든 댓글을 반환합니다")
-    @comment_ns.response(code=200, fields=comment_ns.model('댓글 조회 응답', {
+    @comment_ns.response(code=200, model=comment_ns.model('댓글 조회 응답', {
         'comments': fields.List(fields.Nested(model=comment_model))
     }), description="조회 성공")
     @inject
