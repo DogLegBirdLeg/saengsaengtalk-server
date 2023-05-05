@@ -4,7 +4,7 @@ from logic.delivery.post.domain.entity.Post import Post
 class PostMapper:
     @staticmethod
     def post_mapping(post_json) -> Post:
-        post = Post(post_json['_id'],
+        post = Post(str(post_json['_id']),
                     post_json['store']['_id'],
                     post_json['user_id'],
                     post_json['nickname'],

@@ -1,6 +1,6 @@
 from app import exceptions
 from bson import ObjectId
-from datetime import datetime
+
 from blinker import signal
 
 post_event = signal('post-event')
@@ -21,7 +21,7 @@ class Post:
 
     @staticmethod
     def create(store_id, user_id, nickname, place, order_time, min_member, max_member, order_json):
-        post = Post(_id=ObjectId(),
+        post = Post(_id=str(ObjectId()),
                     store_id=store_id,
                     user_id=user_id,
                     nickname=nickname,

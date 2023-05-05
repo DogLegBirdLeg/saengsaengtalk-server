@@ -22,7 +22,7 @@ class MongoDBPostRepository(PostRepository):
         store_json = self.db.store.find_one(find)
 
         data = {
-            '_id': post._id,
+            '_id': ObjectId(post._id),
             'store': {
                 '_id': store_json['_id'],
                 'name': store_json['name'],

@@ -26,6 +26,7 @@ class CommentQueryService(CommentQueryUseCase):
         temp_comments = []
         while len(comments) > 0:
             super_comment = find_super_comment(comments)
+            print(super_comment)
             temp_comments.append(super_comment)
 
             sub_comment = find_sub_comment(comments, super_comment._id)
