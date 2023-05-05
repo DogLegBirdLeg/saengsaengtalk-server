@@ -47,7 +47,7 @@ class Post:
         self._check_permission(user_id)
         self._check_modifiable()
 
-        self.order_time = order_time
+        self.order_time = datetime.strptime(order_time, '%Y-%m-%dT%H:%M:%S')
         self.place = place
         self.min_member = min_member
         self.max_member = max_member
