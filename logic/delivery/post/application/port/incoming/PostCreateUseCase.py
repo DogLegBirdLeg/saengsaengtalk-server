@@ -1,7 +1,8 @@
 from abc import *
+from logic.delivery.post.dto.presentation import PostWriteModel
 
 
 class PostCreateUseCase(metaclass=ABCMeta):
     @abstractmethod
-    def create(self, user_id, nickname, store_id, place, order_time, min_member, max_member, order_json) -> str:
+    def create(self, user_id, nickname, post_write_model: PostWriteModel) -> str:
         pass

@@ -9,6 +9,8 @@ from logic.delivery.post.application.port.incoming.PostQueryUseCase import PostQ
 from logic.delivery.post.application.port.incoming.PostDeleteUseCase import PostDeleteUseCase
 from logic.delivery.post.application.port.incoming.PostUpdateUseCase import PostUpdateUseCase
 
+from logic.delivery.post.dto.presentation import PostWriteModel, PostUpdateModel
+
 post_ns = Namespace('post', description='게시글')
 
 from app.api.store import store_model
@@ -25,7 +27,7 @@ post_model = post_ns.model('게시글', {
     'users': fields.List(fields.Integer(description='유저 ID', example=1674995732373))
 })
 from app.api.order import order_model
-post_format_model = post_ns.model('게시글 포멧', {
+post_format_model = post_ns.model('게시글 작성', {
     'store_id': fields.String(description='가게 ID', example='644bb4cc735de5ca8a93c365'),
     'place': fields.String(description='수령 장소', example='기숙사'),
     'order_time': fields.DateTime(description='주문 시간', example=datetime.today().strftime("%Y-%m-%dT%H:%M:%S")),
@@ -33,7 +35,7 @@ post_format_model = post_ns.model('게시글 포멧', {
     'max_member': fields.Integer(description='최대 주문 인원', example=6),
     'order': fields.Nested(model=order_model)
 })
-post_update_format_model = post_ns.model('게시글 수정 포멧', {
+post_update_format_model = post_ns.model('게시글 수정', {
      'order_time': fields.DateTime(description='주문 시간', example='2023-02-04T02:07:10'),
      'place': fields.String(description='수령 장소', example='생자대 앞'),
      'min_member': fields.Integer(description='최소 주문 인원', example=2),
@@ -68,14 +70,10 @@ class Post(Resource):
     def post(self, post_use_case: PostCreateUseCase = Provide[PostContainer.post_create_service]):
         """게시글 작성"""
         data = request.get_json()
-        store_id = data['store_id']
-        place = data['place']
-        order_time = data['order_time']
-        min_member = int(data['min_member'])
-        max_member = int(data['max_member'])
-        order = data['order']
 
-        post_id = post_use_case.create(g.id, g.nickname, store_id, place, order_time, min_member, max_member, order)
+        post_write_model = PostWriteModel(**data)
+
+        post_id = post_use_case.create(g.id, g.nickname, post_write_model)
         return {'post_id': post_id}, 201
 
 
@@ -95,7 +93,8 @@ class PostDetail(Resource):
     def patch(self, post_id, post_use_case: PostUpdateUseCase = Provide[PostContainer.post_update_service]):
         """게시글 수정"""
         data = request.get_json()
-        post_use_case.modify(g.id, post_id, data['order_time'], data['place'], int(data['min_member']), int(data['max_member']))
+        post_update_model = PostUpdateModel(**data)
+        post_use_case.modify(g.id, post_id, post_update_model)
         return '', 204
 
     @post_ns.doc(security='jwt', description="게시글을 삭제합니다")

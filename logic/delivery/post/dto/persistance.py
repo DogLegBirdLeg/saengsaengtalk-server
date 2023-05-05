@@ -20,7 +20,7 @@ class StoreSummary:
 
     @staticmethod
     def mapping(store_summary_json):
-        return StoreSummary(_id=store_summary_json['_id'],
+        return StoreSummary(_id=str(store_summary_json['_id']),
                             name=store_summary_json['name'],
                             fee=store_summary_json['fee'],
                             min_order=store_summary_json['min_order'],
@@ -58,7 +58,7 @@ class Post:
 
     @staticmethod
     def mapping(post_json):
-        return Post(_id=post_json['_id'],
+        return Post(_id=str(post_json['_id']),
                     store_summary=StoreSummary.mapping(post_json['store']),
                     user_id=post_json['user_id'],
                     nickname=post_json['nickname'],

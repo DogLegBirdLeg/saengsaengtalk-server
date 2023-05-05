@@ -1,6 +1,7 @@
 from logic.delivery.post.application.port.incoming.PostUpdateUseCase import PostUpdateUseCase
 from logic.delivery.post.application.port.outgoing.persistence.PostRepository import PostRepository
 from logic.delivery.post.application.port.outgoing.persistence.PostUpdateDao import PostUpdateDao
+from logic.delivery.post.dto.presentation import PostUpdateModel
 from app import exceptions
 
 
@@ -9,13 +10,17 @@ class PostUpdateService(PostUpdateUseCase):
         self.post_repository = post_repository
         self.post_update_dao = post_update_dao
 
-    def modify(self, user_id, post_id, order_time, place, min_member, max_member):
+    def modify(self, user_id, post_id, post_update_model: PostUpdateModel):
         try:
             post = self.post_repository.find_post_by_id(post_id)
         except exceptions.NotExistResource:
             raise exceptions.NotExistPost
 
-        post.modify_content(user_id, order_time, place, min_member, max_member)
+        post.modify_content(user_id=user_id,
+                            order_time=post_update_model.order_time,
+                            place=post_update_model.place,
+                            min_member=post_update_model.min_member,
+                            max_member=post_update_model.max_member)
         self.post_update_dao.update_content(post)
 
     def change_status(self, user_id, post_id, status):

@@ -14,14 +14,14 @@ class Post:
         self.nickname = nickname
         self.status = status
         self.place = place
-        self.order_time = datetime.strptime(order_time, '%Y-%m-%dT%H:%M:%S')
+        self.order_time = order_time
         self.min_member = min_member
         self.max_member = max_member
         self.users = users
 
     @staticmethod
     def create(store_id, user_id, nickname, place, order_time, min_member, max_member, order_json):
-        post = Post(_id=str(ObjectId()),
+        post = Post(_id=ObjectId(),
                     store_id=store_id,
                     user_id=user_id,
                     nickname=nickname,
@@ -47,7 +47,7 @@ class Post:
         self._check_permission(user_id)
         self._check_modifiable()
 
-        self.order_time = datetime.strptime(order_time, '%Y-%m-%dT%H:%M:%S')
+        self.order_time = order_time
         self.place = place
         self.min_member = min_member
         self.max_member = max_member

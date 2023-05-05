@@ -10,7 +10,7 @@ class MongoDBPostRepository(PostRepository):
         self.db = mongodb_connection['delivery']
 
     def find_post_by_id(self, post_id: str) -> Post:
-        find = {'_id': post_id}
+        find = {'_id': ObjectId(post_id)}
         post_json = self.db.post.find_one(find)
         if post_json is None:
             raise exceptions.NotExistPost
@@ -19,8 +19,8 @@ class MongoDBPostRepository(PostRepository):
 
     def save(self, post: Post):
         find = {'_id': ObjectId(post.store_id)}
-
         store_json = self.db.store.find_one(find)
+
         data = {
             '_id': post._id,
             'store': {
@@ -44,6 +44,6 @@ class MongoDBPostRepository(PostRepository):
         self.db.post.insert_one(data)
 
     def delete(self, post_id: str):
-        find = {'_id': post_id}
+        find = {'_id': ObjectId(post_id)}
         update = {'$set': {'status': 'canceled'}}
         self.db.post.update_one(find, update)

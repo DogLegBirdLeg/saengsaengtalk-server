@@ -1,5 +1,5 @@
 from typing import List
-
+from bson import ObjectId
 import pymongo
 
 from logic.delivery.post.dto.persistance import Post
@@ -42,7 +42,7 @@ class MongoDBPostQueryDao(PostQueryDao):
         return [Post.mapping(post_json) for post_json in posts_json]
 
     def find_post_by_id(self, post_id) -> Post:
-        find = {'_id': post_id}
+        find = {'_id': ObjectId(post_id)}
         post_json = self.db.post.find_one(find)
 
         if post_json is None:
