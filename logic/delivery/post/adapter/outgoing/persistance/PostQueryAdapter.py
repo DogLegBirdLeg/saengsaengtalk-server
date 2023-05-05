@@ -22,10 +22,9 @@ class MongoDBPostQueryDao(PostQueryDao):
     def find_joined_posts_by_user_id(self, user_id) -> List[Post]:
         current_time = datetime.now()
         one_day_ago = current_time - timedelta(days=1)
-        one_day_later = current_time + timedelta(days=1)
 
         find = {
-            'order_time': {'$gte': one_day_ago, '$lte': one_day_later},
+            'order_time': {'$gte': one_day_ago},
             'status': {'$in': ['recruiting', 'closed', 'ordered', 'delivered']},
             'users': {'$eq': user_id}
         }
