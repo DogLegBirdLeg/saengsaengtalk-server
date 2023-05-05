@@ -1,4 +1,7 @@
 from typing import List
+
+import pymongo
+
 from logic.delivery.post.dto.persistance import Post
 from logic.delivery.post.application.port.outgoing.persistence.PostQueryDao import PostQueryDao
 from datetime import datetime, timedelta
@@ -16,7 +19,7 @@ class MongoDBPostQueryDao(PostQueryDao):
             'users': {'$ne': user_id}
         }
 
-        posts_json = self.db.post.find(find)
+        posts_json = self.db.post.find(find).sort("order_time", pymongo.ASCENDING)
         return [Post.mapping(post_json) for post_json in posts_json]
 
     def find_joined_posts_by_user_id(self, user_id) -> List[Post]:
@@ -29,12 +32,12 @@ class MongoDBPostQueryDao(PostQueryDao):
             'users': {'$eq': user_id}
         }
 
-        posts_json = self.db.post.find(find)
+        posts_json = self.db.post.find(find).sort("order_time", pymongo.ASCENDING)
         return [Post.mapping(post_json) for post_json in posts_json]
 
     def find_all_posts_by_user_id(self, user_id) -> List[Post]:
         find = {'users': {'$eq': user_id}}
-        posts_json = self.db.post.find(find)
+        posts_json = self.db.post.find(find).sort("order_time", pymongo.ASCENDING)
 
         return [Post.mapping(post_json) for post_json in posts_json]
 
