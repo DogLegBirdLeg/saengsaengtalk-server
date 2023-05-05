@@ -10,7 +10,7 @@ class Comment:
         self.nickname = nickname
         self.status = status
         self.content = content
-        self.supper_comment_id = super_comment_id if super_comment_id is None else str(super_comment_id)
+        self.super_comment_id = super_comment_id if super_comment_id is None else str(super_comment_id)
 
     def _check_permission(self, handling_user_id):
         if handling_user_id != self.user_id:
