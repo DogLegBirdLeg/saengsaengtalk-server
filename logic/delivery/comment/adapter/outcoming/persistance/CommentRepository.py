@@ -23,7 +23,7 @@ class MongoDBCommentRepository(CommentRepository):
                        nickname=comment_json['nickname'],
                        status=comment_json['status'],
                        content=comment_json['content'],
-                       super_comment_id=str(comment_json['super_comment_id']))
+                       parent_id=str(comment_json['parent_id']))
 
     def find_all_comment_by_post_id(self, post_id) -> List[Comment]:
         find = {'post_id': ObjectId(post_id)}
@@ -36,7 +36,7 @@ class MongoDBCommentRepository(CommentRepository):
                     nickname=comment_json['nickname'],
                     status=comment_json['status'],
                     content=comment_json['content'],
-                    super_comment_id=comment_json['super_comment_id'])
+                    parent_id=comment_json['parent_id'])
             for comment_json in comments_json
         ]
 
@@ -49,7 +49,7 @@ class MongoDBCommentRepository(CommentRepository):
             'nickname': comment.nickname,
             'status': comment.status,
             'content': comment.content,
-            'super_comment_id': comment.supper_comment_id if comment.supper_comment_id is None else ObjectId(comment.supper_comment_id)
+            'parent_id': comment.parent_id if comment.parent_id is None else ObjectId(comment.parent_id)
         }
 
         self.db.comment.insert_one(data)

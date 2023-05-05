@@ -11,26 +11,26 @@ class CommentQueryService(CommentQueryUseCase):
     def get_comments(self, post_id) -> List[Comment]:
         comments = self.comment_repository.find_all_comment_by_post_id(post_id)
 
-        def find_super_comment(comments: List[Comment]):
+        def find_parent_comment(comments: List[Comment]):
             for comment in comments:
-                if comment.super_comment_id is None:
+                if comment.parent_id is None:
                     comments.remove(comment)
                     return comment
 
         def find_sub_comment(comments: List[Comment], comment_id):
             for comment in comments:
-                if comment.super_comment_id == comment_id:
+                if comment.parent_id == comment_id:
                     comments.remove(comment)
                     return comment
 
         temp_comments = []
         while len(comments) > 0:
-            super_comment = find_super_comment(comments)
-            temp_comments.append(super_comment)
+            parent_comment = find_parent_comment(comments)
+            temp_comments.append(parent_comment)
 
-            sub_comment = find_sub_comment(comments, super_comment._id)
+            sub_comment = find_sub_comment(comments, parent_comment._id)
             while sub_comment is not None:
                 temp_comments.append(sub_comment)
-                sub_comment = find_sub_comment(comments, super_comment._id)
+                sub_comment = find_sub_comment(comments, parent_comment._id)
 
         return temp_comments

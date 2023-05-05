@@ -7,5 +7,5 @@ class CommentCreateUseCase(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def create_reply(self, user_id, nickname, post_id, super_comment_id, content):
+    def create_reply(self, user_id, nickname, post_id, parent_id, content):
         pass

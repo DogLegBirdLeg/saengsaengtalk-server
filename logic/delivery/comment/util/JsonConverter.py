@@ -10,5 +10,5 @@ def comment_to_json(comment: Comment):
         'nickname': comment.nickname,
         'status': comment.status,
         'content': comment.content,
-        'super_comment_id': comment.super_comment_id
+        'parent_id': comment.parent_id
     }

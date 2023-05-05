@@ -22,7 +22,7 @@ class CommentCreateService(CommentCreateUseCase):
 
         self.comment_repository.save(comment)
 
-    def create_reply(self, user_id, nickname, post_id, super_comment_id, content):
+    def create_reply(self, user_id, nickname, post_id, parent_id, content):
         current = datetime.now()
         create_at = datetime(year=current.year, month=current.month, day=current.day, hour=current.hour, minute=current.minute, second=current.second)
         comment = Comment(_id=str(ObjectId()),
@@ -32,5 +32,5 @@ class CommentCreateService(CommentCreateUseCase):
                           nickname=nickname,
                           status='created',
                           content=content,
-                          super_comment_id=super_comment_id)
+                          parent_id=parent_id)
         self.comment_repository.save(comment)

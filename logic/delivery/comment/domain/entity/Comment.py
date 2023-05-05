@@ -2,7 +2,7 @@ from app import exceptions
 
 
 class Comment:
-    def __init__(self, _id, post_id, create_at, user_id, nickname, status, content, super_comment_id=None):
+    def __init__(self, _id, post_id, create_at, user_id, nickname, status, content, parent_id=None):
         self._id = _id
         self.post_id = post_id
         self.create_at = create_at
@@ -10,7 +10,7 @@ class Comment:
         self.nickname = nickname
         self.status = status
         self.content = content
-        self.super_comment_id = super_comment_id if super_comment_id is None else str(super_comment_id)
+        self.parent_id = parent_id if parent_id is None else str(parent_id)
 
     def _check_permission(self, handling_user_id):
         if handling_user_id != self.user_id:
