@@ -9,15 +9,10 @@ firebase_admin.initialize_app(cred)
 
 
 class FirebaseMessagePusher(MessagePusher):
-    def send(self, title, body, tokens):
+    def send(self, data, tokens):
         message = messaging.MulticastMessage(
             tokens=tokens,
-            notification=messaging.Notification(
-                title=title,
-                body=body
-            )
+            data=data
         )
 
-        result = messaging.send_multicast(message)
-        for response in result.responses:
-            pass
+        messaging.send_multicast(message)

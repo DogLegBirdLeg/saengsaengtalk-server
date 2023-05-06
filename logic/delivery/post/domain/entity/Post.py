@@ -59,10 +59,10 @@ class Post:
         self.status = status
 
         if status == 'ordered':
-            post_event.send('ordered', users=self.users)
+            post_event.send('ordered', users=self.users, post_id=self._id)
 
         elif status == 'delivered':
-            post_event.send('delivered', users=self.users, place=self.place)
+            post_event.send('delivered', users=self.users, place=self.place, post_id=self._id)
 
     def _validate_change_status(self, status):
         if status not in ['recruiting', 'closed', 'ordered', 'delivered']:
