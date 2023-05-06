@@ -41,6 +41,8 @@ def create_app():
             g.nickname = request.headers['nickname'].encode('iso-8859-1').decode('utf-8')
         except KeyError:
             pass
-        g.id = 1682589002965
-        g.nickname = '찰봉'
+        #g.id = 1682589002965
+        #g.nickname = '찰봉'
+        #g.id = 11111111
+        #g.nickname='test'
     return app

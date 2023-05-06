@@ -11,3 +11,9 @@ class MongoDBTokenQueryDao(TokenQueryDao):
 
         tokens = [token['registration_token'] for token in self.db.token.find(find, projection)]
         return tokens
+
+    def find_registration_token_by_user_id(self, user_id):
+        find = {'user._id': user_id}
+        projection = {'_id': False, 'registration_token': True}
+
+        return self.db.token.find_one(find, projection)['registration_token']
