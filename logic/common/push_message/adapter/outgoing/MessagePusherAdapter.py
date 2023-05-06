@@ -18,4 +18,6 @@ class FirebaseMessagePusher(MessagePusher):
             )
         )
 
-        messaging.send_multicast(message)
+        result = messaging.send_multicast(message)
+        for response in result.responses:
+            pass

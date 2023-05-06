@@ -37,6 +37,6 @@ class MongoDBOrderRepository(OrderRepository):
 
         self.db.order.insert_one(order_json)
 
-    def delete(self, post_id: str, user_id: str):
+    def delete(self, post_id: str, user_id):
         find = {'post_id': post_id, 'user_id': user_id}
         self.db.order.delete_one(find)
