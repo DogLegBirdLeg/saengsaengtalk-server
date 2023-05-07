@@ -29,6 +29,7 @@ class MongoDBPostRepository(PostRepository):
                 'fee': store_json['fee'],
                 'min_order': store_json['min_order'],
                 'phone_number': store_json['phone_number'],
+                'logo_img_url': store_json['logo_img_url'],
                 'note': store_json['note']
             },
             'user_id': post.user_id,

@@ -13,6 +13,7 @@ store_model = store_ns.model('가게', {
     'min_order': fields.Integer(description='최소 주문 금액', example=12000),
     'fee': fields.Integer(description='배달비', example=3000),
     'phone_number': fields.String(description='전화번호', example='055-1234-5678'),
+    'logo_img_url': fields.String(description='로고 이미지 url'),
     'note': fields.List(fields.String(description='특이사항', example='세트메뉴 3개 이상 주문 가능'))
 })
 store_detail_model = store_ns.model('가게 상세', {
@@ -21,6 +22,7 @@ store_detail_model = store_ns.model('가게 상세', {
     'min_order': fields.Integer(description='최소 주문 금액', example=12000),
     'fee': fields.Integer(description='배달비', example=3000),
     'phone_number': fields.String(description='전화번호', example='055-1234-5678'),
+    'logo_img_url': fields.String(description='로고 이미지 url'),
     'note': fields.List(fields.String(description='특이사항', example='세트메뉴 3개 이상 주문 가능')),
     'sections': fields.List(fields.Nested(model=store_ns.model('섹션', {
         'section_name': fields.String(description='섹션 이름', example='세트메뉴'),
@@ -56,7 +58,6 @@ class Store(Resource):
     @inject
     def get(self, store_use_case: StoreUseCase = Provide[StoreContainer.store_use_case]):
         stores = store_use_case.get_list()
-
         return [store.json for store in stores]
 
 

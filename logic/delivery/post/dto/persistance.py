@@ -1,10 +1,11 @@
 class StoreSummary:
-    def __init__(self, _id, name, fee, min_order, phone_number, note):
+    def __init__(self, _id, name, fee, min_order, phone_number, logo_img_url, note):
         self._id = _id
         self.name = name
         self.fee = fee
         self.min_order = min_order
         self.phone_number = phone_number
+        self.logo_img_url = logo_img_url
         self.note = note
 
     @property
@@ -15,6 +16,7 @@ class StoreSummary:
             'fee': self.fee,
             'min_order': self.min_order,
             'phone_number': self.phone_number,
+            'logo_img_url': self.logo_img_url,
             'note': self.note
         }
 
@@ -25,6 +27,7 @@ class StoreSummary:
                             fee=store_summary_json['fee'],
                             min_order=store_summary_json['min_order'],
                             phone_number=store_summary_json['phone_number'],
+                            logo_img_url=store_summary_json['logo_img_url'],
                             note=store_summary_json['note'])
 
 
