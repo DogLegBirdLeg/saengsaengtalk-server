@@ -7,7 +7,7 @@ post_event = signal('post-event')
 
 
 class Post:
-    def __init__(self, _id, store_id, user_id, nickname, status, place, order_time, min_member, max_member, users):
+    def __init__(self, _id, store_id, user_id, nickname, status, place, order_time, min_member, max_member, fee, users):
         self._id = _id
         self.store_id = store_id
         self.user_id = user_id
@@ -17,6 +17,7 @@ class Post:
         self.order_time = order_time
         self.min_member = min_member
         self.max_member = max_member
+        self.fee = fee
         self.users = users
 
     @staticmethod
@@ -30,6 +31,7 @@ class Post:
                     order_time=order_time,
                     min_member=min_member,
                     max_member=max_member,
+                    fee=0,
                     users=[user_id])
 
         post_event.send('created', post_id=post._id, store_id=store_id, user_id=user_id, nickname=nickname, order_json=order_json)
@@ -63,6 +65,10 @@ class Post:
 
         elif status == 'delivered':
             post_event.send('delivered', users=self.users, place=self.place, post_id=self._id)
+
+    def update_fee(self, user_id, fee):
+        self._check_permission(user_id)
+        self.fee = fee
 
     def _validate_change_status(self, status):
         if status not in ['recruiting', 'closed', 'ordered', 'delivered']:

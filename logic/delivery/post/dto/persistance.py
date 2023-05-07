@@ -32,7 +32,7 @@ class StoreSummary:
 
 
 class Post:
-    def __init__(self, _id, store_summary: StoreSummary, user_id, nickname, status, place, order_time, min_member, max_member, users):
+    def __init__(self, _id, store_summary: StoreSummary, user_id, nickname, status, place, order_time, min_member, max_member, fee, users):
         self._id = _id
         self.store_summary = store_summary
         self.user_id = user_id
@@ -42,6 +42,7 @@ class Post:
         self.order_time = order_time
         self.min_member = min_member
         self.max_member = max_member
+        self.fee = fee
         self.users = users
 
     @property
@@ -56,6 +57,7 @@ class Post:
             'order_time': self.order_time,
             'min_member': self.min_member,
             'max_member': self.max_member,
+            'fee': self.fee,
             'users': self.users
         }
 
@@ -70,4 +72,5 @@ class Post:
                     order_time=post_json['order_time'],
                     min_member=post_json['min_member'],
                     max_member=post_json['max_member'],
+                    fee=post_json['fee'],
                     users=post_json['users'])

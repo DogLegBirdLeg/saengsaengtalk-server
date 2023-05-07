@@ -14,3 +14,7 @@ class PostUpdateDao(metaclass=ABCMeta):
     @abstractmethod
     def update_users(self, post: Post):
         pass
+
+    @abstractmethod
+    def update_fee(self, post: Post):
+        pass

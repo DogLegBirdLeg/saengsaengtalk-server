@@ -39,6 +39,7 @@ class MongoDBPostRepository(PostRepository):
             'order_time': post.order_time,
             'min_member': post.min_member,
             'max_member': post.max_member,
+            'fee': store_json['fee'],
             'users': post.users
         }
 

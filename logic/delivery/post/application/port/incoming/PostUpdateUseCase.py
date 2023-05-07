@@ -10,3 +10,7 @@ class PostUpdateUseCase(metaclass=ABCMeta):
     @abstractmethod
     def change_status(self, user_id, post_id, status):
         pass
+
+    @abstractmethod
+    def update_fee(self, user_id, post_id, fee):
+        pass

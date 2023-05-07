@@ -13,6 +13,7 @@ class PostMapper:
                     post_json['order_time'].strftime('%Y-%m-%dT%H:%M:%S'),
                     post_json['min_member'],
                     post_json['max_member'],
+                    post_json['fee'],
                     post_json['users'])
 
         return post

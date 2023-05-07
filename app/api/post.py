@@ -22,6 +22,7 @@ post_model = post_ns.model('게시글', {
     'min_member': fields.Integer(description='최소 주문 인원', example=3),
     'max_member': fields.Integer(description='최대 주문 인원', example=6),
     'order_time': fields.DateTime(description='주문 시간', example='2023-02-22T08:56:57'),
+    'fee': fields.Integer(description='배달비', example=3000),
     'store': fields.Nested(store_model),
     'status': fields.String(description='현재 게시글 상태', example='recruiting'),
     'users': fields.List(fields.Integer(description='유저 ID', example=1674995732373))
@@ -46,6 +47,9 @@ post_register_model = post_ns.model('게시글 등록 응답', {
 })
 post_status_model = post_ns.model('상태 파라미터', {
     'status': fields.String(description='상태 변경, recruiting/closed/ordered/delivered', example='closed'),
+})
+post_fee_model = post_ns.model('배달비 수정', {
+    'fee': fields.Integer(description='배달비', example=5000),
 })
 
 option = post_ns.parser()
@@ -115,4 +119,16 @@ class PostStatus(Resource):
         """게시글 상태 변경"""
         data = request.get_json()
         post_use_case.change_status(g.id, post_id, data['status'])
+        return '', 204
+
+
+@post_ns.route('/<string:post_id>/fee')
+class PostFee(Resource):
+    @post_ns.doc(security='jwt', body=post_fee_model, description="해당 게시글의 주문에서 발생한 배달비를 수정합니다")
+    @post_ns.response(code=204, description='변경 성공')
+    @inject
+    def patch(self, post_id, post_use_case: PostUpdateUseCase = Provide[PostContainer.post_update_service]):
+        """배달비 변경"""
+        data = request.get_json()
+        post_use_case.update_fee(g.id, post_id, data['fee'])
         return '', 204

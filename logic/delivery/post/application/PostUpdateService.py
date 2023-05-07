@@ -31,3 +31,12 @@ class PostUpdateService(PostUpdateUseCase):
 
         post.set_status(user_id, status)
         self.post_update_dao.update_status(post)
+
+    def update_fee(self, user_id, post_id, fee):
+        try:
+            post = self.post_repository.find_post_by_id(post_id)
+        except exceptions.NotExistResource:
+            raise exceptions.NotExistPost
+
+        post.update_fee(user_id, fee)
+        self.post_update_dao.update_fee(post)

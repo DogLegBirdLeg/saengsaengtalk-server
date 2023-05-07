@@ -28,3 +28,9 @@ class MongoDBPostUpdateDao(PostUpdateDao):
         update = {'$set': {'users': post.users}}
 
         self.db.post.update_one(find, update)
+
+    def update_fee(self, post: Post):
+        find = {'_id': ObjectId(post._id)}
+        update = {'$set': {'fee': post.fee}}
+
+        self.db.post.update_one(find, update)
