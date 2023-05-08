@@ -1,12 +1,10 @@
 from app import exceptions
-import jwt
-from datetime import datetime, timedelta
-from flask import current_app
 
-from logic.user.application.port.outgoing.CodeCacher import CodeCacher
 from logic.user.application.port.outgoing.UserRepository import UserRepository
+from logic.user.application.port.outgoing.UserDao import UserDao
 from logic.user.application.port.incoming.ForgotUseCase import ForgotUsernameUseCase, ForgotPasswordUseCase
-from logic.user.util.AuthCodeGenerator import generate_auth_code
+from logic.user.util.TempPasswordGenerator import generate_temp_password
+from logic.user.util.PasswordHashing import pw_hashing
 
 from blinker import signal
 
@@ -27,30 +25,22 @@ class ForgotUsernameService(ForgotUsernameUseCase):
 
 
 class ForgotPasswordService(ForgotPasswordUseCase):
-    def __init__(self, code_cacher: CodeCacher, user_repository: UserRepository):
-        self.code_cacher = code_cacher
+    def __init__(self, user_repository: UserRepository, user_dao: UserDao):
         self.user_repository = user_repository
+        self.user_dao = user_dao
 
-    def send_auth_email(self, email):
-        auth_code = generate_auth_code()
-        self.code_cacher.save(email, auth_code)
-        forgot_signal.send('auth_email', email=email, auth_code=auth_code)
-
-    def publish_temp_access_token(self, auth_code, email):
-        cached_code = self.code_cacher.get_code_by_email(email)
-        if auth_code != cached_code:
-            raise exceptions.NotValidAuthCode
-        self.code_cacher.delete(email)
-
+    def send_temp_password(self, username, email):
         try:
-            user = self.user_repository.find_user_by_email(email)
+            user = self.user_repository.find_user_by_username(username)
         except exceptions.NotExistResource:
             raise exceptions.NotExistUser
 
-        payload = {
-            'user_id': user._id,
-            'nickname': user.nickname,
-            'exp': datetime.utcnow() + timedelta(minutes=10)
-        }
+        if user.email != email:
+            raise exceptions.NotExistUser
 
-        return jwt.encode(payload, current_app.secret_key)
+        temp_password = generate_temp_password()
+        user.pw = pw_hashing(temp_password)
+        print(user.pw)
+
+        self.user_dao.update_pw(user._id, user.pw)
+        forgot_signal.send('temp-password', temp_password=temp_password, email=email)

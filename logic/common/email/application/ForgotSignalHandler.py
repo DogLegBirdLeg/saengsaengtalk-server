@@ -8,13 +8,13 @@ from blinker import signal
 forgot_signal = signal('forgot-signal')
 
 
-@forgot_signal.connect_via('auth_email')
+@forgot_signal.connect_via('temp-password')
 @inject
-def signup_auth_signal_handler(sender, email, auth_code,
+def signup_auth_signal_handler(sender, temp_password, email,
                                email_sender: EmailSender = Provide[CommonContainer.email_sender]):
 
-    subject = '[왔소] 비밀번호 찾기 인증코드입니다.'
-    body = f'인증코드 : {auth_code}'
+    subject = '[왔소] 임시 비밀번호입니다.'
+    body = f'임시 비밀번호 : {temp_password}'
 
     email_sender.send(email, subject, body)
 

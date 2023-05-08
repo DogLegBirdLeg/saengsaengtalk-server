@@ -9,10 +9,6 @@ class ForgotUsernameUseCase(metaclass=ABCMeta):
 
 class ForgotPasswordUseCase(metaclass=ABCMeta):
     @abstractmethod
-    def send_auth_email(self, email):
-        pass
-
-    @abstractmethod
-    def publish_temp_access_token(self, auth_code, email):
+    def send_temp_password(self, username, email):
         pass
     

@@ -54,7 +54,7 @@ class UserContainer(containers.DeclarativeContainer):
     user_service = providers.Singleton(UserService, user_dao=user_dao)
 
     forgot_username_service = providers.Singleton(ForgotUsernameService, user_repository=user_repository)
-    forgot_password_service = providers.Singleton(ForgotPasswordService, code_cacher=code_cacher, user_repository=user_repository)
+    forgot_password_service = providers.Singleton(ForgotPasswordService, user_dao=user_dao, user_repository=user_repository)
 
     auth_service = providers.Singleton(JwtAuthService, user_repository=user_repository, token_dao=token_dao)
 
