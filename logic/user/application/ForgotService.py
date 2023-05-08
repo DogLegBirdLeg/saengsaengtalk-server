@@ -18,7 +18,11 @@ class ForgotUsernameService(ForgotUsernameUseCase):
         self.user_repository = user_repository
 
     def send_username_email(self, email):
-        user = self.user_repository.find_user_by_email(email)
+        try:
+            user = self.user_repository.find_user_by_email(email)
+        except exceptions.NotExistResource:
+            raise exceptions.NotExistUser
+
         forgot_signal.send('username', email=email, username=user.username)
 
 
@@ -38,7 +42,11 @@ class ForgotPasswordService(ForgotPasswordUseCase):
             raise exceptions.NotValidAuthCode
         self.code_cacher.delete(email)
 
-        user = self.user_repository.find_user_by_email(email)
+        try:
+            user = self.user_repository.find_user_by_email(email)
+        except exceptions.NotExistResource:
+            raise exceptions.NotExistUser
+
         payload = {
             'user_id': user._id,
             'nickname': user.nickname,

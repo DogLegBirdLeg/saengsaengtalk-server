@@ -2,6 +2,7 @@ from logic.user.application.port.incoming.ProfileUseCase import ProfileQueryUseC
 from logic.user.application.port.outgoing.UserRepository import UserRepository
 from logic.user.application.port.outgoing.UserDao import UserDao
 from logic.user.util.PasswordHashing import pw_hashing
+from app import exceptions
 
 
 class ProfileQueryService(ProfileQueryUseCase):
@@ -9,7 +10,12 @@ class ProfileQueryService(ProfileQueryUseCase):
         self.user_repository = user_repository
 
     def get(self, user_id):
-        return self.user_repository.find_user_by_id(user_id)
+        try:
+            user = self.user_repository.find_user_by_id(user_id)
+        except exceptions.NotExistResource:
+            raise exceptions.NotExistUser
+
+        return user
 
 
 class ProfileDeleteService(ProfileDeleteUseCase):
