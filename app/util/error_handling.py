@@ -16,6 +16,10 @@ def login_error_handling(api):
 
 
 def user_error_handling(api):
+    @api.errorhandler(exceptions.NotExistUser)
+    def not_exist_user(error):
+        return error.json, 401
+
     signup_error_handling(api)
     profile_error_handling(api)
 
