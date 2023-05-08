@@ -48,7 +48,7 @@ class SigninFail(AuthError):
         super().__init__(msg=msg, code=code)
 
 
-class NotExistUser(SigninFail):
+class NotExistUser(AuthError):
     def __int__(self, msg='유저 데이터를 찾을 수 없습니다', code=102):
         super().__init__(msg=msg, code=code)
 
