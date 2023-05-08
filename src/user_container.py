@@ -60,4 +60,4 @@ class UserContainer(containers.DeclarativeContainer):
 
     profile_query_service = providers.Singleton(ProfileQueryService, user_repository=user_repository)
     profile_delete_service = providers.Singleton(ProfileDeleteService, user_repository=user_repository)
-    profile_update_service = providers.Singleton(ProfileUpdateService, user_dao=user_dao)
+    profile_update_service = providers.Singleton(ProfileUpdateService, user_repository=user_repository, user_dao=user_dao)

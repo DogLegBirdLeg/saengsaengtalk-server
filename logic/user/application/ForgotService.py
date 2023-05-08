@@ -40,7 +40,6 @@ class ForgotPasswordService(ForgotPasswordUseCase):
 
         temp_password = generate_temp_password()
         user.pw = pw_hashing(temp_password)
-        print(user.pw)
 
         self.user_dao.update_pw(user._id, user.pw)
         forgot_signal.send('temp-password', temp_password=temp_password, email=email)

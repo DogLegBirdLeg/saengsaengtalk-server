@@ -12,7 +12,7 @@ class ProfileDeleteUseCase(metaclass=ABCMeta):
 
 
 class ProfileUpdateUseCase(metaclass=ABCMeta):
-    def update_password(self, user_id, new_password):
+    def update_password(self, user_id, current_password, new_password):
         pass
 
     def update_nickname(self, user_id, nickname):

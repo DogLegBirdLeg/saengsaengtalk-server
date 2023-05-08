@@ -27,10 +27,19 @@ class ProfileDeleteService(ProfileDeleteUseCase):
 
 
 class ProfileUpdateService(ProfileUpdateUseCase):
-    def __init__(self, user_dao: UserDao):
+    def __init__(self, user_repository: UserRepository, user_dao: UserDao):
+        self.user_repository = user_repository
         self.user_dao = user_dao
 
-    def update_password(self, user_id, new_password):
+    def update_password(self, user_id, current_password, new_password):
+        try:
+            user = self.user_repository.find_user_by_id(user_id)
+        except exceptions.NotExistResource:
+            raise exceptions.NotExistUser
+
+        if user.compare_pw(current_password) is False:
+            raise exceptions.PasswordMismatch
+
         hashed_pw = pw_hashing(new_password)
         self.user_dao.update_pw(user_id, hashed_pw)
 
