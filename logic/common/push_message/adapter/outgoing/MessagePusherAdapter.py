@@ -15,4 +15,4 @@ class FirebaseMessagePusher(MessagePusher):
             data=data
         )
 
-        messaging.send_multicast(message)
+        result = messaging.send_multicast(message)

@@ -100,7 +100,14 @@ class Post:
             raise exceptions.AlreadyJoinedUser
 
         self.users.append(user_id)
-        post_event.send('joined', store_id=self.store_id, post_id=self._id, user_id=user_id, nickname=nickname, order_json=order_json)
+        post_event.send('joined',
+                        owner_user_id=self.user_id,
+                        current_member=len(self.users),
+                        store_id=self.store_id,
+                        post_id=self._id,
+                        user_id=user_id,
+                        nickname=nickname,
+                        order_json=order_json)
 
     def quit(self, user_id):
         if self.status != 'recruiting':

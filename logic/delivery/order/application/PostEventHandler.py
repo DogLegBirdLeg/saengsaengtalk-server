@@ -20,7 +20,7 @@ def post_created_event_handler(sender, store_id, post_id, user_id, nickname, ord
 
 @post_event.connect_via('joined')
 @inject
-def post_joined_event_handler(sender, store_id, post_id, user_id, nickname, order_json,
+def post_joined_event_handler(sender, owner_user_id, current_member, store_id, post_id, user_id, nickname, order_json,
                               order_repository: OrderRepository = Provide[OrderContainer.order_repository],
                               order_create_service: OrderCreateService = Provide[OrderContainer.order_create_service]):
     order = order_create_service.create(store_id, post_id, user_id, nickname, order_json)
