@@ -2,6 +2,7 @@ from logic.delivery.post.domain.entity.Post import Post
 from logic.delivery.post.application.port.outgoing.persistence.PostUpdateDao import PostUpdateDao
 from bson import ObjectId
 
+
 class MongoDBPostUpdateDao(PostUpdateDao):
     def __init__(self, mongodb_connection):
         self.db = mongodb_connection['delivery']

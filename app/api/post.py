@@ -132,3 +132,16 @@ class PostFee(Resource):
         data = request.get_json()
         post_use_case.update_fee(g.id, post_id, data['fee'])
         return '', 204
+
+
+@post_ns.route('/<string:post_id>/account-number')
+class PostFee(Resource):
+    @post_ns.doc(security='jwt', description="게시글 대표 유저의 계좌번호를 확인합니다. 게시글에 참여한 유저가 주문완료, 배달완료 상태에서만 확인 가능합니다")
+    @post_ns.response(code=200, description='조회 성공', model=post_ns.model('계좌번호', {
+        'account_number': fields.String(description='계좌번호', example='123-1234-1234-12 농협')
+    }))
+    @inject
+    def get(self, post_id, post_use_case: PostQueryUseCase = Provide[PostContainer.post_query_service]):
+        """대표 유저 계좌번호 확인"""
+        account_number = post_use_case.get_owner_user_account_number(post_id, g.id)
+        return {'account_number': account_number}

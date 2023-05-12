@@ -96,6 +96,10 @@ def post_error_handler(api):
     def not_valid_order_handling(error):
         return error.json, 406
 
+    @api.errorhandler(exceptions.BeforeOrdered)
+    def before_ordered_handling(error):
+        return error.json, 406
+
 
 def store_error_handler(api):
     @api.errorhandler(exceptions.NotExistStore)
