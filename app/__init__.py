@@ -43,6 +43,6 @@ def create_app():
             pass
         #g.id = 1682589002965
         #g.nickname = '찰봉'
-        #g.id = 11111111
-        #g.nickname='test'
+        g.id = 11111111
+        g.nickname='test'
     return app

@@ -2,6 +2,7 @@ from dependency_injector.wiring import inject, Provide
 from src.common_container import CommonContainer
 from logic.common.push_message.application.port.outgoing.TokenQueryDao import TokenQueryDao
 from logic.common.push_message.application.port.outgoing.MessagePusher import MessagePusher
+from app import exceptions
 
 from blinker import signal
 
@@ -13,7 +14,12 @@ post_event = signal('post-event')
 def push_joined_message(sender, owner_user_id, current_member, store_id, post_id, user_id, nickname, order_json,
                         token_query_dao: TokenQueryDao = Provide[CommonContainer.token_query_dao],
                         message_pusher: MessagePusher = Provide[CommonContainer.message_pusher]):
-    tokens = token_query_dao.find_all_registration_token_user_id([owner_user_id])
+
+    try:
+        token = token_query_dao.find_registration_token_by_user_id(owner_user_id)
+    except exceptions.NotExistResource:
+        print('로그인 하지 않은 유저에게는 메시지를 발송할 수 없습니다')
+        return
 
     data = {
         'title': f'{nickname}님이 참여했습니다!',
@@ -21,7 +27,7 @@ def push_joined_message(sender, owner_user_id, current_member, store_id, post_id
         'post_id': post_id
     }
 
-    message_pusher.send(data, tokens)
+    message_pusher.send(data, [token])
 
 
 @post_event.connect_via('ordered')
