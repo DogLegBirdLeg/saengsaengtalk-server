@@ -2,7 +2,7 @@ from flask_restx import Resource, Namespace, fields
 from dependency_injector.wiring import inject, Provide
 from flask import request
 from src.user_container import UserContainer
-
+from app.util import validator
 from logic.user.application.port.incoming.ForgotUseCase import ForgotUsernameUseCase, ForgotPasswordUseCase
 
 
@@ -25,8 +25,9 @@ class ForgotUsername(Resource):
     @inject
     def get(self, forgot_use_case: ForgotUsernameUseCase = Provide[UserContainer.forgot_username_service]):
         """아이디 찾기"""
-
         email = request.args['email']
+        validator.validate_email(email)
+
         forgot_use_case.send_username_email(email)
         return '', 204
 
@@ -39,8 +40,12 @@ class ForgotPassword(Resource):
     def post(self, forgot_use_case: ForgotPasswordUseCase = Provide[UserContainer.forgot_password_service]):
         """임시 비밀번호 발급"""
         data = request.get_json()
+
         username = data['username']
         email = data['email']
+
+        validator.validate_username(username)
+        validator.validate_email(email)
 
         forgot_use_case.send_temp_password(username, email)
         return '', 204

@@ -4,6 +4,7 @@ from logic.user.application.port.outgoing.UserRepository import UserRepository
 from logic.user.domain.entity.User import User
 from logic.user.util.PasswordHashing import pw_hashing
 from logic.user.util.AuthCodeGenerator import generate_auth_code
+from logic.user.dto.presentaition import SignupModel
 
 from app import exceptions
 from datetime import datetime, timedelta
@@ -38,21 +39,21 @@ class SignupService(SignupUseCase):
         self.user_repository = user_repository
         self.code_cacher = code_cacher
 
-    def signup(self, auth_token, name, username, pw, nickname, account_number, email):
+    def signup(self, signup_model: SignupModel):
         try:
-            jwt.decode(auth_token, current_app.secret_key, algorithms='HS256')
+            jwt.decode(signup_model.auth_token, current_app.secret_key, algorithms='HS256')
         except jwt.exceptions.DecodeError:
             raise exceptions.NotExistToken
         except jwt.exceptions.ExpiredSignatureError:
             raise exceptions.ExpiredToken
 
         user = User(_id=int(round(datetime.today().timestamp() * 1000)),
-                    name=name,
-                    username=username,
-                    pw=pw_hashing(pw),
-                    nickname=nickname,
-                    account_number=account_number,
-                    email=email)
+                    name=signup_model.name,
+                    username=signup_model.username,
+                    pw=pw_hashing(signup_model.pw),
+                    nickname=signup_model.nickname,
+                    account_number=signup_model.account_number,
+                    email=signup_model.email)
         try:
             self.user_repository.save(user)
         except exceptions.DuplicateKeyError:

@@ -2,8 +2,10 @@ from flask import request
 from flask_restx import Resource, Namespace, fields
 from dependency_injector.wiring import inject, Provide
 from src.user_container import UserContainer
+from app.util import validator
 
 from logic.user.application.port.incoming.SignupUseCase import SignupUseCase, SignupAuthUseCase
+from logic.user.dto.presentaition import SignupModel
 
 signup_ns = Namespace('signup', description='회원가입')
 
@@ -31,6 +33,8 @@ class Signup(Resource):
         """회원가입 인증코드 발송"""
         email = request.args['email']
 
+        validator.validate_email(email)
+
         signup_use_case.send_auth_email(email)
         return '', 204
 
@@ -41,8 +45,8 @@ class Signup(Resource):
     def post(self, signup_use_case: SignupUseCase = Provide[UserContainer.signup_service]):
         """회원가입"""
         data = request.get_json()
-
-        signup_use_case.signup(data['auth_token'], data['name'], data['username'], data['pw'], data['nickname'], data['account_number'], data['email'])
+        signup_model = SignupModel(**data)
+        signup_use_case.signup(signup_model)
 
         return '', 201
 
@@ -64,6 +68,8 @@ class SignupValidation(Resource):
         auth_code = request.args['auth-code']
         email = request.args['email']
 
+        validator.validate_auth_code(auth_code)
+        validator.validate_email(email)
+
         auth_token = signup_use_case.validate_auth_code(email, auth_code)
         return {'auth_token': auth_token}, 200
-0

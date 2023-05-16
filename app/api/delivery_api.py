@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restx import Api
 
-from app.util.error_handling import delivery_error_handler
+from app.util.error_handling import delivery_error_handler, format_error
 
 authorizations = {
     'jwt': {
@@ -14,6 +14,7 @@ authorizations = {
 delivery_bp = Blueprint('delivery', __name__, url_prefix='/api/delivery')
 delivery_api = Api(delivery_bp, authorizations=authorizations, title='delivery', description='배달 API', doc='/docs')
 delivery_error_handler(delivery_api)
+format_error(delivery_api)
 
 from app.api.store import store_ns
 from app.api.post import post_ns

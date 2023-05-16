@@ -6,7 +6,7 @@ from app.user.user import duplicate_check_ns
 from flask import Blueprint
 from flask_restx import Api
 
-from app.util.error_handling import user_error_handling
+from app.util.error_handling import user_error_handling, format_error
 
 authorizations = {
     'jwt': {
@@ -19,6 +19,7 @@ authorizations = {
 user_bp = Blueprint('user', __name__, url_prefix='/api/user')
 user_api = Api(user_bp, authorizations=authorizations, title='user', description='유저 API', doc='/docs')
 user_error_handling(user_api)
+format_error(user_api)
 
 user_api.add_namespace(signup_ns, path='/signup')
 user_api.add_namespace(profile_ns, path='/profile')

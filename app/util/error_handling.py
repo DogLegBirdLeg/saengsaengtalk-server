@@ -1,6 +1,12 @@
 from app import exceptions
 
 
+def format_error(api):
+    @api.errorhandler(exceptions.FormatError)
+    def format_error_handling(error):
+        return error.json, 401
+
+
 def auth_error_handler(api):
     login_error_handling(api)
 

@@ -1,4 +1,5 @@
 from abc import *
+from logic.user.dto.presentaition import SignupModel
 
 
 class SignupAuthUseCase(metaclass=ABCMeta):
@@ -13,5 +14,5 @@ class SignupAuthUseCase(metaclass=ABCMeta):
 
 class SignupUseCase(metaclass=ABCMeta):
     @abstractmethod
-    def signup(self, auth_token, name, username, pw, nickname, account_number, email):
+    def signup(self, signup_model: SignupModel):
         pass

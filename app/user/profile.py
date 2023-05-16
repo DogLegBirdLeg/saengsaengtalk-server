@@ -3,6 +3,7 @@ from flask_restx import Resource, Namespace, fields
 from dependency_injector.wiring import inject, Provide
 from logic.user.application.port.incoming.ProfileUseCase import ProfileQueryUseCase, ProfileUpdateUseCase, ProfileDeleteUseCase
 from src.user_container import UserContainer
+from app.util import validator
 from flask import request
 
 profile_ns = Namespace('profile', description='프로필')
@@ -49,8 +50,13 @@ class ModifyPassword(Resource):
     def patch(self, profile_use_case: ProfileUpdateUseCase = Provide[UserContainer.profile_update_service]):
         """비밀번호 변경"""
         data = request.get_json()
+        current_password = data['current_password']
+        new_password = data['new_password']
 
-        profile_use_case.update_password(g.id, data['current_password'], data['new_password'])
+        validator.validate_password(current_password)
+        validator.validate_password(new_password)
+
+        profile_use_case.update_password(g.id, current_password, new_password)
         return '', 204
 
 
@@ -65,7 +71,11 @@ class ModifyNickname(Resource):
     def patch(self, profile_use_case: ProfileUpdateUseCase = Provide[UserContainer.profile_update_service]):
         """닉네임 변경"""
         data = request.get_json()
-        profile_use_case.update_nickname(g.id, data['nickname'])
+        nickname = data['nickname']
+
+        validator.validate_nickname(nickname)
+
+        profile_use_case.update_nickname(g.id, nickname)
         return '', 204
 
 
@@ -80,5 +90,9 @@ class ModifyAccountNumber(Resource):
     def patch(self, profile_use_case: ProfileUpdateUseCase = Provide[UserContainer.profile_update_service]):
         """계좌번호 변경"""
         data = request.get_json()
-        profile_use_case.update_account_number(g.id, data['account_number'])
+        account_number = data['account_number']
+
+        validator.validate_account_number(account_number)
+
+        profile_use_case.update_account_number(g.id, account_number)
         return '', 204

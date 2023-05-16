@@ -2,6 +2,7 @@ from flask import make_response, request
 from flask_restx import Namespace, Resource, fields
 from dependency_injector.wiring import inject, Provide
 from src.user_container import UserContainer
+from app.util import validator
 
 from logic.user.application.port.incoming.AuthUseCase import AuthUseCase
 
@@ -24,7 +25,14 @@ class Login(Resource):
     def post(self, authentication_use_case: AuthUseCase = Provide[UserContainer.auth_service]):
         """로그인"""
         data = request.get_json()
-        access_token, refresh_token = authentication_use_case.login(data['username'], data['pw'], data['registration_token'])
+        username = data['username']
+        password = data['pw']
+        registration_token = data['registration_token']
+
+        validator.validate_username(username)
+        validator.validate_password(password)
+
+        access_token, refresh_token = authentication_use_case.login(username, password, registration_token)
 
         res = make_response()
         res.headers['Authentication'] = f'{access_token}/{refresh_token}'

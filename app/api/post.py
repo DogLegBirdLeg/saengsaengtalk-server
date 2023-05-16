@@ -74,9 +74,7 @@ class Post(Resource):
     def post(self, post_use_case: PostCreateUseCase = Provide[PostContainer.post_create_service]):
         """게시글 작성"""
         data = request.get_json()
-
         post_write_model = PostWriteModel(**data)
-
         post_id = post_use_case.create(g.id, g.nickname, post_write_model)
         return {'post_id': post_id}, 201
 
