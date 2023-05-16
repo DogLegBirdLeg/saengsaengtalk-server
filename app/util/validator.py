@@ -33,7 +33,7 @@ def validate_account_number(account_number):
 
 
 def validate_email(email):
-    r = re.fullmatch(r'^[a-zA-Z0-9]{2,20}@[a-zA-Z0-9.]{2,20}$', email)
+    r = re.fullmatch(r'^[a-zA-Z0-9]{2,20}@[a-zA-Z0-9.]{2,40}$', email)
     if r is None:
         raise exceptions.FormatError
 
