@@ -11,7 +11,7 @@ authorizations = {
     }
 }
 
-delivery_bp = Blueprint('delivery', __name__, url_prefix='/api/delivery')
+delivery_bp = Blueprint('delivery', __name__, url_prefix='/delivery')
 delivery_api = Api(delivery_bp, authorizations=authorizations, title='delivery', description='배달 API', doc='/docs')
 delivery_error_handler(delivery_api)
 format_error(delivery_api)

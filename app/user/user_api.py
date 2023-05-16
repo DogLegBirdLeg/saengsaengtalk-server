@@ -16,7 +16,7 @@ authorizations = {
     }
 }
 
-user_bp = Blueprint('user', __name__, url_prefix='/api/user')
+user_bp = Blueprint('user', __name__, url_prefix='/user')
 user_api = Api(user_bp, authorizations=authorizations, title='user', description='유저 API', doc='/docs')
 user_error_handling(user_api)
 format_error(user_api)

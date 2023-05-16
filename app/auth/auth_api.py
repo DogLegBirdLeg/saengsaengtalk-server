@@ -14,7 +14,7 @@ authorizations = {
     }
 }
 
-auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
+auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 auth_api = Api(auth_bp, authorizations=authorizations, title='auth', description='인증 API', doc='/docs')
 auth_error_handler(auth_api)
 format_error(auth_api)
