@@ -9,13 +9,13 @@ def validate_name(name):
 
 
 def validate_username(username):
-    r = re.fullmatch(r'^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,16}$', username)
+    r = re.fullmatch(r'^[a-zA-Z0-9]{5,20}$', username)
     if r is None:
         raise exceptions.FormatError
 
 
 def validate_password(password):
-    r = re.fullmatch(r'^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[~!@#$%^&])[a-zA-Z0-9~!@#$%^&]{8,16}$', password)
+    r = re.fullmatch(r'^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[~!@#$%^&*_\-+=`|\\(){}\[\]:;\"\'<>,.?/])[a-zA-Z0-9~!@#$%^&*_\-+=`|\\(){}\[\]:;\"\'<>,.?/]{8,40}$', password)
     if r is None:
         raise exceptions.FormatError
 
