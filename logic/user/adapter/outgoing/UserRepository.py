@@ -1,6 +1,6 @@
 import pymongo.errors
 from pymongo import MongoClient
-from app import exceptions
+import exceptions
 from logic.user.application.port.outgoing.UserRepository import UserRepository
 
 from logic.user.util.Mapper import UserMapper

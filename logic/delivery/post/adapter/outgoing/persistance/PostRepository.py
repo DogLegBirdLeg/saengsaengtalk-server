@@ -1,4 +1,4 @@
-from app import exceptions
+import exceptions
 from bson import ObjectId
 from logic.delivery.post.util.PostMapper import PostMapper
 from logic.delivery.post.domain.entity.Post import Post

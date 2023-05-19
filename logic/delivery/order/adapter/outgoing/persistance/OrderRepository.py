@@ -1,6 +1,5 @@
-from app import exceptions
+import exceptions
 from typing import List
-from bson import ObjectId
 
 from logic.delivery.order.util.Mapper import OrderMapper
 from logic.delivery.order.util.JsonConverter import order_to_json

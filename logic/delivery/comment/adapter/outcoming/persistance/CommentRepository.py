@@ -3,7 +3,7 @@ from bson import ObjectId
 from logic.delivery.comment.application.port.outcoming.persistance.CommentRepository import CommentRepository
 from logic.delivery.comment.domain.entity.Comment import Comment
 from typing import List
-from app import exceptions
+import exceptions
 
 
 class MongoDBCommentRepository(CommentRepository):

@@ -2,7 +2,7 @@ from logic.user.application.port.incoming.ProfileUseCase import ProfileQueryUseC
 from logic.user.application.port.outgoing.UserRepository import UserRepository
 from logic.user.application.port.outgoing.UserDao import UserDao
 from logic.user.util.PasswordHashing import pw_hashing
-from app import exceptions
+import exceptions
 
 
 class ProfileQueryService(ProfileQueryUseCase):

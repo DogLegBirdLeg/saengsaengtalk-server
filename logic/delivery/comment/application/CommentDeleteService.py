@@ -1,6 +1,6 @@
 from logic.delivery.comment.application.port.outcoming.persistance.CommentRepository import CommentRepository
 from logic.delivery.comment.application.port.incoming.CommentDeleteUseCase import CommentDeleteUseCase
-from app import exceptions
+import exceptions
 
 
 class CommentDeleteService(CommentDeleteUseCase):

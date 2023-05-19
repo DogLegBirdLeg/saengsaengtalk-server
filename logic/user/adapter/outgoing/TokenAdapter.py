@@ -1,4 +1,4 @@
-from app import exceptions
+import exceptions
 from logic.user.application.port.outgoing.TokenDao import TokenDao
 
 

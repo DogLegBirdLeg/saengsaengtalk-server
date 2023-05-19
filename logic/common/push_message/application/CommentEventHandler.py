@@ -3,7 +3,7 @@ from src.common_container import CommonContainer
 from logic.common.push_message.application.port.outgoing.UserIdFinder import UserIdFinder
 from logic.common.push_message.application.port.outgoing.TokenQueryDao import TokenQueryDao
 from logic.common.push_message.application.port.outgoing.MessagePusher import MessagePusher
-from app import exceptions
+import exceptions
 
 from blinker import signal
 

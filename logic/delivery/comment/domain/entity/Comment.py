@@ -1,4 +1,4 @@
-from app import exceptions
+import exceptions
 from datetime import datetime
 from bson import ObjectId
 

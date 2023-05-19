@@ -6,7 +6,7 @@ from logic.delivery.order.domain.entity.OrderGroup import OrderGroup
 from logic.delivery.order.domain.entity.OrderOption import OrderOption
 from logic.delivery.order.domain.entity.Order import Order
 from typing import List
-from app import exceptions
+import exceptions
 
 
 class OrderValidator:

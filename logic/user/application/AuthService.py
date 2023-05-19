@@ -1,4 +1,4 @@
-from app import exceptions
+import exceptions
 from flask import current_app
 import jwt
 from datetime import datetime, timedelta

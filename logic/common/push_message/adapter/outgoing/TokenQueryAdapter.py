@@ -1,5 +1,5 @@
 from logic.common.push_message.application.port.outgoing.TokenQueryDao import TokenQueryDao
-from app import exceptions
+import exceptions
 
 
 class MongoDBTokenQueryDao(TokenQueryDao):

@@ -1,7 +1,6 @@
 from flask import g
 from typing import List
-from app import exceptions
-
+import exceptions
 
 from logic.delivery.order.application.port.incoming.OrderQueryUseCase import OrderQueryUseCase
 from logic.delivery.order.application.port.outgoing.persistance.OrderRepository import OrderRepository

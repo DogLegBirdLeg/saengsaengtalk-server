@@ -1,4 +1,4 @@
-from app import exceptions
+import exceptions
 from bson import ObjectId
 
 from blinker import signal

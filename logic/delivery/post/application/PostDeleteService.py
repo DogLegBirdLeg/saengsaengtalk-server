@@ -1,7 +1,7 @@
 from logic.delivery.post.application.port.incoming.PostDeleteUseCase import PostDeleteUseCase
 from logic.delivery.post.application.port.outgoing.persistence.PostRepository import PostRepository
 
-from app import exceptions
+import exceptions
 
 
 class PostDeleteService(PostDeleteUseCase):

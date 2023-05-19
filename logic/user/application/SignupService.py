@@ -6,7 +6,7 @@ from logic.user.util.PasswordHashing import pw_hashing
 from logic.user.util.AuthCodeGenerator import generate_auth_code
 from logic.user.dto.presentaition import SignupModel
 
-from app import exceptions
+import exceptions
 from datetime import datetime, timedelta
 from flask import current_app
 

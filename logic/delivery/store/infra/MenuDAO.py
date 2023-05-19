@@ -1,7 +1,7 @@
 from typing import List
 from logic.delivery.store.usecase.DAOInterface import MenuDAO
 from bson import ObjectId
-from app import exceptions
+import exceptions
 from logic.delivery.store.domain.dto.MenuSummaryDto import MenuSummaryDto
 
 

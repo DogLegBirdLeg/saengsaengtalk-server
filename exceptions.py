@@ -105,7 +105,7 @@ class NotExistMenu(StoreError):
         super().__init__(msg=msg, code=code)
 
 
-# Post
+# post
 class PostError(DomainError):
     def __init__(self, msg, code):
         super().__init__(msg=msg, code=code)

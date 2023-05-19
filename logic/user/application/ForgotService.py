@@ -1,4 +1,4 @@
-from app import exceptions
+import exceptions
 
 from logic.user.application.port.outgoing.UserRepository import UserRepository
 from logic.user.application.port.outgoing.UserDao import UserDao

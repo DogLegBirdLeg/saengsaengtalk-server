@@ -5,7 +5,7 @@ import pymongo
 from logic.delivery.post.dto.persistance import Post
 from logic.delivery.post.application.port.outgoing.persistence.PostQueryDao import PostQueryDao
 from datetime import datetime, timedelta
-from app import exceptions
+import exceptions
 
 
 class MongoDBPostQueryDao(PostQueryDao):

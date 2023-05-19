@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from bson import ObjectId
-from app import exceptions
+import exceptions
 from typing import List
 
 from logic.delivery.store.domain.entity.Store import Store

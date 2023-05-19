@@ -3,7 +3,7 @@ from logic.delivery.post.application.port.incoming.PostQueryUseCase import PostQ
 from logic.delivery.post.application.port.outgoing.persistence.PostQueryDao import PostQueryDao
 from logic.delivery.post.application.port.outgoing.persistence.UserQueryDao import UserQueryDao
 from logic.delivery.post.dto.persistance import Post
-from app import exceptions
+import exceptions
 
 
 class PostQueryService(PostQueryUseCase):

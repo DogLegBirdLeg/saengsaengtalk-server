@@ -1,4 +1,4 @@
-from app import exceptions
+import exceptions
 
 
 def format_error(api):

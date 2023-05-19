@@ -2,7 +2,7 @@ from logic.delivery.post.application.port.incoming.PostUserPoolUseCase import Po
 from logic.delivery.post.application.port.outgoing.persistence.PostUpdateDao import PostUpdateDao
 from logic.delivery.post.application.port.outgoing.persistence.PostRepository import PostRepository
 
-from app import exceptions
+import exceptions
 
 
 class PostUserPoolService(PostUserPoolUseCase):
