@@ -22,29 +22,37 @@ class MongoDBUserDao(UserDao):
 
     def update_pw(self, user_id, pw):
         find = {'_id': user_id}
-        update = {
-            '$set': {'pw': pw}
-        }
+        update = {'$set': {'pw': pw}}
         self.db.user.update_one(find, update)
+
+        find = {'user._id': user_id}
+        update = {'$set': {'user.pw': pw}}
+        self.db.token.update_one(find, update)
 
     def update_email(self, user_id, email):
         find = {'_id': user_id}
-        update = {
-            '$set': {'email': email}
-        }
+        update = {'$set': {'email': email}}
         self.db.user.update_one(find, update)
+
+        find = {'user._id': user_id}
+        update = {'$set': {'user.email': email}}
+        self.db.token.update_one(find, update)
 
     def update_nickname(self, user_id, nickname):
         find = {'_id': user_id}
-        update = {
-            '$set': {'nickname': nickname}
-        }
+        update = {'$set': {'nickname': nickname}}
         self.db.user.update_one(find, update)
+
+        find = {'user._id': user_id}
+        update = {'$set': {'user.nickname': nickname}}
+        self.db.token.update_one(find, update)
 
     def update_account_number(self, user_id, account_number):
         find = {'_id': user_id}
-        update = {
-            '$set': {'account_number': account_number}
-        }
+        update = {'$set': {'account_number': account_number}}
         self.db.user.update_one(find, update)
+
+        find = {'user._id': user_id}
+        update = {'$set': {'user.account_number': account_number}}
+        self.db.token.update_one(find, update)
 
