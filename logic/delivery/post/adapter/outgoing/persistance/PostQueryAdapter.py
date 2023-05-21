@@ -23,12 +23,8 @@ class MongoDBPostQueryDao(PostQueryDao):
         return [Post.mapping(post_json) for post_json in posts_json]
 
     def find_joined_posts_by_user_id(self, user_id) -> List[Post]:
-        current_time = datetime.now()
-        one_day_ago = current_time - timedelta(days=1)
-
         find = {
-            'order_time': {'$gte': one_day_ago},
-            'status': {'$in': ['recruiting', 'closed', 'ordered', 'delivered']},
+            'status': {'$in': ['recruiting', 'closed', 'ordered']},
             'users': {'$eq': user_id}
         }
 
@@ -36,7 +32,10 @@ class MongoDBPostQueryDao(PostQueryDao):
         return [Post.mapping(post_json) for post_json in posts_json]
 
     def find_all_posts_by_user_id(self, user_id) -> List[Post]:
-        find = {'users': {'$eq': user_id}}
+        find = {
+            'users': {'$eq': user_id},
+            'status': {'$in': ['delivered', 'canceled']}
+        }
         posts_json = self.db.post.find(find).sort("order_time", pymongo.ASCENDING)
 
         return [Post.mapping(post_json) for post_json in posts_json]
