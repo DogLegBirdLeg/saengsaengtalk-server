@@ -1,5 +1,4 @@
 from logic.common.push_message.application.port.outgoing.TokenQueryDao import TokenQueryDao
-import exceptions
 
 
 class MongoDBTokenQueryDao(TokenQueryDao):
@@ -17,8 +16,5 @@ class MongoDBTokenQueryDao(TokenQueryDao):
         find = {'user._id': user_id}
         projection = {'_id': False, 'registration_token': True}
 
-        token = self.db.token.find_one(find, projection)
-        if token is None:
-            raise exceptions.NotExistResource
-
-        return token['registration_token']
+        tokens = [token['registration_token'] for token in self.db.token.find(find, projection)]
+        return tokens

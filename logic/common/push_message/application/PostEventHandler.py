@@ -15,19 +15,14 @@ def push_joined_message(sender, owner_user_id, current_member, store_id, post_id
                         token_query_dao: TokenQueryDao = Provide[CommonContainer.token_query_dao],
                         message_pusher: MessagePusher = Provide[CommonContainer.message_pusher]):
 
-    try:
-        token = token_query_dao.find_registration_token_by_user_id(owner_user_id)
-    except exceptions.NotExistResource:
-        print('로그인 하지 않은 유저에게는 메시지를 발송할 수 없습니다')
-        return
-
+    tokens = token_query_dao.find_registration_token_by_user_id(owner_user_id)
     data = {
         'title': f'{nickname}님이 참여했습니다!',
         'body': f'현재까지 {current_member}명 참여했습니다!',
         'post_id': post_id
     }
 
-    message_pusher.send(data, [token])
+    message_pusher.send(data, tokens)
 
 
 @post_event.connect_via('ordered')
