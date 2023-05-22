@@ -28,8 +28,8 @@ class JwtAuthService(AuthUseCase):
 
         return access_token, refresh_token
 
-    def logout(self, user_id):
-        self.token_dao.delete(user_id)
+    def logout(self, user_id, access_token):
+        self.token_dao.delete(user_id, access_token)
 
     def refresh(self, refresh_token) -> str:
         try:

@@ -7,5 +7,5 @@ class AuthUseCase(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def logout(self, user_id):
+    def logout(self, user_id, access_token):
         pass

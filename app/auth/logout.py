@@ -1,4 +1,4 @@
-from flask import g
+from flask import g, request
 from flask_restx import Namespace, Resource
 from dependency_injector.wiring import inject, Provide
 from src.user_container import UserContainer
@@ -16,5 +16,6 @@ class Logout(Resource):
     @inject
     def delete(self, authentication_use_case: AuthUseCase = Provide[UserContainer.auth_service]):
         """로그아웃"""
-        authentication_use_case.logout(g.id)
+        access_token = request.headers['authorization']
+        authentication_use_case.logout(g.id, access_token)
         return '', 204
