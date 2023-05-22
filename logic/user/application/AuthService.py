@@ -1,8 +1,8 @@
 import exceptions
 from flask import current_app
 import jwt
+import time
 from datetime import datetime, timedelta
-
 from logic.user.application.port.incoming.AuthUseCase import AuthUseCase
 from logic.user.application.port.outgoing.UserRepository import UserRepository
 from logic.user.application.port.outgoing.TokenDao import TokenDao
@@ -54,4 +54,7 @@ class JwtAuthService(AuthUseCase):
 
     @staticmethod
     def _create_refresh_token(secret_key):
-        return jwt.encode({}, secret_key)
+        payload = {
+            'create_at': time.time()
+        }
+        return jwt.encode(payload, secret_key)
