@@ -21,7 +21,3 @@ class TokenDao(metaclass=ABCMeta):
     @abstractmethod
     def update_access_token(self, user_id, access_token):
         pass
-
-    @abstractmethod
-    def update_registration_token(self, user_id, registration_token):
-        pass

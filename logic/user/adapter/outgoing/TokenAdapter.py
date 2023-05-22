@@ -24,14 +24,17 @@ class MongoDBTokenDao(TokenDao):
         find = {'_id': user_id}
         user = self.db.user.find_one(find)
 
+        find = {'registration_token': registration_token}
         data = {
-            'user': user,
-            'access_token': access_token,
-            'refresh_token': refresh_token,
-            'registration_token': registration_token,
+            '$set': {
+                'user': user,
+                'access_token': access_token,
+                'refresh_token': refresh_token,
+                'registration_token': registration_token
+            }
         }
 
-        self.db.token.insert_one(data)
+        self.db.token.update_one(find, data, True)
 
     def delete(self, user_id):
         find = {'user._id': user_id}
@@ -41,14 +44,6 @@ class MongoDBTokenDao(TokenDao):
         find = {'user._id': user_id}
         update = {
             '$set': {'access_token': access_token}
-        }
-
-        self.db.token.update_one(find, update)
-
-    def update_registration_token(self, user_id, registration_token):
-        find = {'user._id': user_id}
-        update = {
-            '$set': {'registration_token': registration_token}
         }
 
         self.db.token.update_one(find, update)

@@ -22,16 +22,11 @@ class JwtAuthService(AuthUseCase):
         if user.compare_pw(pw) is False:
             raise exceptions.SigninFail
 
-        try:
-            token = self.token_dao.find_token_by_user_id(user._id)
-        except exceptions.NotExistResource:
-            access_token = self._create_token(user._id, user.nickname, current_app.secret_key, True)
-            refresh_token = self._create_token(user._id, user.nickname, current_app.secret_key)
-            self.token_dao.save(user._id, access_token, refresh_token, registration_token)
-            return access_token, refresh_token
+        access_token = self._create_access_token(user._id, user.nickname, current_app.secret_key)
+        refresh_token = self._create_refresh_token(current_app.secret_key)
+        self.token_dao.save(user._id, access_token, refresh_token, registration_token)
 
-        self.token_dao.update_registration_token(user._id, registration_token)
-        return token['access_token'], token['refresh_token']
+        return access_token, refresh_token
 
     def logout(self, user_id):
         self.token_dao.delete(user_id)
@@ -43,22 +38,20 @@ class JwtAuthService(AuthUseCase):
             raise exceptions.NotExistToken
 
         user = token['user']
-        access_token = self._create_token(user['_id'], user['nickname'], current_app.secret_key, True)
+        access_token = self._create_access_token(user['_id'], user['nickname'], current_app.secret_key)
         self.token_dao.update_access_token(user['_id'], access_token)
         return access_token
 
     @staticmethod
-    def _create_token(user_id, nickname, secret_key, expire_time: bool = False):
-        if expire_time is True:
-            payload = {
-                'user_id': user_id,
-                'nickname': nickname,
-                'exp': datetime.utcnow() + timedelta(minutes=30)
-            }
-            return jwt.encode(payload, secret_key)
-
+    def _create_access_token(user_id, nickname, secret_key):
         payload = {
             'user_id': user_id,
             'nickname': nickname,
+            'exp': datetime.utcnow() + timedelta(minutes=30)
         }
+
         return jwt.encode(payload, secret_key)
+
+    @staticmethod
+    def _create_refresh_token(secret_key):
+        return jwt.encode({}, secret_key)
