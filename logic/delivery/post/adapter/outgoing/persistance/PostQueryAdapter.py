@@ -36,7 +36,7 @@ class MongoDBPostQueryDao(PostQueryDao):
             'users': {'$eq': user_id},
             'status': {'$in': ['delivered', 'canceled']}
         }
-        posts_json = self.db.post.find(find).sort("order_time", pymongo.ASCENDING)
+        posts_json = self.db.post.find(find).sort("order_time", pymongo.DESCENDING)
 
         return [Post.mapping(post_json) for post_json in posts_json]
 
