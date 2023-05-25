@@ -27,7 +27,8 @@ def request_log(response):
 
     if request.content_type == 'application/json':
         data = request.get_json()
-        msg['request'] = data
+        if '/auth/login' != request.path:
+            msg['request'] = data
 
     msg['response'] = response.get_json()
     request_logger.info(f'msg: {msg}')
