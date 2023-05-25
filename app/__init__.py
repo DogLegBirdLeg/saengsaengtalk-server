@@ -34,15 +34,24 @@ def create_app():
     from app.api.delivery_api import delivery_bp
     app.register_blueprint(delivery_bp)
 
+    from .util import log
+
     @app.before_request
-    def init_g():
+    def init():
         try:
             g.id = int(request.headers['user_id'])
             g.nickname = request.headers['nickname'].encode('iso-8859-1').decode('utf-8')
         except KeyError:
             pass
-        #g.id = 1682589002965
-        #g.nickname = '찰봉'
+        g.id = 1682589002965
+        g.nickname = '찰봉'
         #g.id = 11111111
         #g.nickname='test'
+
+    @app.after_request
+    def logging(response):
+        if 'swagger' not in request.path:
+            log.request_log(response)
+        return response
+
     return app

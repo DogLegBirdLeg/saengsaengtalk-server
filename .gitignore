@@ -117,3 +117,5 @@ out/
 config/
 *.pyc
 __pycache__/
+
+log/
