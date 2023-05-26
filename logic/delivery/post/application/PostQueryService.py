@@ -42,4 +42,8 @@ class PostQueryService(PostQueryUseCase):
         if post.status != 'delivered':
             raise exceptions.BeforeDelivered
 
+        one_day_ago = post.order_time + timedelta(days=1)
+        if datetime.now() > one_day_ago:
+            raise exceptions.AccountQueryTimeout
+
         return self.user_query_dao.find_user_account_number(post.user_id)

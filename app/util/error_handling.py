@@ -106,6 +106,10 @@ def post_error_handler(api):
     def before_ordered_handling(error):
         return error.json, 406
 
+    @api.errorhandler(exceptions.AccountQueryTimeout)
+    def account_timeout_handling(error):
+        return error.json, 406
+
 
 def store_error_handler(api):
     @api.errorhandler(exceptions.NotExistStore)

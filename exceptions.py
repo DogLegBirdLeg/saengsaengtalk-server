@@ -156,6 +156,11 @@ class BeforeDelivered(PostError):
         super().__init__(msg=msg, code=code)
 
 
+class AccountQueryTimeout(PostError):
+    def __init__(self, msg='조회 가능 기간이 지났습니다', code=409):
+        super().__init__(msg=msg, code=code)
+
+
 # Order
 class OrderError(DomainError):
     def __init__(self, msg, code):
