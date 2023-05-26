@@ -7,4 +7,5 @@ class MongoDBUserQueryDao(UserQueryDao):
 
     def find_user_account_number(self, user_id):
         find = {'_id': user_id}
-        return self.db.user.find_one(find)['account_number']
+        user = self.db.user.find_one(find)
+        return user['name'], user['account_number']
