@@ -12,6 +12,7 @@ class FirebaseMessagePusher(MessagePusher):
     def send(self, data, tokens):
         message = messaging.MulticastMessage(
             tokens=tokens,
+            notification=messaging.Notification(data['title'], data['body']),
             data=data
         )
 
