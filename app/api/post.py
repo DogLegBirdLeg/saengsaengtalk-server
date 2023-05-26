@@ -143,4 +143,7 @@ class PostFee(Resource):
     def get(self, post_id, post_use_case: PostQueryUseCase = Provide[PostContainer.post_query_service]):
         """대표 유저 계좌 정보 확인"""
         name, account_number = post_use_case.get_owner_user_account_number(post_id, g.id)
-        return {'account_number': account_number}
+        return {
+            'name': name,
+            'account_number': account_number
+        }
