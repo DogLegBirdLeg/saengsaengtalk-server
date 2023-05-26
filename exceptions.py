@@ -151,8 +151,8 @@ class NotValidStatus(PostError):
         super().__init__(msg=msg, code=code)
 
 
-class BeforeOrdered(PostError):
-    def __init__(self, msg='주문 완료 이전에는 계좌번호를 확인할 수 없습니다', code=408):
+class BeforeDelivered(PostError):
+    def __init__(self, msg='배달 완료 이전에는 계좌번호를 확인할 수 없습니다', code=408):
         super().__init__(msg=msg, code=code)
 
 

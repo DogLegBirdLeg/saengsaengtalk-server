@@ -102,7 +102,7 @@ def post_error_handler(api):
     def not_valid_order_handling(error):
         return error.json, 406
 
-    @api.errorhandler(exceptions.BeforeOrdered)
+    @api.errorhandler(exceptions.BeforeDelivered)
     def before_ordered_handling(error):
         return error.json, 406
 

@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime, timedelta
 from logic.delivery.post.application.port.incoming.PostQueryUseCase import PostQueryUseCase
 from logic.delivery.post.application.port.outgoing.persistence.PostQueryDao import PostQueryDao
 from logic.delivery.post.application.port.outgoing.persistence.UserQueryDao import UserQueryDao
@@ -38,7 +39,7 @@ class PostQueryService(PostQueryUseCase):
         if handling_user_id not in post.users:
             raise exceptions.AccessDenied
 
-        if post.status not in ['ordered', 'delivered']:
-            raise exceptions.BeforeOrdered
+        if post.status != 'delivered':
+            raise exceptions.BeforeDelivered
 
         return self.user_query_dao.find_user_account_number(post.user_id)
