@@ -27,7 +27,7 @@ class DuplicateKeyError(DatabaseError):
 
 
 class FormatError(BaseException):
-    def __init__(self, msg='필드가 유효하지 않습니다', code=4):
+    def __init__(self, msg='입력값이 유효하지 않습니다', code=4):
         super().__init__(msg=msg, code=code)
 
 
