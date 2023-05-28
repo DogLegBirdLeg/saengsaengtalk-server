@@ -25,7 +25,7 @@ class MongoDBDeviceDao(DeviceDao):
             'user_id': user_id,
             'key': ObjectId(key),
             'device_token': device_token,
-            'notification_allow': True
+            'notification_allow': False
         }
 
         try:
@@ -41,7 +41,7 @@ class MongoDBDeviceDao(DeviceDao):
 
         data = {
             '$set': {
-                'allow': allow
+                'notification_allow': allow
             }
         }
 
