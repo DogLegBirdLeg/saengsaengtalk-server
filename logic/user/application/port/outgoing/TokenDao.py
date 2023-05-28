@@ -11,11 +11,11 @@ class TokenDao(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def save(self, user_id, access_token, refresh_token, registration_token):
+    def save(self, user_id, access_token, refresh_token):
         pass
 
     @abstractmethod
-    def delete(self, user_id, access_token):
+    def delete(self, key):
         pass
 
     @abstractmethod

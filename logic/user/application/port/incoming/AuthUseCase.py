@@ -3,9 +3,9 @@ from abc import *
 
 class AuthUseCase(metaclass=ABCMeta):
     @abstractmethod
-    def login(self, username, pw, registration_token):
+    def login(self, username, pw):
         pass
 
     @abstractmethod
-    def logout(self, user_id, access_token):
+    def logout(self, key):
         pass

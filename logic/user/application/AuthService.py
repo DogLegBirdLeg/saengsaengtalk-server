@@ -13,7 +13,7 @@ class JwtAuthService(AuthUseCase):
         self.user_repository = user_repository
         self.token_dao = token_dao
 
-    def login(self, username, pw, registration_token):
+    def login(self, username, pw):
         try:
             user = self.user_repository.find_user_by_username(username)
         except exceptions.NotExistResource:
@@ -24,12 +24,12 @@ class JwtAuthService(AuthUseCase):
 
         access_token = self._create_access_token(user._id, user.nickname, current_app.secret_key)
         refresh_token = self._create_refresh_token(current_app.secret_key)
-        self.token_dao.save(user._id, access_token, refresh_token, registration_token)
+        key = self.token_dao.save(user._id, access_token, refresh_token)
 
-        return access_token, refresh_token
+        return key, access_token, refresh_token
 
-    def logout(self, user_id, access_token):
-        self.token_dao.delete(user_id, access_token)
+    def logout(self, key):
+        self.token_dao.delete(key)
 
     def refresh(self, refresh_token) -> str:
         try:

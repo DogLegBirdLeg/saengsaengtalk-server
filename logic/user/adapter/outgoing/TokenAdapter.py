@@ -1,4 +1,6 @@
 import exceptions
+import time
+from bson import ObjectId
 from logic.user.application.port.outgoing.TokenDao import TokenDao
 
 
@@ -20,33 +22,31 @@ class MongoDBTokenDao(TokenDao):
             raise exceptions.NotExistResource
         return token
 
-    def save(self, user_id, access_token, refresh_token, registration_token):
+    def save(self, user_id, access_token, refresh_token):
         find = {'_id': user_id}
         user = self.db.user.find_one(find)
 
-        find = {'registration_token': registration_token}
         data = {
-            '$set': {
-                'user': user,
-                'access_token': access_token,
-                'refresh_token': refresh_token,
-                'registration_token': registration_token
-            }
+            'user': user,
+            'access_token': access_token,
+            'refresh_token': refresh_token,
+            'last_refreshed_date': time.time()
         }
 
-        self.db.token.update_one(find, data, True)
+        _id = self.db.token.insert_one(data)
+        return str(_id.inserted_id)
 
-    def delete(self, user_id, access_token):
-        find = {
-            'user._id': user_id,
-            'access_token': access_token
-        }
+    def delete(self, key):
+        find = {'_id': ObjectId(key)}
         self.db.token.delete_one(find)
 
     def update_access_token(self, user_id, access_token):
         find = {'user._id': user_id}
         update = {
-            '$set': {'access_token': access_token}
+            '$set': {
+                'access_token': access_token,
+                'last_refreshed_date': time.time()
+            }
         }
 
         self.db.token.update_one(find, update)

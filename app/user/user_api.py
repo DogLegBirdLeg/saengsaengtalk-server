@@ -2,6 +2,7 @@ from app.user.signup import signup_ns
 from app.user.profile import profile_ns
 from app.user.forgot import forgot_ns
 from app.user.user import duplicate_check_ns
+from app.user.notification_allow import notification_allow_ns
 
 from flask import Blueprint
 from flask_restx import Api
@@ -25,6 +26,7 @@ user_api.add_namespace(signup_ns, path='/signup')
 user_api.add_namespace(profile_ns, path='/profile')
 user_api.add_namespace(forgot_ns, path='/forgot')
 user_api.add_namespace(duplicate_check_ns, path='/duplicate-check')
+user_api.add_namespace(notification_allow_ns, path='/notification-allow')
 
 
 parser = signup_ns.parser()

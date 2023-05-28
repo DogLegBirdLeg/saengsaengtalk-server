@@ -15,5 +15,5 @@ class FirebaseMessagePusher(MessagePusher):
             notification=messaging.Notification(data['title'], data['body']),
             data=data
         )
-
+        messaging.get_token_info()
         result = messaging.send_multicast(message)
