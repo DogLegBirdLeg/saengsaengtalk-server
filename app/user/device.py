@@ -6,7 +6,7 @@ from bson import ObjectId
 from logic.user.application.port.incoming.DeviceUseCase import DeviceUseCase
 
 
-device_ns = Namespace('notification_allow', description='푸시 알림 허용')
+device_ns = Namespace('device', description='기기 관리')
 
 notification_allow = device_ns.model('알림 허용', {
     'allow': fields.Boolean(description='허용여부'),
