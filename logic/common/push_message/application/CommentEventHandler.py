@@ -20,7 +20,7 @@ def push_comment_message(sender, parent_id, user_id, nickname, content, post_id,
     if parent_id is None:
         post_owner_id = user_id_finder.find_user_id_by_post_id(post_id)
 
-        tokens = token_query_dao.find_registration_token_by_user_id(post_owner_id)
+        tokens = token_query_dao.find_device_token_by_user_id(post_owner_id)
         data = {
             'title': f'{nickname}님의 댓글',
             'body': f'{content}',
@@ -33,7 +33,7 @@ def push_comment_message(sender, parent_id, user_id, nickname, content, post_id,
     if user_id == parent_comment_owner_id:
         return
 
-    tokens = token_query_dao.find_registration_token_by_user_id(parent_comment_owner_id)
+    tokens = token_query_dao.find_device_token_by_user_id(parent_comment_owner_id)
     data = {
         'title': f'{nickname}님의 답글',
         'body': f'{content}',

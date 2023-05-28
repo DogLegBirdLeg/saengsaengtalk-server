@@ -15,7 +15,7 @@ def push_joined_message(sender, owner_user_id, current_member, store_id, post_id
                         token_query_dao: TokenQueryDao = Provide[CommonContainer.token_query_dao],
                         message_pusher: MessagePusher = Provide[CommonContainer.message_pusher]):
 
-    tokens = token_query_dao.find_registration_token_by_user_id(owner_user_id)
+    tokens = token_query_dao.find_device_token_by_user_id(owner_user_id)
     data = {
         'title': f'{nickname}님이 참여했습니다!',
         'body': f'현재까지 {current_member}명 참여했습니다!',
@@ -30,7 +30,7 @@ def push_joined_message(sender, owner_user_id, current_member, store_id, post_id
 def push_ordered_message(sender, users, post_id,
                          token_query_dao: TokenQueryDao = Provide[CommonContainer.token_query_dao],
                          message_pusher: MessagePusher = Provide[CommonContainer.message_pusher]):
-    tokens = token_query_dao.find_all_registration_token_user_id(users)
+    tokens = token_query_dao.find_all_device_token_token_by_user_id(users)
 
     data = {
         'title': '주문이 완료되었습니다!',
@@ -46,7 +46,7 @@ def push_ordered_message(sender, users, post_id,
 def push_delivered_message(sender, users, place, post_id,
                            token_query_dao: TokenQueryDao = Provide[CommonContainer.token_query_dao],
                            message_pusher: MessagePusher = Provide[CommonContainer.message_pusher]):
-    tokens = token_query_dao.find_all_registration_token_user_id(users)
+    tokens = token_query_dao.find_all_device_token_token_by_user_id(users)
 
     data = {
         'title': '배달이 완료되었습니다!',

@@ -5,16 +5,22 @@ class MongoDBTokenQueryDao(TokenQueryDao):
     def __init__(self, mongodb_connection):
         self.db = mongodb_connection['auth']
 
-    def find_all_registration_token_user_id(self, users):
-        find = {'user._id': {'$in': users}}
-        projection = {'_id': False, 'registration_token': True}
+    def find_all_device_token_token_by_user_id(self, users):
+        find = {
+            'user_id': {'$in': users},
+            'notification_allow': True
+        }
+        projection = {'_id': False, 'device_token': True}
 
-        tokens = [token['registration_token'] for token in self.db.token.find(find, projection)]
+        tokens = [device['device_token'] for device in self.db.device.find(find, projection)]
         return tokens
 
-    def find_registration_token_by_user_id(self, user_id):
-        find = {'user._id': user_id}
-        projection = {'_id': False, 'registration_token': True}
+    def find_device_token_by_user_id(self, user_id):
+        find = {
+            'user_id': user_id,
+            'notification_allow': True
+        }
+        projection = {'_id': False, 'device_token': True}
 
-        tokens = [token['registration_token'] for token in self.db.token.find(find, projection)]
+        tokens = [device['device_token'] for device in self.db.device.find(find, projection)]
         return tokens
