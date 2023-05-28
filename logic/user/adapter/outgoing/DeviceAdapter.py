@@ -1,3 +1,5 @@
+import pymongo.errors
+
 import exceptions
 from bson import ObjectId
 from logic.user.application.port.outgoing.DeviceDao import DeviceDao
@@ -19,19 +21,17 @@ class MongoDBDeviceDao(DeviceDao):
         return device['notification_allow']
 
     def save(self, user_id, key, device_token):
-        find = {
-            'user_id': user_id,
-            'device_token': device_token
-        }
         data = {
-            '$set': {
-                'user_id': user_id,
-                'key': ObjectId(key),
-                'device_token': device_token
-            }
+            'user_id': user_id,
+            'key': ObjectId(key),
+            'device_token': device_token,
+            'notification_allow': True
         }
 
-        self.db.device.update_one(find, data, True)
+        try:
+            self.db.device.insert_one(data)
+        except pymongo.errors.DuplicateKeyError: # 중복 키 에러 발생시 무시
+            pass
 
     def update_notification_allow(self, user_id, device_token, allow):
         find = {
