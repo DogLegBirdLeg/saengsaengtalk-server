@@ -1,5 +1,5 @@
 import exceptions
-import time
+from datetime import datetime
 from bson import ObjectId
 from logic.user.application.port.outgoing.TokenDao import TokenDao
 
@@ -30,7 +30,7 @@ class MongoDBTokenDao(TokenDao):
             'user': user,
             'access_token': access_token,
             'refresh_token': refresh_token,
-            'last_refreshed_date': time.time()
+            'last_refreshed_date': datetime.now()
         }
 
         _id = self.db.token.insert_one(data)
@@ -45,7 +45,7 @@ class MongoDBTokenDao(TokenDao):
         update = {
             '$set': {
                 'access_token': access_token,
-                'last_refreshed_date': time.time()
+                'last_refreshed_date': datetime.now()
             }
         }
 

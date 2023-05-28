@@ -1,5 +1,5 @@
 import pymongo.errors
-
+from datetime import datetime
 import exceptions
 from bson import ObjectId
 from logic.user.application.port.outgoing.DeviceDao import DeviceDao
@@ -25,13 +25,21 @@ class MongoDBDeviceDao(DeviceDao):
             'user_id': user_id,
             'key': ObjectId(key),
             'device_token': device_token,
-            'notification_allow': False
+            'notification_allow': False,
+            'last_updated_date': datetime.now()
         }
 
         try:
             self.db.device.insert_one(data)
-        except pymongo.errors.DuplicateKeyError: # 중복 키 에러 발생시 무시
-            pass
+        except pymongo.errors.DuplicateKeyError:  # 중복 키 에러 발생시 무시
+            find = {
+                'device_token': device_token
+            }
+
+            data = {
+                '$set': {'last_updated_date': datetime.now()}
+            }
+            self.db.device.update_one(find, data)
 
     def update_notification_allow(self, user_id, device_token, allow):
         find = {
