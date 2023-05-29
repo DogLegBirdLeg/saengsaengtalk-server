@@ -1,7 +1,7 @@
 from flask_restx import Resource, Namespace, fields
 from dependency_injector.wiring import inject, Provide
 from src.user_container import UserContainer
-from flask import request, g
+from flask import request
 from logic.user.application.port.incoming.DeviceUseCase import DeviceUseCase
 
 
@@ -12,18 +12,18 @@ notification_allow = device_ns.model('알림 허용', {
 })
 
 
-@device_ns.route('')
+@device_ns.route('/token')
 class Notification(Resource):
-    @device_ns.doc(security='jwt', description='기기 정보를 추가합니다. 중복되는 기기 토큰이 있다면 무시합니다', body=device_ns.model('device', model={
+    @device_ns.doc(security='jwt', description='기기 토큰 정보를 수정합니다.', body=device_ns.model('device', model={
         'device_token': fields.String(description='기기 토큰')
     }))
     @device_ns.response(code=204, description='추가 성공')
     @inject
-    def post(self, device_use_case: DeviceUseCase = Provide[UserContainer.device_service]):
-        """기기 정보 추가 """
+    def patch(self, device_use_case: DeviceUseCase = Provide[UserContainer.device_service]):
+        """기기 토큰 수정 """
         access_token = request.headers['Authorization']
         data = request.get_json()
-        device_use_case.append_device(g.id, access_token, data['device_token'])
+        device_use_case.update_device_token(access_token, data['device_token'])
         return '', 204
 
 

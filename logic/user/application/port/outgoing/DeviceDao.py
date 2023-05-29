@@ -7,7 +7,7 @@ class DeviceDao(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def save(self, user_id, access_token, device_token):
+    def update_device_token(self, user_id, access_token, device_token):
         pass
 
     @abstractmethod

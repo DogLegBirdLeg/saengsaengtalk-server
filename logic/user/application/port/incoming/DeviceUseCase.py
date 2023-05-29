@@ -3,7 +3,7 @@ from abc import *
 
 class DeviceUseCase(metaclass=ABCMeta):
     @abstractmethod
-    def append_device(self,user_id, access_token, device_token):
+    def update_device_token(self, access_token, device_token):
         pass
 
     @abstractmethod

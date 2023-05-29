@@ -2,6 +2,7 @@ from logic.user.application.port.incoming.DeviceUseCase import DeviceUseCase
 from logic.user.application.port.outgoing.DeviceDao import DeviceDao
 import exceptions
 
+
 class DeviceService(DeviceUseCase):
     def __init__(self, device_dao: DeviceDao):
         self.device_dao = device_dao
@@ -13,8 +14,8 @@ class DeviceService(DeviceUseCase):
             raise exceptions.DeviceNotFound
         return allow
 
-    def append_device(self, user_id, access_token, device_token):
-        self.device_dao.save(user_id, access_token, device_token)
+    def update_device_token(self, access_token, device_token):
+        self.device_dao.update_device_token(access_token, device_token)
 
     def update_notification_allow(self, access_token, allow):
         self.device_dao.update_notification_allow(access_token, allow)
