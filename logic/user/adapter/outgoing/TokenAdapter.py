@@ -37,7 +37,13 @@ class MongoDBTokenDao(TokenDao):
 
     def delete(self, access_token):
         find = {'access_token': access_token}
+        token = self.db.token.find_one(find)
+
+        find = {'_id': token['_id']}
         self.db.token.delete_one(find)
+
+        find = {'token_id': token['_id']}
+        self.db.device.delete_one(find)
 
     def update_access_token(self, user_id, access_token):
         find = {'user._id': user_id}
