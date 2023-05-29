@@ -18,7 +18,7 @@ class Login(Resource):
         'username': fields.String(description='유저 ID', example='milcampus1234'),
         'pw': fields.String(description='비밀번호', example='dogLegBirdLeg1234'),
     }))
-    @login_ns.response(code=200, description='로그인 성공', headers={'Authentication': 'access_token/refresh_token'}, body=login_ns.model('login res', model={
+    @login_ns.response(code=200, description='로그인 성공', headers={'Authentication': 'access_token/refresh_token'}, model=login_ns.model('login res', model={
         'key': fields.String(description='토큰 식별자', example=str(ObjectId()))
     }))
     @inject
