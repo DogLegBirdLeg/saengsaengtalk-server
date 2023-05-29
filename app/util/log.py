@@ -12,8 +12,13 @@ request_logger.addHandler(rotating_file_handler)
 
 
 def request_log(response):
+    ip = request.remote_addr
+    ip_list = request.environ.get('X-Forwarded-For')
+    if ip_list:
+        ip = ip_list[0]
+
     msg = {
-        'ip': request.remote_addr,
+        'ip': ip,
         'method': request.method,
         'path': request.path,
         'status_code': response.status_code
