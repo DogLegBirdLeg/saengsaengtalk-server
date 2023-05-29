@@ -8,7 +8,8 @@ class MongoDBTokenQueryDao(TokenQueryDao):
     def find_all_device_token_token_by_user_id(self, users):
         find = {
             'user_id': {'$in': users},
-            'notification_allow': True
+            'notification_allow': True,
+            'device_token': {'$ne': None}
         }
         projection = {'_id': False, 'device_token': True}
 
