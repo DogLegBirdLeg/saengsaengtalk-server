@@ -39,7 +39,7 @@ class MongoDBTokenDao(TokenDao):
             'user_id': user_id,
             'token_id': _id.inserted_id,
             'device_token': None,
-            'notification_allow': False,
+            'notification_allow': True,
             'last_updated_date': datetime.now()
         }
 
