@@ -33,11 +33,10 @@ class MongoDBTokenDao(TokenDao):
             'last_refreshed_date': datetime.now()
         }
 
-        _id = self.db.token.insert_one(data)
-        return str(_id.inserted_id)
+        self.db.token.insert_one(data)
 
-    def delete(self, key):
-        find = {'_id': ObjectId(key)}
+    def delete(self, access_token):
+        find = {'access_token': access_token}
         self.db.token.delete_one(find)
 
     def update_access_token(self, user_id, access_token):

@@ -24,12 +24,12 @@ class JwtAuthService(AuthUseCase):
 
         access_token = self._create_access_token(user._id, user.nickname, current_app.secret_key)
         refresh_token = self._create_refresh_token(current_app.secret_key)
-        key = self.token_dao.save(user._id, access_token, refresh_token)
+        self.token_dao.save(user._id, access_token, refresh_token)
 
-        return key, access_token, refresh_token
+        return access_token, refresh_token
 
-    def logout(self, key):
-        self.token_dao.delete(key)
+    def logout(self, access_token):
+        self.token_dao.delete(access_token)
 
     def refresh(self, refresh_token) -> str:
         try:

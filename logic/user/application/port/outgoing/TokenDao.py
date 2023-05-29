@@ -15,7 +15,7 @@ class TokenDao(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def delete(self, key):
+    def delete(self, access_token):
         pass
 
     @abstractmethod
