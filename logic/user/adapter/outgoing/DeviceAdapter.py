@@ -13,7 +13,6 @@ class MongoDBDeviceDao(DeviceDao):
         find = {'access_token': access_token}
         token = self.db.token.find_one(find)
 
-        print(token)
         find = {'token_id': token['_id']}
         device = self.db.device.find_one(find)
 

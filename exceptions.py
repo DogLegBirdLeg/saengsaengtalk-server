@@ -31,6 +31,11 @@ class FormatError(BaseException):
         super().__init__(msg=msg, code=code)
 
 
+class DeviceNotFound(BaseException):
+    def __init__(self, msg='기기 정보를 찾을 수 없습니다', code=6):
+        super().__init__(msg=msg, code=code)
+
+
 # domain Error
 class DomainError(BaseException):
     def __init__(self, msg, code):

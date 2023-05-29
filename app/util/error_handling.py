@@ -28,6 +28,13 @@ def user_error_handling(api):
 
     signup_error_handling(api)
     profile_error_handling(api)
+    device_error(api)
+
+
+def device_error(api):
+    @api.errorhandler(exceptions.DeviceNotFound)
+    def device_not_found(error):
+        return error.json, 404
 
 
 def profile_error_handling(api):
