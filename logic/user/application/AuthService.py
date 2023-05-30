@@ -55,6 +55,6 @@ class JwtAuthService(AuthUseCase):
     @staticmethod
     def _create_refresh_token(secret_key):
         payload = {
-            'create_at': time.time()
+            'exp': datetime.utcnow() + timedelta(days=90)
         }
         return jwt.encode(payload, secret_key)
