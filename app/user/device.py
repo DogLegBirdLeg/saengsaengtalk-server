@@ -13,7 +13,7 @@ notification_allow = device_ns.model('알림 허용', {
 
 
 @device_ns.route('/token')
-class Notification(Resource):
+class Token(Resource):
     @device_ns.doc(security='jwt', description='기기 토큰 정보를 수정합니다.', body=device_ns.model('device', model={
         'device_token': fields.String(description='기기 토큰')
     }))
