@@ -13,7 +13,7 @@ class MongoDBTokenQueryDao(TokenQueryDao):
         }
         projection = {'_id': False, 'device_token': True}
 
-        tokens = [device['device_token'] for device in self.db.device.find(find, projection)]
+        tokens = list(set([device['device_token'] for device in self.db.device.find(find, projection)]))
         return tokens
 
     def find_device_token_by_user_id(self, user_id):
@@ -24,5 +24,5 @@ class MongoDBTokenQueryDao(TokenQueryDao):
         }
         projection = {'_id': False, 'device_token': True}
 
-        tokens = [device['device_token'] for device in self.db.device.find(find, projection)]
+        tokens = list(set([device['device_token'] for device in self.db.device.find(find, projection)]))
         return tokens
