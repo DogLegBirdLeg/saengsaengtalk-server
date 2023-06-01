@@ -9,6 +9,8 @@ from src.common_container import CommonContainer
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_restx import apidoc
 
+import base64
+
 URL_PREFIX = '/static'
 apidoc.apidoc.url_prefix = URL_PREFIX
 
@@ -39,8 +41,12 @@ def create_app():
     @app.before_request
     def init():
         try:
-            g.id = int(request.headers['user_id'])
-            g.nickname = request.headers['nickname'].encode('iso-8859-1').decode('utf-8')
+            user_id = request.headers['user_id']
+            nickname_base64 = request.headers['nickname'].encode('latin-1')
+            nickname_bytes = base64.b64decode(nickname_base64)
+
+            g.id = int(user_id)
+            g.nickname = nickname_bytes.decode('utf-8')
         except KeyError:
             pass
         #g.id = 1682589002965
